@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   
+    tools:context=".WebActivity" >
+    <ProgressBar
+      style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/myProgressBar"
+        android:layout_alignParentTop="true"
+        
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        />
+    
+    <WebView
+    android:id="@+id/webhelp"
+    android:layout_marginTop="3dp"
+    android:layout_width="match_parent"
+    android:layout_height="100px"
+    />
+    
+    <com.dayu.gushiriji.CustomTextView 
+        android:id="@+id/CustomTextView"
+        android:layout_below="@+id/webhelp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        ></com.dayu.gushiriji.CustomTextView>
+    
+     <Button
+         android:id="@+id/btn_fanhuishouye"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" 
+          android:background="@drawable/bg_button"
+          android:layout_alignParentBottom="true"
+          android:text="返回应用首页"
+           />
+
+</RelativeLayout>

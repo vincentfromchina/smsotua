@@ -1,0 +1,169 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+  <RelativeLayout 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ContentSetActivity" >
+      
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="编辑" />
+
+    <EditText
+        android:id="@+id/edt_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="3dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:background="@drawable/edit_bg"
+        android:gravity="start"
+        android:minLines="8" >
+
+        <requestFocus />
+    </EditText>
+    
+
+       <Button
+           android:id="@+id/btn_insertspc"
+           style="?android:attr/buttonStyleSmall"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/edt_content"
+           android:text="特殊字" />
+       
+        <Button
+           android:id="@+id/btn_insertbig_a"
+           style="?android:attr/buttonStyleSmall"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/edt_content"
+           android:layout_toRightOf="@+id/btn_insertspc"
+           android:text="大写A" />
+
+   
+
+    <Button
+        android:id="@+id/btn_insertnum"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edt_content"
+        android:layout_alignParentRight="true"
+        android:text="数字" />
+
+    <Button
+        android:id="@+id/btn_insertdate"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_insertnum"
+        android:layout_alignLeft="@+id/btn_insertnum"
+        android:text="日期" />
+
+    <Button
+        android:id="@+id/btn_inserttime"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_insertdate"
+        android:layout_alignLeft="@+id/btn_insertdate"
+        android:text="时间" />
+
+    <TextView
+        android:id="@+id/txv_totalcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edt_content"
+        android:layout_toLeftOf="@+id/txv_calculate"
+        android:textSize="18sp"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/txv_calculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edt_content"
+        android:layout_alignRight="@+id/edt_content"
+        android:textSize="18sp"
+        android:text="/140" />
+
+    <TextView
+        android:id="@+id/txv_yulan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_insertspc"
+        android:layout_below="@+id/btn_insertspc"
+        android:layout_marginTop="7dp"
+        android:text="短信预览"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+     <RelativeLayout
+        android:id="@+id/rel_xiaoguo"
+        android:layout_width="300dp"
+        android:layout_height="fill_parent"
+        android:layout_alignLeft="@+id/edt_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/txv_yulan"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp" >
+
+    <!-- 使用自定义view 组件   
+
+       <com.dayu.autosms.Showresult
+           android:id="@+id/view_showcontent"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/weixin_kuang" />
+       -->
+
+       <EditText
+           android:id="@+id/edt_showresult"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_alignParentTop="true"
+           android:background="@drawable/weixin_kuang"
+           android:focusable="false"
+           android:longClickable="false"
+           android:ems="10"
+           android:gravity="start"
+           android:inputType="textMultiLine"
+           android:textSize="20sp" />
+
+    </RelativeLayout>
+
+     <Button
+         android:id="@+id/btn_insertlitter_a"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/txv_yulan"
+         android:layout_toRightOf="@+id/btn_insertbig_a"
+         android:text="小写a" />
+
+     <Button
+         android:id="@+id/btn_insertblank"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/txv_yulan"
+         android:visibility="gone"
+         android:layout_toRightOf="@+id/btn_insertlitter_a"
+         android:text="空格" />
+
+  </RelativeLayout>
+  
+</ScrollView>
