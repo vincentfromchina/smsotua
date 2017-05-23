@@ -1,13 +1,33 @@
 package com.dayu.autosms;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.dayu.autosms.c.GernatorSMSText;
 
@@ -20,11 +40,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 public class ContentSetActivity extends Activity {
 
 	final String TAG = "autophone";
-
+	public static String Imei = "";
+	public static String serverip = "dayuinf.com";
+	private static final int REG_OK = 1001,REG_EXITS = 1002,REG_FAIL = 1007,REG_BACKLIST = 1004;
+	String serialid;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +222,133 @@ public class ContentSetActivity extends Activity {
 		});
     }
     
-   
+    private void Register()
+	{
+	 	HttpClient mHttpClient = new DefaultHttpClient();
+	 	Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+		 String uri = "http://"+serverip+"/autosms_Reg";
+		 if( AutoSMSActivity.isdebug ) Log.e("loghere", Imei);
+		    HttpPost httppost = new HttpPost(uri);   
+		    List<NameValuePair> params = new ArrayList<NameValuePair>();
+		     // 添加要传递的参数
+		    NameValuePair pair1 = new BasicNameValuePair("serialno", Imei);
+		    params.add(pair1);
+		   
+		    HttpEntity mHttpEntity;
+		 			try
+		 			{
+		 				mHttpEntity = new UrlEncodedFormEntity(params, "gbk");
+		 			
+		 				httppost.setEntity(mHttpEntity); 
+		 				if( AutoSMSActivity.isdebug )Log.e("url", "发送数据");
+		 			} catch (UnsupportedEncodingException e1)
+		 			{
+		 				// TODO Auto-generated catch block
+		 				if( AutoSMSActivity.isdebug )Log.e("url", "数据传递出错了");
+		 				e1.printStackTrace();
+		 			}
+		 		    		
+		 			mHttpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 4000);	
+		 		     
+		 		    HttpResponse httpresponse = null;  
+		 		    try
+		 			{
+		 				httpresponse = mHttpClient.execute(httppost);
+		 				
+		 			   if (httpresponse.getStatusLine().getStatusCode()==200)	
+		 			   {
+		 				  String response = EntityUtils.toString(httpresponse.getEntity(), "utf-8");
+		 				 TextView tv1 = (TextView)findViewById(R.id.textView1);
+		 				 JSONObject mJsonObject = new JSONObject(response);
+		 				if( AutoSMSActivity.isdebug )Log.e("loghere", response);
+						try
+						{
+							String resp = mJsonObject.getString("resp");
+					
+							switch (resp)
+							{
+							case "1":
+								serialid = mJsonObject.getString("serialid");
+								mHandler.sendEmptyMessage(REG_OK);
+								break;
+							case "2":
+								serialid = mJsonObject.getString("serialid");
+								mHandler.sendEmptyMessage(REG_EXITS);
+								break;
+							case "4":
+								serialid = mJsonObject.getString("serialid");
+								Log.e("loghere", serialid);
+								mHandler.sendEmptyMessage(REG_BACKLIST);
+								break;
+							default:
+								mHandler.sendEmptyMessage(REG_FAIL);
+								break;
+							} 
+						} catch (JSONException e)
+						{
+							e.printStackTrace();
+						}
+					 		
+						if( AutoSMSActivity.isdebug )	Log.e("url",response);
+		 			   }
+		 			  if( AutoSMSActivity.isdebug )Log.e("url","rescode:"+httpresponse.getStatusLine().getStatusCode());
+		 				
+		 				
+		 			} catch (ClientProtocolException e1)
+					{
+						e1.printStackTrace();
+					} catch (IOException e1)
+					{
+						e1.printStackTrace();
+						if( AutoSMSActivity.isdebug )Log.e("loghere", "sockettimeout");
+						
+					} catch (JSONException e1)
+					{
+						e1.printStackTrace();
+					}       
+	
+
+}
+
+    class doreg  extends Thread
+{
+
+	@Override
+	public void run()
+	{
+		Register();
+		super.run();
+	}
+	
+}
+    
+    private final Handler mHandler = new Handler() {
+ 		@Override
+ 	    public void handleMessage(android.os.Message msg) {
+ 	        super.handleMessage(msg);
+ 	        switch (msg.what) {
+ 	            
+ 	            case REG_OK:
+ 	            	Toast.makeText(ContentSetActivity.this, "激活成功", Toast.LENGTH_LONG).show();
+ 	            	
+ 	               break;
+ 	            case REG_EXITS:
+ 	            	Toast.makeText(ContentSetActivity.this, "本设备已存在", Toast.LENGTH_LONG).show();
+ 	            	
+ 		            break;
+ 	            case REG_BACKLIST:
+ 	            	Toast.makeText(ContentSetActivity.this, "本设备无效，请更换", Toast.LENGTH_LONG).show();
+ 	            	
+ 		            break;    
+ 	            case REG_FAIL:
+ 	            	Toast.makeText(ContentSetActivity.this, "激活失败，请重试", Toast.LENGTH_LONG).show();
+ 	            	
+ 	            	break;
+ 	        default:
+ 	        	if( AutoSMSActivity.isdebug ) Log.i(TAG, "Unhandled msg - " + msg.what);
+ 	        }
+ 	    }                                       
+ 	};
 
 
     @Override
