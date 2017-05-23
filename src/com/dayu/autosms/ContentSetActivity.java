@@ -220,13 +220,28 @@ public class ContentSetActivity extends Activity {
 				
 			}
 		});
+        
+        Button btn_unlock = (Button)findViewById(R.id.btn_unlock);
+        btn_unlock.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				 
+					   doreg mdoreg = new doreg();
+				       mdoreg.start();
+				   
+				
+			}
+		});
     }
     
     private void Register()
 	{
 	 	HttpClient mHttpClient = new DefaultHttpClient();
 	 	Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
-		 String uri = "http://"+serverip+"/autosms_Reg";
+		 String uri = "http://"+serverip+"/AutoSms_Reg";
 		 if( AutoSMSActivity.isdebug ) Log.e("loghere", Imei);
 		    HttpPost httppost = new HttpPost(uri);   
 		    List<NameValuePair> params = new ArrayList<NameValuePair>();
