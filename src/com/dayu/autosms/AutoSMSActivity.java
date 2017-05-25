@@ -46,10 +46,14 @@ import org.json.JSONObject;
 import com.dayu.autosms.R;
 import com.dayu.autosms.c.FolderFilePicker;
 import com.dayu.autosms.c.FolderFilePicker.PickPathEvent;
+import com.dayu.autosms.m.SmsBase;
+import com.dayu.autosms.m.SmsTask;
+import com.dayu.autosms.m.SmsTaskQuery;
 import com.dayu.autosms.c.GernatorSMSText;
 import com.dayu.autosms.c.DBHelper;
 
 import android.R.integer;
+import android.R.mipmap;
 import android.R.string;
 import android.app.Activity;
 import android.app.Dialog;
@@ -85,21 +89,24 @@ public class AutoSMSActivity extends Activity
 	PendingIntent deliverPI;
     SmsManager smsManager;
     EditText edt_phonenum;
-    private String mfilePath="",owner="";
-    String send_target[] = new String[10];
-    int    send_num = 0;
-    int    send_totalnum = 0;
+    static private String mfilePath="",owner="";
+    static String send_target[] = new String[10];
+    static int    send_num = 0;
+    static int    send_totalnum = 0;
 	private DBHelper sqldb;
 	static SmsTaskQuery m_SmsTaskQuery = null;
+	static SmsTask m_SmsTask = null;
 	static load_smstask m_loadsmstask = null;
-	long filesize = 0;
-	Object loadsmstask_lock = "共享锁";
-	public static Boolean isdebug = false;
-	public static ProgressBar mProgressBar;
+	static long filesize = 0;
+	final static Object loadsmstask_lock = "导入数据共享锁";
+	final static Object sendsmstask_lock = "发送进程共享锁";
+    static public Boolean isdebug = false;
+    static public ProgressBar mProgressBar;
 	HttpURLConnection urlConn = null;  
-	boolean cancelupdate = false;
+	static boolean cancelupdate = false;
+    static boolean send_isstart = true;
 	private static int progessperct = 0;
-	private static final int BINDPHONE = 33,REFRESHGPS = 35,DOWNLOAD_ING = 37, DOWNLOAD_FINISH = 39;
+	private static final int DOWNLOAD_ING = 37, DOWNLOAD_FINISH = 39;
 	private static String mSavepath = "", apkurl = "", apkname = "", apkversion = "";
     
     void jiaocheng()
@@ -156,15 +163,19 @@ public class AutoSMSActivity extends Activity
 	    	        switch (getResultCode()) {  
 	    	        case Activity.RESULT_OK:  
 	    	        	Log.e(TAG,"发送成功"); 
+	    	        	 m_SmsTask.setTasksuccess(m_SmsTask.getTasksuccess()+1);
 	    	        break;  
 	    	        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
 	    	        	Log.e(TAG,"RESULT_ERROR_GENERIC_FAILURE");
+	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
 	    	        break;  
 	    	        case SmsManager.RESULT_ERROR_RADIO_OFF:  
 	    	        	Log.e(TAG,"RESULT_ERROR_RADIO_OFF");
+	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
 	    	        break;  
 	    	        case SmsManager.RESULT_ERROR_NULL_PDU:  
 	    	        	Log.e(TAG,"RESULT_ERROR_NULL_PDU");
+	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
 	    	        break;  
 	    	        }  
 	    	    }  
@@ -184,9 +195,11 @@ public class AutoSMSActivity extends Activity
 	             {  
 	                 case  Activity.RESULT_OK:  
 	                     Log.e(TAG ,  "RESULT_OK" );  
+	                    
 	                     break ;  
 	                 case  Activity.RESULT_CANCELED:  
-	                     Log.e(TAG ,  "RESULT_CANCELED" );  
+	                     Log.e(TAG ,  "RESULT_CANCELED" ); 
+	                     
 	                     break ;  
 	             }   
 	        	 
@@ -270,8 +283,10 @@ public class AutoSMSActivity extends Activity
 				
 			}
 		});
+	  
 	     
 	     sqldb = new DBHelper(getBaseContext(),"smstask.db", null) ;
+	     
 		 Cursor c = null;
 		 c = sqldb.query_count();
 		 if (c!=null)	
@@ -285,6 +300,7 @@ public class AutoSMSActivity extends Activity
 				
 			 }
 		  }
+		  
 	     
 	     Button btn_sms = (Button)findViewById(R.id.btn_sms);
 	     btn_sms.setOnClickListener(new OnClickListener()
@@ -357,34 +373,65 @@ public class AutoSMSActivity extends Activity
 			}
 		});
 	     
-	     Button button1 = (Button)findViewById(R.id.button1);
-	     button1.setOnClickListener(new OnClickListener()
+	     final Button btn_startorpuase = (Button)findViewById(R.id.btn_startorpuase);
+	     btn_startorpuase.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
 			public void onClick(View v)
 			{
-				synchronized (loadsmstask_lock)
-				{
-					loadsmstask_lock.notify();
-				}
-								
+				send_isstart = !send_isstart;
+			   if (send_isstart )
+			   {
+				   synchronized (sendsmstask_lock)
+					  {
+						sendsmstask_lock.notifyAll();
+					  }
+				   btn_startorpuase.setText("暂停");
+			   }else
+			   { 
+				   btn_startorpuase.setText("开始");
+			   }				
+		}
+	 });
+	     
+	     Button btn_managecontentplate = (Button)findViewById(R.id.btn_managecontentplate);
+	     btn_managecontentplate.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent mIntent = new Intent();
+				mIntent.setClass(AutoSMSActivity.this, ManagercontentplateActivity.class);
+				startActivity(mIntent);
 			}
 		});
 	     
+	     Button btn_cpdb = (Button)findViewById(R.id.btn_cpdb);
+	     btn_cpdb.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				copydbfile();				
+			}
+		});
 			
 	     m_SmsTaskQuery = new SmsTaskQuery();
-	     send_sms kk = new send_sms();
-			kk.start();
+	     send_sms m_sendsms = new send_sms();
+	     m_sendsms.start();
 			
 		checkupdate ck = new checkupdate();
 		ck.start();
 			
 	}
 	
-	void fenxi_file(File feFile)
+	void copydbfile()
 	{
-		
+		String dbfilepath = getApplication().getDatabasePath("smstask.db").toString();
+		sqldb.copyDataBaseToSD(dbfilepath);
 	}
 	
 	public class checkupdate extends Thread
@@ -731,7 +778,7 @@ public class AutoSMSActivity extends Activity
 			
 			try
 			{
-				Thread.sleep(15000);
+				Thread.sleep(1500);
 			} catch (InterruptedException e)
 			{
 				// TODO Auto-generated catch block
@@ -751,7 +798,21 @@ public class AutoSMSActivity extends Activity
 		{
 			while (true)
 			{
-			  
+				if (!send_isstart)
+				{
+					synchronized (sendsmstask_lock)
+					{
+						try
+						{
+							sendsmstask_lock.wait();
+						} catch (InterruptedException e)
+						{
+							
+							e.printStackTrace();
+						}
+					}
+				}
+				
 				SmsBase t_SmsBase = null;
 				
 				t_SmsBase = SmsTaskQuery.poll_sendlist();
@@ -775,7 +836,7 @@ public class AutoSMSActivity extends Activity
 			   
 				try
 				{
-					sleep(2000);
+					sleep(200);
 				} catch (InterruptedException e)
 				{
 					
@@ -814,10 +875,15 @@ public class AutoSMSActivity extends Activity
 		@Override
 		public void run()
 		{
-			File feFile = new File(mfilePath);
-			Log.e(TAG, "open file  1");
+			m_SmsTask = new SmsTask();
 			
-			Log.e(TAG, "open file  2");
+			File feFile = new File(mfilePath);
+			m_SmsTask.setTaskfilepath(feFile.getParent());
+			m_SmsTask.setTaskfilename(feFile.getName());
+			
+			Log.e(TAG, "open file  AbsolutePath"+feFile.getAbsolutePath());
+			
+			Log.e(TAG, "open file  name" +feFile.getName());
 			if(feFile.canRead())
 			{
 				Log.e(TAG, "open file  3");
@@ -832,23 +898,43 @@ public class AutoSMSActivity extends Activity
 					 buffd = new BufferedReader(frd);
 					
 					String tmp_str = "";
-					       send_num = 0;
+					send_num = 0;
 					long readbytes = 0;
 			
 					
 					while((tmp_str=buffd.readLine())!=null)
 					{   
+						if (!send_isstart)
+						{
+							synchronized (sendsmstask_lock)
+							{
+								try
+								{
+									sendsmstask_lock.wait();
+								} catch (InterruptedException e)
+								{
+									
+									e.printStackTrace();
+								}
+							}
+						}
 						readbytes += tmp_str.getBytes().length+2;
 						tmp_str = tmp_str.trim();
 						if((tmp_str.length()>0)&&(tmp_str.length()==11)&&tmp_str.startsWith("1"))
 						 {	
+							m_SmsTask.setTasktotal(send_num+1);
 							send_target[send_num] = tmp_str;
 							Log.e(TAG, send_target[send_num]);
 							send_num++;
 						 }
 						
+                        Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
 						
-						if (send_num==10)
+						progessperct =  Math.round((float)readbytes/filesize*100);
+						
+						Log.e(TAG, String.valueOf(progessperct)+"%");
+						
+						if (send_num==10||progessperct>=100)
 						{
 							for (int i = 0; i < send_num; i++)
 							{
@@ -871,14 +957,18 @@ public class AutoSMSActivity extends Activity
 							send_num=0;
 							
 						}
-						Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
-						Log.e(TAG, String.valueOf((float)readbytes/filesize*100)+"%");
+						
 						
 					}
 					
+					while (m_SmsTaskQuery.query_sendlist_count()!=0)
+					{
+						; //等待方队列清空然后更新数据库任务表		
+					}
 					
+					sqldb.insert_smstask(m_SmsTask);
 					
-					Log.e(TAG, String.valueOf(send_num));
+
 					
 				} catch (FileNotFoundException e)
 				{

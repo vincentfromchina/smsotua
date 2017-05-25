@@ -1,4 +1,4 @@
-package com.dayu.autosms;
+package com.dayu.autosms.m;
 
 import java.util.LinkedList;
 
@@ -13,12 +13,10 @@ public class SmsTaskQuery
 	static int addlist_num = 5;
 	static boolean exit = false;
 	
-	
-	
-	
+		
 	public SmsTaskQuery()
 	{
-		Log.e("autophone","create query "+ String.valueOf(m_sendlist.size()));
+		Log.e("autophone","create sms send query "+ String.valueOf(m_sendlist.size()));
 	}
 
 	synchronized public static int insert_sendlist(SmsBase smsBase)

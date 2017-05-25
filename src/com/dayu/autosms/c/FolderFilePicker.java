@@ -239,6 +239,7 @@ public class FolderFilePicker extends Dialog {
 				holder.mIcon = (ImageView) convertView.findViewById(R.id.icon);
 				holder.mText = (TextView) convertView.findViewById(R.id.text);
 				holder.mText.setTextColor(0xff000000);
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();

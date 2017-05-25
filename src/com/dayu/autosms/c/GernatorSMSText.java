@@ -21,6 +21,19 @@ public class GernatorSMSText
 		 static SimpleDateFormat nowtime;
 		 static Date date;
 		 
+	static public  String sqliteEscape(String keyWord){  
+		        keyWord = keyWord.replace("/", "//");  
+		        keyWord = keyWord.replace("'", "''");  
+		        keyWord = keyWord.replace("[", "/[");  
+		        keyWord = keyWord.replace("]", "/]");  
+		        keyWord = keyWord.replace("%", "/%");  
+		        keyWord = keyWord.replace("&","/&");  
+		        keyWord = keyWord.replace("_", "/_");  
+		        keyWord = keyWord.replace("(", "/(");  
+		        keyWord = keyWord.replace(")", "/)");  
+		        return keyWord;  
+		    }  
+		 
 	static public String getSMSresult(String orgStr)
     {
     	int t = -1;

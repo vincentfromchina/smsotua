@@ -1,25 +1,34 @@
-package com.dayu.autosms;
+package com.dayu.autosms.m;
 
 import android.R.integer;
 
 public class SmsTask
 {
-	String Tasktime;
+	String TaskStarttime;
+	String TaskEndtime;
 	String Taskname;
 	String Taskfilepath;
 	String Taskfilename;
 	
-	int Tasksuccess;
-	int Taskfail;
-	int Tasktotal;
+	int Tasksuccess = 0;
+	int Taskfail = 0;
+	int Tasktotal = 0;
 	int Taskcontentplate;  //¶ÌÐÅÄ£°å
-	public String getTasktime()
+	public String getTaskStarttime()
 	{
-		return Tasktime;
+		return TaskStarttime;
 	}
-	public void setTasktime(String tasktime)
+	public void setTaskStarttime(String tasktime)
 	{
-		Tasktime = tasktime;
+		TaskStarttime = tasktime;
+	}
+	public String getTaskEndtime()
+	{
+		return TaskStarttime;
+	}
+	public void setTaskEndtime(String tasktime)
+	{
+		TaskStarttime = tasktime;
 	}
 	public String getTaskname()
 	{

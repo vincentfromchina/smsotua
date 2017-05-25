@@ -33,6 +33,7 @@ import com.dayu.autosms.c.GernatorSMSText;
 
 import android.R.color;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
@@ -231,8 +232,23 @@ public class ContentSetActivity extends Activity {
 				 
 					   doreg mdoreg = new doreg();
 				       mdoreg.start();
-				   
-				
+			
+			}
+		});
+        
+        Button btn_ok = (Button)findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				final int RESULT_CODE = 308;
+			
+				Intent data = new Intent();
+				data.putExtra("contentplate", getcontent());
+				setResult(RESULT_CODE, data);
+				finish();
 			}
 		});
     }

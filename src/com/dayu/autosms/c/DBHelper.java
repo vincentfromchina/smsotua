@@ -1,34 +1,45 @@
 package com.dayu.autosms.c;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
-import com.dayu.autosms.SmsTask;
+import com.dayu.autosms.m.SmsTask;
 
+import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 1;    
-    private static final String CREATE_INFO = "create table if not exists smstask("  
-            + "tasktime DATETEXT(19,19),"
+    private static final int DB_VERSION = 3;    
+    private static final String CREATE_smstask = "create table if not exists smstask("  
+            + "TaskStarttime DATETEXT(19,19),"
+            + "TaskEndtime DATETEXT(19,19),"
     		+ "Taskname VARCHAR2(50),"
     		+ "Taskfilepath VARCHAR2(500), Taskfilename VARCHAR2(50), "
             + "Tasksuccess INT , Taskfail INT, "
     		+ "Tasktotal INT, Taskcontentplate INT"
     		+ ")";  
-    
+    private static final String CREATE_contentplate = "create table if not exists contentplate("  
+            + "plateid INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + "platename VARCHAR2(50),"
+    		+ "platecontent VARCHAR2(1000)"
+    		+ ")";
    
 
-	public DBHelper(Context context, String name, CursorFactory factory)
+	public DBHelper(Context context, String dbname, CursorFactory factory)
 	{
-		super(context, name, null, DB_VERSION);
+		super(context, dbname, null, DB_VERSION);
 		// TODO Auto-generated constructor stub
 		
 	}
@@ -38,7 +49,10 @@ public class DBHelper extends SQLiteOpenHelper
 	{
 		// TODO Auto-generated method stub
 		
-		String sql = CREATE_INFO;
+		String sql = CREATE_smstask;
+        db.execSQL(sql);
+        
+        sql = CREATE_contentplate;
         db.execSQL(sql);
         
         Log.e("database","数据库创建成功");
@@ -63,22 +77,25 @@ public class DBHelper extends SQLiteOpenHelper
 		String pre ="drop table if exists smstask";
 		db.execSQL(pre);
 		
-	    sql = CREATE_INFO;
+		sql = CREATE_smstask;
+        db.execSQL(sql);
+        
+        sql = CREATE_contentplate;
         db.execSQL(sql);
         
         Log.e("database","数据库更新成功");
 	}
 	
-	public void delrec_smstask()
+	public void delrec_smstask(Integer taskid)
 	{
-		String sql ="delete from smstask";
+		String sql ="delete from smstask where taskid=" +taskid;
 		SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
 	}
 	
-	public void delrec_null()
+	public void delrec_smscontentplate(Integer plateid)
 	{
-		String sql ="delete from stock_sort where buy_times = 0";
+		String sql ="delete from smstask where plateid =" +plateid;
 		SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
 	}
@@ -91,9 +108,32 @@ public class DBHelper extends SQLiteOpenHelper
     	return c;
     }
     
+    public void insert_smstask(SmsTask s)
+    {
+    	String sql ="insert into smstask(taskStarttime,taskname,taskfilepath,"
+    			+ "taskfilename,tasksuccess,taskfail,tasktotal,taskcontentplate,"
+    			+"taskEndtime)"
+    			+ "values ('"+ s.getTaskStarttime()+ "','"+ s.getTaskname()
+    			+ "','"+ s.getTaskfilepath() + "','" + s.getTaskfilename()
+    			+ "',"+ s.getTasksuccess() +"," + s.getTaskfail()
+    			+ ","+ s.getTasktotal() +"," + s.getTaskcontentplate()
+    		    +",'" + s.getTaskEndtime()+"')";
+    	SQLiteDatabase db = getReadableDatabase();
+    	db.execSQL(sql);
+    	
+        Log.e("database","数据库insert成功");
+    }
     
-   
-   
+    public void insert_smscontentplate(String platename,String contentplate)
+    {
+    	String sql ="insert into contentplate(platename,platecontent)"
+    			+ "values ('"+ platename+ "','"+ contentplate
+    			+"')";
+    	SQLiteDatabase db = getReadableDatabase();
+    	db.execSQL(sql);
+    	
+        Log.e("database","数据库insert成功");
+    }
     
     public Cursor query_Sum_fenhong()
     {
@@ -150,21 +190,6 @@ public class DBHelper extends SQLiteOpenHelper
     			          + " iscompleted ='true'  order by tol "+ order +" limit 100", null);
     }
     
-    public void insert_stockrec(SmsTask s)
-    {
-    	String sql ="insert into smstask(tasktime,Taskname,Taskfilepath,"
-    			+ "Taskfilename,Tasksuccess,Taskfail,Tasktotal,Taskcontentplate,"
-    			+")"
-    			+ "values ('"+ s.getTasktime()+ "','"+ s.getTaskname()
-    			+ "',"+ s.getTaskfilepath() + "," + s.getTaskfilename()
-    			+ ","+ s.getTasksuccess() +"," + s.getTaskfail()
-    			+ ","+ s.getTasktotal() +"," + s.getTaskcontentplate()
-    		    + "')";
-    	SQLiteDatabase db = getReadableDatabase();
-    	db.execSQL(sql);
-    	
-      //  Log.e("database","数据库insert成功");
-    }
  
 	@Override
 	public void onOpen(SQLiteDatabase db)
@@ -174,6 +199,38 @@ public class DBHelper extends SQLiteOpenHelper
 		Log.e("database","数据库open成功");
 	}
 
-    
+	public static void copyDataBaseToSD(String dbfilepath){  
+	     if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {  
+	            return ;  
+	         }  
+	     File dbFile = new File( dbfilepath);  
+	     File file  = new File(Environment.getExternalStorageDirectory(), "copyof_smstask.db");  
+	       
+	     FileChannel inChannel = null,outChannel = null;  
+	       
+	     try {  
+	        file.createNewFile();  
+	        inChannel = new FileInputStream(dbFile).getChannel();  
+	        outChannel = new FileOutputStream(file).getChannel();  
+	        inChannel.transferTo(0, inChannel.size(), outChannel);  
+	    } catch (Exception e) {  
+	        Log.e("database", "copy dataBase to SD error.");  
+	        e.printStackTrace();  
+	    }finally{  
+	        try {  
+	            if (inChannel != null) {  
+	                inChannel.close();  
+	                inChannel = null;  
+	            }  
+	            if(outChannel != null){  
+	                outChannel.close();  
+	                outChannel = null;  
+	            }  
+	        } catch (IOException e) {  
+	            Log.e("database", "file close error.");  
+	            e.printStackTrace();  
+	        }  
+	    }  
+	}  
     
 }

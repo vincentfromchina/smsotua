@@ -1,4 +1,4 @@
-package com.dayu.autosms;
+package com.dayu.autosms.m;
 
 public class SmsBase
 {

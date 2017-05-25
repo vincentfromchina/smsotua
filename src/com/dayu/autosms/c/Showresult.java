@@ -1,4 +1,4 @@
-package com.dayu.autosms;
+package com.dayu.autosms.c;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -7,6 +7,10 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+
+import com.dayu.autosms.R;
+import com.dayu.autosms.R.drawable;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
