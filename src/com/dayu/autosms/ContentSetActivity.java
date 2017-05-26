@@ -29,6 +29,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.dayu.autosms.ManagercontentplateActivity.platelistadapter;
 import com.dayu.autosms.c.GernatorSMSText;
 
 import android.R.color;
@@ -51,11 +52,37 @@ public class ContentSetActivity extends Activity {
 	public static String serverip = "dayuinf.com";
 	private static final int REG_OK = 1001,REG_EXITS = 1002,REG_FAIL = 1007,REG_BACKLIST = 1004;
 	String serialid;
+	String type = "";
+	int    plateid;
+	String platecontent;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content_set);
+        
+        Bundle bundle = this.getIntent().getExtras();
+        
+        if (bundle!=null)
+		{
+        	if (bundle.containsKey("type"))
+    		{
+            	type = bundle.getString("type");
+    		}
+            if (bundle.containsKey("plateid"))
+    		{
+            	plateid = bundle.getInt("plateid");
+    		}
+            if (bundle.containsKey("platecontent"))
+    		{
+                platecontent = bundle.getString("platecontent"); 
+    		}
+                    
+		}
+        
+        
+        Log.e("autophone", type + " " + plateid);
+        
         
         final TextView txv_calculate = (TextView)findViewById(R.id.txv_calculate);
         
@@ -90,8 +117,7 @@ public class ContentSetActivity extends Activity {
 			//	Log.e("TAG", String.valueOf(s));
 				
 				String teString = edt_content.getText().toString();
-				
-				
+								
 				teString = GernatorSMSText.getSMSresult(teString);
 						
 			//	Log.e(TAG, teString);
@@ -119,7 +145,6 @@ public class ContentSetActivity extends Activity {
 				
 			}
 		});
-        
         
         
         Button btn_insertspc = (Button)findViewById(R.id.btn_insertspc);
@@ -243,14 +268,29 @@ public class ContentSetActivity extends Activity {
 			@Override
 			public void onClick(View v)
 			{
-				final int RESULT_CODE = 308;
-			
 				Intent data = new Intent();
-				data.putExtra("contentplate", getcontent());
-				setResult(RESULT_CODE, data);
-				finish();
+				if (type.equals("mod"))
+			    {
+					final int RESULT_MOD = 309;
+					data.putExtra("plateid", plateid);
+					data.putExtra("contentplate", getcontent());
+					setResult(RESULT_MOD, data);
+					finish();
+			    }else
+			    {
+					final int RESULT_CODE = 308;
+					data.putExtra("contentplate", getcontent());
+					setResult(RESULT_CODE, data);
+					finish();
+			    }
 			}
 		});
+ 
+        if (type.equals("mod"))
+	    {
+    	   edt_content.setText(platecontent);
+	    }
+        
     }
     
     private void Register()
@@ -392,6 +432,7 @@ public class ContentSetActivity extends Activity {
     public String getcontent()
     {
        EditText tv_edit = (EditText)findViewById(R.id.edt_content);
+       Log.e("autophone","send contentplate"+ tv_edit.getText().toString());
        return tv_edit.getText().toString();
     }
     

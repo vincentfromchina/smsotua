@@ -21,19 +21,20 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 3;    
+    private static final int DB_VERSION = 4;    
     private static final String CREATE_smstask = "create table if not exists smstask("  
-            + "TaskStarttime DATETEXT(19,19),"
-            + "TaskEndtime DATETEXT(19,19),"
-    		+ "Taskname VARCHAR2(50),"
-    		+ "Taskfilepath VARCHAR2(500), Taskfilename VARCHAR2(50), "
-            + "Tasksuccess INT , Taskfail INT, "
-    		+ "Tasktotal INT, Taskcontentplate INT"
+            + "taskStarttime DATETEXT(19,19),"
+            + "taskEndtime DATETEXT(19,19),"
+    		+ "taskname VARCHAR2(50),"
+    		+ "taskfilepath VARCHAR2(500), taskfilename VARCHAR2(50), "
+            + "tasksuccess INT , Taskfail INT, "
+    		+ "tasktotal INT, taskcontentplate INT"
     		+ ")";  
     private static final String CREATE_contentplate = "create table if not exists contentplate("  
             + "plateid INTEGER PRIMARY KEY AUTOINCREMENT,"
             + "platename VARCHAR2(50),"
-    		+ "platecontent VARCHAR2(1000)"
+    		+ "platecontent VARCHAR2(1000),"
+    		+ "plateaddtime DATETEXT(19, 19)"
     		+ ")";
    
 
@@ -77,6 +78,9 @@ public class DBHelper extends SQLiteOpenHelper
 		String pre ="drop table if exists smstask";
 		db.execSQL(pre);
 		
+		pre ="drop table if exists contentplate";
+		db.execSQL(pre);
+		
 		sql = CREATE_smstask;
         db.execSQL(sql);
         
@@ -95,9 +99,10 @@ public class DBHelper extends SQLiteOpenHelper
 	
 	public void delrec_smscontentplate(Integer plateid)
 	{
-		String sql ="delete from smstask where plateid =" +plateid;
+		String sql ="delete from contentplate where plateid =" +plateid;
 		SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
+    	Log.e("database","delete成功"); 
 	}
 
     public Cursor query_count()
@@ -124,10 +129,10 @@ public class DBHelper extends SQLiteOpenHelper
         Log.e("database","数据库insert成功");
     }
     
-    public void insert_smscontentplate(String platename,String contentplate)
+    public void insert_smscontentplate(String platename,String contentplate,String opttime)
     {
-    	String sql ="insert into contentplate(platename,platecontent)"
-    			+ "values ('"+ platename+ "','"+ contentplate
+    	String sql ="insert into contentplate(platename,platecontent,plateaddtime)"
+    			+ "values ('"+ platename+ "','"+ contentplate+ "','"+ opttime
     			+"')";
     	SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
@@ -135,29 +140,28 @@ public class DBHelper extends SQLiteOpenHelper
         Log.e("database","数据库insert成功");
     }
     
-    public Cursor query_Sum_fenhong()
+    public Cursor query_smscontentplate()
     {
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","query访问成功");  
-    	return db.rawQuery("select sum(fenhong_mon) as jiaoyicishu from stock_sort where iscompleted ='true'", null);
+    	return db.rawQuery("select * from contentplate order by plateaddtime desc", null);
     }
     
-    public Cursor query_yongjin(boolean asc)
+    public Cursor query_smstask(boolean asc)
     {
     	String order;
     	order = asc ? "asc" : "desc";
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","query访问成功");  
-    	return db.rawQuery("select zqdm,zqmc,yongjin_tol+yinhuashui_tol as tol from stock_sort where iscompleted ='true' order by tol "+ order +" limit 100", null);
+    	return db.rawQuery("select * from smstask order by taskstarttime "+ order, null);
     }
     
-    public Cursor query_fenhong(boolean asc)
+    public void update_contentplate(int plateid,String contentplate)
     {
-    	String order;
-    	order = asc ? "asc" : "desc";
+    	
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
-    	return db.rawQuery("select zqdm,zqmc,fenhong_mon from stock_sort where iscompleted ='true' order by fenhong_mon "+ order +" limit 100", null);
+    	Log.e("database","update contentplate成功");  
+        db.execSQL("update contentplate set platecontent='"+contentplate+"' where plateid="+plateid);
     }
     
     public Cursor query_jiaoyicishu(boolean asc)

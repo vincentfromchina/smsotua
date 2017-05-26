@@ -19,5 +19,9 @@
     <string name="logining">程序在后台执行, 请查看日志！</string>
     <string name="setting_su">设置成功</string>
     <string name="title_activity_managercontentplate">管理短信模板</string>
+    <item type="id" name="mod_key_first_tag">  
+    </item>  
+    <item type="id" name="mod_key_second_tag">  
+    </item>  
 
 </resources>

@@ -8,14 +8,18 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="短信模板标题"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="3dp"
+        android:text="短信模板名称"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
         android:id="@+id/edt_contentplatename"
         android:layout_width="240dp"
+        android:background="@drawable/edit_bg"
+        android:textSize="25sp"
         android:layout_height="wrap_content" >
-
+        
         <requestFocus />
     </EditText>
 
@@ -23,6 +27,7 @@
         android:id="@+id/btn_editcontentplate"
         android:layout_width="154dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="编辑短信模板" />
   
 </LinearLayout> 
