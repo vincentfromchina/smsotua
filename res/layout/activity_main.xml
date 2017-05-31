@@ -110,4 +110,32 @@
         android:layout_alignTop="@+id/btn_managecontentplate"
         android:text="cpdb" />
 
+    <Button
+        android:id="@+id/btn_jiaocheng"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_startorpuase"
+        android:layout_below="@+id/btn_managecontentplate"
+        android:layout_marginTop="17dp"
+        android:text="教程" />
+
+    <Button
+        android:id="@+id/btn_managertask"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_jiaocheng"
+        android:layout_alignBottom="@+id/btn_jiaocheng"
+        android:layout_alignLeft="@+id/btn_fenxifile"
+        android:text="管理任务记录" />
+
+    <Button
+        android:id="@+id/btn_openaddtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_cpdb"
+        android:layout_alignTop="@+id/btn_managertask"
+        android:text="任务" />
+
 </RelativeLayout>

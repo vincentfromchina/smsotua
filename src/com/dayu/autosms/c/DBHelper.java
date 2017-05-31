@@ -21,14 +21,15 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 4;    
+    private static final int DB_VERSION = 5;    
     private static final String CREATE_smstask = "create table if not exists smstask("  
             + "taskStarttime DATETEXT(19,19),"
             + "taskEndtime DATETEXT(19,19),"
     		+ "taskname VARCHAR2(50),"
     		+ "taskfilepath VARCHAR2(500), taskfilename VARCHAR2(50), "
             + "tasksuccess INT , Taskfail INT, "
-    		+ "tasktotal INT, taskcontentplate INT"
+    		+ "tasktotal INT, taskcontentplate INT,"
+            + "taskid INTEGER PRIMARY KEY AUTOINCREMENT"
     		+ ")";  
     private static final String CREATE_contentplate = "create table if not exists contentplate("  
             + "plateid INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -164,23 +165,18 @@ public class DBHelper extends SQLiteOpenHelper
         db.execSQL("update contentplate set platecontent='"+contentplate+"' where plateid="+plateid);
     }
     
-    public Cursor query_jiaoyicishu(boolean asc)
+    public void update_contentplatename(int plateid,String contentplatename)
     {
-    	String order;
-    	order = asc ? "asc" : "desc";
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
-    	return db.rawQuery("select zqdm,zqmc,buy_times+sell_times as tol from stock_sort where iscompleted ='true'  order by tol "+ order +" limit 100", null);
+    	Log.e("database","update contentplate set platename='"+contentplatename+"' where plateid="+plateid);  
+        db.execSQL("update contentplate set platename='"+contentplatename+"' where plateid="+plateid);
     }
     
-    public Cursor query_yinlipercent(boolean asc)
+    public void update_smstaskname(int taskid,String taskname)
     {
-    	String order;
-    	order = asc ? "asc" : "desc";
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
-    	return db.rawQuery("select zqdm,zqmc,zonglirun,buy_tolmon,zonglirun/buy_tolmon*100 as tol from stock_sort where"
-    			          + " iscompleted ='true'  order by tol "+ order +" limit 100", null);
+    	Log.e("database","update smstask set taskname='"+taskname+"' where taskid="+taskid);  
+        db.execSQL("update smstask set taskname='"+taskname+"' where taskid="+taskid);
     }
     
     public Cursor query_yinlipercent_all(boolean asc)

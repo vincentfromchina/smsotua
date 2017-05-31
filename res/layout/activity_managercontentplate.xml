@@ -25,6 +25,7 @@
         android:layout_below="@+id/lv_contentplate"
         android:background="@drawable/weixin_kuang"
         android:ems="15"
+        
         android:focusable="false"
         android:gravity="start"
         android:inputType="textMultiLine"

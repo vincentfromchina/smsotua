@@ -50,6 +50,8 @@ import com.dayu.autosms.m.SmsBase;
 import com.dayu.autosms.m.SmsTask;
 import com.dayu.autosms.m.SmsTaskQuery;
 import com.dayu.autosms.c.GernatorSMSText;
+import com.dayu.autosms.c.Getnowtime;
+import com.dayu.autosms.dummy.ThreeDES;
 import com.dayu.autosms.c.DBHelper;
 
 import android.R.integer;
@@ -100,7 +102,7 @@ public class AutoSMSActivity extends Activity
 	static long filesize = 0;
 	final static Object loadsmstask_lock = "导入数据共享锁";
 	final static Object sendsmstask_lock = "发送进程共享锁";
-    static public Boolean isdebug = false;
+    static public Boolean isdebug = true;
     static public ProgressBar mProgressBar;
 	HttpURLConnection urlConn = null;  
 	static boolean cancelupdate = false;
@@ -113,7 +115,7 @@ public class AutoSMSActivity extends Activity
     {
     	Intent excel = new Intent();		
 		excel.setClass(AutoSMSActivity.this, WebActivity.class);
-	    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/gushiriji/gushiriji_wangye.jsp");
+	    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/jiaocheng.jsp");
 		startActivity(excel);
     }
     
@@ -156,6 +158,24 @@ public class AutoSMSActivity extends Activity
 	      Intent sentIntent = new Intent(SENT_SMS_ACTION);  
 	      paIntent = PendingIntent.getBroadcast(this, 0, sentIntent, 0); 
 	      smsManager = SmsManager.getDefault();
+	      
+	      final byte[] keyBytes = {
+	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+	      };
+	      
+	      final byte[] keyBytes2 = {
+	  	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+	  	      };
+	      
+	      String szSrc = "厉害了 is a 3DES test. 测试";  
+	      
+	       Log.e(TAG,"加密前的字符串:" + szSrc);  
+	        
+	        byte[] encoded = ThreeDES.encryptMode(keyBytes, szSrc.getBytes());  
+	        Log.e(TAG,"加密后的字符串:" + new String(encoded));  
+	  
+	        byte[] srcBytes = ThreeDES.decryptMode(keyBytes2, encoded);  
+	        Log.e(TAG,"解密后的字符串:" + (new String(srcBytes)));  
 	      
 	      getApplicationContext().registerReceiver(new BroadcastReceiver() {  
 	    	    @Override  
@@ -309,21 +329,23 @@ public class AutoSMSActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				
+				/*
 				String test = "接下来的流程和普通短信一样，最终通过RILJ将短信发送出去，并且注册回调消息为EVENT_SEND_SMS_COMPLETE。"
 						+ "也就是说，对于长短信而言，如果运营商不支持，那么就拆分为一个个普通短信然后逐条发送，如果运营商支持长短信，则会对每个分"
 						+ "组短信添加SmsHeader的信息头，然后逐条发送。 所以当SMSDispatcher接收到EVENT_SEND_SMS_COMPLETE消息"
 						+ "时，就说明，无论是普通短信或者长短信，都已经发送完毕。以上就是长短信的发送流程。";
-			
+			    */
+				
+				String test = "联通收到吗？";
 				Log.e("TAG",String.valueOf(test.getBytes().length));
 				
-			//	smsManager.sendTextMessage("18620470826", null, test, paIntent, null); 
+				smsManager.sendTextMessage("13538948083", null, test, paIntent, null); 
 				
 				ArrayList<String> divideContents = smsManager.divideMessage(test);   
 		        
 				ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(divideContents.size()); 
 				
-		        smsManager.sendMultipartTextMessage("13538948083", null, divideContents, null /*sentIntents*/, null); 
+		    //    smsManager.sendMultipartTextMessage("13538948083", null, divideContents, null sentIntents, null); 
 		        
 				/*
 				if (send_num>0)
@@ -416,6 +438,46 @@ public class AutoSMSActivity extends Activity
 			public void onClick(View v)
 			{
 				copydbfile();				
+			}
+		});
+	     
+	     Button btn_jiaocheng = (Button)findViewById(R.id.btn_jiaocheng);
+	     btn_jiaocheng.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				jiaocheng();
+				
+			}
+		});
+	     
+	     Button btn_managertask = (Button)findViewById(R.id.btn_managertask);
+	     btn_managertask.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent mIntent = new Intent();
+				mIntent.setClass(AutoSMSActivity.this, ManagertaskActivity.class);
+				startActivity(mIntent);
+				
+			}
+		});
+	     
+	     Button btn_openaddtask = (Button)findViewById(R.id.btn_openaddtask);
+	     btn_openaddtask.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent mIntent = new Intent();
+				mIntent.setClass(AutoSMSActivity.this, AddsmstaskActivity.class);
+				startActivity(mIntent);
+				
 			}
 		});
 			
@@ -893,7 +955,10 @@ public class AutoSMSActivity extends Activity
 				BufferedReader buffd = null;
 				try
 				{
-					 frd = new FileReader(feFile);
+					Getnowtime m_Getnowtime = new Getnowtime();
+					m_SmsTask.setTaskStarttime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
+					
+					frd = new FileReader(feFile);
 					
 					 buffd = new BufferedReader(frd);
 					
@@ -963,8 +1028,11 @@ public class AutoSMSActivity extends Activity
 					
 					while (m_SmsTaskQuery.query_sendlist_count()!=0)
 					{
-						; //等待方队列清空然后更新数据库任务表		
+						; //等待队列清空然后更新数据库任务表		
 					}
+					
+				    m_Getnowtime = new Getnowtime();
+					m_SmsTask.setTaskEndtime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
 					
 					sqldb.insert_smstask(m_SmsTask);
 					

@@ -12,6 +12,7 @@ import java.util.List;
 import com.dayu.autosms.c.DBHelper;
 import com.dayu.autosms.c.GernatorSMSText;
 
+import android.R.bool;
 import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,12 +22,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +47,7 @@ public class ManagercontentplateActivity extends Activity
 	EditText edt_contentplate;
 	Cursor m_Cursor;
 	private LayoutInflater mInflater;//得到一个LayoutInfalter对象用来导入布局
-	private List<String> platelist ;
+	private List<String> platename ;
 	private List<Integer>  plateid;
 	private List<String>  platecontent;
 	 static SimpleDateFormat nowdate;
@@ -54,6 +57,9 @@ public class ManagercontentplateActivity extends Activity
 	 private static ListView lv_contentplate ;
 	 private static EditText edt_showresult;
 	 final int REQUEST_CODE = 307;
+	 static String modplatename = "";
+	 static int pressplateid ;
+	 static boolean isfirstlongclick = true;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -78,7 +84,7 @@ public class ManagercontentplateActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				showDialog();
+				show_newcontentplateDialog();
 			}
 		});
 		
@@ -108,7 +114,29 @@ public class ManagercontentplateActivity extends Activity
 			{
 				//点击后在标题上显示点击了第几行
                 Log.e("autophone","你点击了第"+position +"id:"+id);
-                edt_showresult.setText(GernatorSMSText.getSMSresult(platecontent.get(position)));
+                
+               if (isfirstlongclick)
+			   {
+            	   isfirstlongclick = !isfirstlongclick;
+            	   Toast.makeText(ManagercontentplateActivity.this, "长按修改模板名字", Toast.LENGTH_LONG).show();    
+			   }   
+                
+               edt_showresult.setText(GernatorSMSText.getSMSresult(platecontent.get(position)));
+			}
+			
+		});
+		
+		lv_contentplate.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				pressplateid = plateid.get(position);
+				Log.e("autophone","你长按了第"+position+"模板名"+platename.get(position));
+				show_modplatenameDialog(platename.get(position));
+			
+				return false;
 			}
 			
 		});
@@ -199,14 +227,14 @@ public class ManagercontentplateActivity extends Activity
 			if (position >= getCount() || position < 0) {
 				return null;
 			}
-			return platelist.get(position);
+			return platename.get(position);
 		}
 		
 		@Override
 		public int getCount()
 		{			
 			//Log.e("autophone", "getCount "+m_Cursor.getCount());
-			return platelist.size();
+			return platename.size();
 		}
 		
 	   class ViewHolder{
@@ -218,7 +246,7 @@ public class ManagercontentplateActivity extends Activity
 	
 	public void update_dataset()
 	{
-		platelist = new ArrayList<>();		
+		platename = new ArrayList<>();		
 		plateid = new ArrayList<>();
 		platecontent = new ArrayList<>();
 		
@@ -227,13 +255,13 @@ public class ManagercontentplateActivity extends Activity
 	    
 		while (m_Cursor.moveToNext())
 		{
-			platelist.add(m_Cursor.getString(1));	
+			platename.add(m_Cursor.getString(1));	
 			plateid.add(Integer.valueOf(m_Cursor.getInt(0)));
 			platecontent.add(m_Cursor.getString(2));
 		}
 	}
 	
-	public void showDialog(){         
+	public void show_newcontentplateDialog(){         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);  
         LayoutInflater inflater = getLayoutInflater();  
         final View layout = inflater.inflate(R.layout.newcontentplatedialog, null);//获取自定义布局  
@@ -273,6 +301,43 @@ public class ManagercontentplateActivity extends Activity
 					update_dataset();
 			        m_datasetadpter.notifyDataSetChanged();
 				} 
+            }  
+        });  
+        //取消  
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {  
+              
+            @Override  
+            public void onClick(DialogInterface arg0, int arg1) {             
+            	arg0.dismiss();
+            }  
+        });  
+        final AlertDialog dlg = builder.create();  
+        dlg.show();  
+     } 
+	
+	public void show_modplatenameDialog(String platename){         
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);  
+        LayoutInflater inflater = getLayoutInflater();  
+        final View layout = inflater.inflate(R.layout.modcontentplatenamedialog, null);//获取自定义布局  
+        builder.setView(layout);  
+    //    builder.setIcon(R.drawable.ic_launcher);//设置标题图标  
+        builder.setTitle("编辑短信模板名称");//设置标题内容  
+        //builder.setMessage("");//显示自定义布局内容  
+        final EditText edt_modplatename = (EditText)layout.findViewById(R.id.edt_modplatename);
+        edt_modplatename.setText(platename);  
+            
+        //确认按钮  
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {  
+              
+            @Override  
+            public void onClick(DialogInterface arg0, int arg1) {  
+                
+            	modplatename = edt_modplatename.getText().toString();
+
+				sqldb.update_contentplatename(pressplateid, modplatename);
+
+				update_dataset();
+				m_datasetadpter.notifyDataSetChanged();
             }  
         });  
         //取消  

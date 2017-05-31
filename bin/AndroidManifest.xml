@@ -27,11 +27,13 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/sms_logo"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".AutoSMSActivity"
@@ -46,6 +48,11 @@
         <activity
             android:name=".ContentSetActivity"
             android:label="@string/promot"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".WebActivity"
+            android:label="使用教程"
             android:screenOrientation="portrait" >
         </activity>
 
@@ -104,7 +111,7 @@
             android:exported="false" >
             <intent-filter android:priority="1000" >
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
- <!-- Required  显示通知栏 -->
+                <!-- Required  显示通知栏 -->
                 <category android:name="com.dayu.autosms" />
             </intent-filter>
             <intent-filter>
@@ -136,6 +143,18 @@
         <activity
             android:name=".ManagercontentplateActivity"
             android:label="@string/title_activity_managercontentplate" >
+        </activity>
+        <activity
+            android:name=".ManagertaskActivity"
+            android:label="@string/title_activity_managertask" >
+        </activity>
+        <activity
+            android:name=".StartSMStaskActivity"
+            android:label="@string/title_activity_start_smstask" >
+        </activity>
+        <activity
+            android:name=".AddsmstaskActivity"
+            android:label="@string/title_activity_addsmstask" >
         </activity>
     </application>
 

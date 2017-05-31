@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AutoSMS</string>
+    <string name="app_name">短信群发王</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">自动接听电话</string>
-    <string name="title_activity_content_set">ContentSetActivity</string>
+    <string name="title_activity_content_set">编辑短信模板</string>
     <string name="promot">短信模板</string>
     <string name="url">http://dayuinf.com</string>
     <string name="hello">Hello World, JPush!</string>
@@ -19,9 +19,12 @@
     <string name="logining">程序在后台执行, 请查看日志！</string>
     <string name="setting_su">设置成功</string>
     <string name="title_activity_managercontentplate">管理短信模板</string>
-    <item type="id" name="mod_key_first_tag">  
-    </item>  
-    <item type="id" name="mod_key_second_tag">  
-    </item>  
+
+    <item name="mod_key_first_tag" type="id"></item>
+    <item name="mod_key_second_tag" type="id"></item>
+
+    <string name="title_activity_managertask">管理任务</string>
+    <string name="title_activity_start_smstask">发送任务监控</string>
+    <string name="title_activity_addsmstask">添加发送任务</string>
 
 </resources>

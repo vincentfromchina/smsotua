@@ -329,9 +329,11 @@ public class ContentSetActivity extends Activity {
 		 			   if (httpresponse.getStatusLine().getStatusCode()==200)	
 		 			   {
 		 				  String response = EntityUtils.toString(httpresponse.getEntity(), "utf-8");
-		 				 TextView tv1 = (TextView)findViewById(R.id.textView1);
+		 				 
+		 				 
 		 				 JSONObject mJsonObject = new JSONObject(response);
-		 				if( AutoSMSActivity.isdebug )Log.e("loghere", response);
+		 				
+		 				if( AutoSMSActivity.isdebug )Log.e("loghere", mJsonObject.toString());
 						try
 						{
 							String resp = mJsonObject.getString("resp");

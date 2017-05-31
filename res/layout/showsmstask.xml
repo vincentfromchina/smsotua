@@ -3,32 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-
-    <Button
-        android:id="@+id/btn_modplate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/btn_delplate"
-        android:focusable="false"
-        android:text="修改" />
-
-    <Button
-        android:id="@+id/btn_delplate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:focusable="false"
-        android:text="删除" />
     
      <TextView
-        android:id="@+id/tv_listcontentplate"
+        android:id="@+id/tv_listsmstask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium Text"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+     
+     <Button
+        android:id="@+id/btn_deltask"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:focusable="false"
+        android:text="删除" />
+     
+     <Button
+        android:id="@+id/btn_starttask"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_deltask"
+        android:focusable="false"
+        android:text="▶" />
     
 </RelativeLayout>
