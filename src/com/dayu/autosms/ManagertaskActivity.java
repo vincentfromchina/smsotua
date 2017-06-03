@@ -147,11 +147,14 @@ public class ManagertaskActivity extends Activity
 							{
 								Intent open_starttaskactivity = new Intent();
 								open_starttaskactivity.setClass(ManagertaskActivity.this, StartSMStaskActivity.class);
-		         				Bundle bundle = new Bundle();
-		         		
+		         				
+								Bundle bundle = new Bundle();
 		         				bundle.putInt("taskid", (int)v.getTag());
 		         				open_starttaskactivity.putExtras(bundle);
+		         				
+								startActivity(open_starttaskactivity);
 								
+								finish();
 							}
 						});
 	                    

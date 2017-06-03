@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 5;    
+    private static final int DB_VERSION = 6;    
     private static final String CREATE_smstask = "create table if not exists smstask("  
             + "taskStarttime DATETEXT(19,19),"
             + "taskEndtime DATETEXT(19,19),"
@@ -37,6 +37,9 @@ public class DBHelper extends SQLiteOpenHelper
     		+ "platecontent VARCHAR2(1000),"
     		+ "plateaddtime DATETEXT(19, 19)"
     		+ ")";
+    
+    private static final String CREATE_config = "CREATE TABLE if not exists config ("
+    		 +"sendinteval INT DEFAULT 1)";
    
 
 	public DBHelper(Context context, String dbname, CursorFactory factory)
@@ -82,11 +85,18 @@ public class DBHelper extends SQLiteOpenHelper
 		pre ="drop table if exists contentplate";
 		db.execSQL(pre);
 		
+		pre ="drop table if exists config";
+		db.execSQL(pre);
+		
 		sql = CREATE_smstask;
         db.execSQL(sql);
         
         sql = CREATE_contentplate;
         db.execSQL(sql);
+        
+        sql = CREATE_config;
+        db.execSQL(sql);
+        
         
         Log.e("database","数据库更新成功");
 	}
@@ -140,26 +150,16 @@ public class DBHelper extends SQLiteOpenHelper
     	
         Log.e("database","数据库insert成功");
     }
-    
-    public Cursor query_smscontentplate()
+   
+    public void update_smstask(SmsTask s)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
-    	return db.rawQuery("select * from contentplate order by plateaddtime desc", null);
-    }
-    
-    public Cursor query_smstask(boolean asc)
-    {
-    	String order;
-    	order = asc ? "asc" : "desc";
-    	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
-    	return db.rawQuery("select * from smstask order by taskstarttime "+ order, null);
+    	Log.e("database","update_smstask成功");  
+        db.execSQL("update smstask set taskEndtime='"+s.getTaskEndtime()+ "',tasksuccess=" +s.getTasksuccess()+ ",Taskfail="+ s.getTaskfail()+",tasktotal="+s.getTasktotal()+ " where taskid="+s.getTaskid());
     }
     
     public void update_contentplate(int plateid,String contentplate)
     {
-    	
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","update contentplate成功");  
         db.execSQL("update contentplate set platecontent='"+contentplate+"' where plateid="+plateid);
@@ -179,15 +179,37 @@ public class DBHelper extends SQLiteOpenHelper
         db.execSQL("update smstask set taskname='"+taskname+"' where taskid="+taskid);
     }
     
-    public Cursor query_yinlipercent_all(boolean asc)
+    
+    public Cursor query_smscontentplate()
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	Log.e("database","query访问成功");  
+    	return db.rawQuery("select * from contentplate order by plateaddtime desc", null);
+    }
+    
+    public Cursor query_smstask(boolean asc)
     {
     	String order;
     	order = asc ? "asc" : "desc";
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","query访问成功");  
-    	return db.rawQuery("select zqdm,zqmc,zonglirun,buy_tolmon,fenhong_mon,yongjin_tol,(zonglirun+fenhong_mon-yongjin_tol)/buy_tolmon*100 as tol "
-    			          + "from stock_sort where"
-    			          + " iscompleted ='true'  order by tol "+ order +" limit 100", null);
+    	return db.rawQuery("select * from smstask order by taskEndtime "+ order, null);
+    }
+    
+    public Cursor get_sendtask(int taskid)
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	Log.e("database","select * from smstask where taskid=" + taskid);  
+    	return db.rawQuery("select * from smstask,contentplate where taskid=" + taskid +" and smstask.taskcontentplate=contentplate.plateid",null);
+    			         
+    }
+    
+    public Cursor get_sendinteval()
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	Log.e("database","select * from config");  
+    	return db.rawQuery("select * from config",null);
+    			         
     }
     
  

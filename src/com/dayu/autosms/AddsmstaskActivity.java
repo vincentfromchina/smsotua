@@ -6,17 +6,33 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileReader;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.dayu.autosms.c.DBHelper;
 import com.dayu.autosms.c.FolderFilePicker;
 import com.dayu.autosms.c.FolderFilePicker.PickPathEvent;
+import com.dayu.autosms.c.GernatorSMSText;
+import com.dayu.autosms.c.Getnowtime;
+import com.dayu.autosms.m.SmsTask;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +40,19 @@ public class AddsmstaskActivity extends Activity
 {
 	private static final String TAG = "autophone";
 	private static EditText edt_showcontent;
+	private static EditText edt_newtaskname;
+	private static ListView lv_chooseplate;
+	private static TextView tv_contentplatename;
 	static private String mfilePath="";
-	
+	private static int contentplateid = 0;
+	Cursor m_Cursor;
+	private List<String> platename ;
+	private List<Integer>  plateid;
+	private List<String>  platecontent;
+	private  platelistadapter m_datasetadpter;
+	private LayoutInflater mInflater;//得到一个LayoutInfalter对象用来导入布局
+	DBHelper sqldb ;
+	static SmsTask m_SmsTask = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,7 +60,15 @@ public class AddsmstaskActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_addsmstask);
 		
+		mInflater = LayoutInflater.from(AddsmstaskActivity.this);
+		
+		sqldb = new DBHelper(AddsmstaskActivity.this, "smstask.db", null);
+		m_SmsTask = new SmsTask();
+		
 		edt_showcontent = (EditText)findViewById(R.id.edt_showresult);
+		edt_newtaskname = (EditText)findViewById(R.id.edt_newtaskname);
+		lv_chooseplate = (ListView)findViewById(R.id.lv_chooseplate);
+		tv_contentplatename = (TextView)findViewById(R.id.tv_contentname);
 		
 		Button btn_addnewtask = (Button)findViewById(R.id.btn_addnewtask);
 		Button btn_selectsmsplate = (Button)findViewById(R.id.btn_selectsmsplate);
@@ -51,12 +86,48 @@ public class AddsmstaskActivity extends Activity
 				{
 				case R.id.btn_addnewtask:
 					
+					if (edt_newtaskname.getText().toString().equals(""))
+					{
+						Toast.makeText(AddsmstaskActivity.this, "请填写任务名", Toast.LENGTH_LONG).show();
+						return;
+					}
+					
+					if (tv_contentplatename.getText().toString().equals(""))
+					{
+						Toast.makeText(AddsmstaskActivity.this, "请选择模板", Toast.LENGTH_LONG).show();
+						return;
+					}
+					
+					if (mfilePath.equals(""))
+					{
+						Toast.makeText(AddsmstaskActivity.this, "请选文件", Toast.LENGTH_LONG).show();
+						return;
+					}
+					
+					m_SmsTask.setTaskname(edt_newtaskname.getText().toString());
+					m_SmsTask.setTaskcontentplate(contentplateid);
+					Getnowtime m_Getnowtime = new Getnowtime();
+					m_SmsTask.setTaskStarttime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
+					m_SmsTask.setTaskEndtime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
+					
+					sqldb.insert_smstask(m_SmsTask);
+					
+					Intent open_managertaskactivity = new Intent();
+					open_managertaskactivity.setClass(AddsmstaskActivity.this, ManagertaskActivity.class);
+     				startActivity(open_managertaskactivity);
+					
 					break;
                 case R.id.btn_selectsmsplate:
-					
+                	lv_chooseplate.setVisibility(View.VISIBLE);
+                	 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+                	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
 					break;
                 case R.id.btn_fromfile:
                 	pickFile(v);
+                	File feFile = new File(mfilePath);
+                	m_SmsTask.setTaskfilename(feFile.getParent());
+                	m_SmsTask.setTaskfilepath(feFile.getName());
+                	
 					break;
                 case R.id.btn_fromcontart:
                 	readAllContacts();
@@ -75,6 +146,105 @@ public class AddsmstaskActivity extends Activity
 		btn_fromfile.setOnClickListener(listener);
 		btn_fromcontart.setOnClickListener(listener);
 		
+		update_dataset();
+		
+		m_datasetadpter = new platelistadapter();
+		
+		lv_chooseplate.setAdapter(m_datasetadpter);
+		
+		lv_chooseplate.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+			{
+				contentplateid =  plateid.get(position);
+				Log.e(TAG, "plateid:"+plateid.get(position));
+				lv_chooseplate.setVisibility(View.GONE);
+				tv_contentplatename.setText(platename.get(position));
+				edt_showcontent.setText(GernatorSMSText.getSMSresult(platecontent.get(position)));
+			}
+			
+		});
+		
+	}
+	
+	class platelistadapter extends BaseAdapter
+	{
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent)
+		{
+			 ViewHolder holder;
+	            //观察convertView随ListView滚动情况
+	     
+	            if (convertView == null) {
+	                     convertView = mInflater.inflate(R.layout.listviewonetextview, parent, false);
+
+	                     holder = new ViewHolder();
+	                    /*得到各个控件的对象*/
+	                    holder.contenplatename = (TextView) convertView.findViewById(R.id.tv_contentname);
+	                    
+	                    Log.e("autophone", ""+position+"--"+plateid.get(position));
+	                    
+	                    convertView.setTag(holder);//绑定ViewHolder对象
+	                    Log.v("autophone", "getView " + position + " " + convertView);
+	          }
+	          else{
+	                    holder = (ViewHolder)convertView.getTag();//取出ViewHolder对象
+	                    Log.e("autophone", "会执行");
+	                  }
+	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
+	            holder.contenplatename.setText((String)getItem(position));
+	            
+	            /*为Button添加点击事件*/
+	            return convertView;
+		}
+		
+		@Override
+		public long getItemId(int position)
+		{
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
+		@Override
+		public Object getItem(int position)
+		{
+			if (position >= getCount() || position < 0) {
+				return null;
+			}
+			return platename.get(position);
+		}
+		
+		@Override
+		public int getCount()
+		{			
+			//Log.e("autophone", "getCount "+m_Cursor.getCount());
+			return platename.size();
+		}
+		
+	   class ViewHolder{
+		    public TextView contenplatename;
+
+		    }
+	};
+	
+	public void update_dataset()
+	{
+		platename = new ArrayList<>();		
+		plateid = new ArrayList<>();
+		platecontent = new ArrayList<>();
+		
+	    m_Cursor =  sqldb.query_smscontentplate();
+	    Log.e("autophone","m_Cursor.getCount"+ m_Cursor.getCount());
+	    
+		while (m_Cursor.moveToNext())
+		{
+			platename.add(m_Cursor.getString(1));	
+			plateid.add(Integer.valueOf(m_Cursor.getInt(0)));
+			platecontent.add(m_Cursor.getString(2));
+		}
 	}
 	
 	public void pickFile(View v) {
@@ -95,6 +265,9 @@ public class AddsmstaskActivity extends Activity
 							{
 								long filesize = feFile.length();
 								TextView tv_taskinfo = (TextView)findViewById(R.id.tv_taskinfo);
+								
+								m_SmsTask.setTaskfilepath(feFile.getParent());
+								m_SmsTask.setTaskfilename(feFile.getName());
 								
 								if (filesize>1024)
 								{

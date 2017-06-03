@@ -142,18 +142,23 @@
         <!-- </>值来自开发者平台取得的AppKey -->
         <activity
             android:name=".ManagercontentplateActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_managercontentplate" >
         </activity>
         <activity
             android:name=".ManagertaskActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_managertask" >
         </activity>
         <activity
             android:name=".StartSMStaskActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:label="@string/title_activity_start_smstask" >
         </activity>
         <activity
             android:name=".AddsmstaskActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_addsmstask" >
         </activity>
     </application>

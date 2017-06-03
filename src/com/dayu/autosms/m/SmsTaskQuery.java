@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class SmsTaskQuery
 {
-	static LinkedList<SmsBase> m_sendlist = new LinkedList<>();
+	static LinkedList<SmsBase> m_sendlist ;
 	static int m_sendlist_count = 0;
 	static int tasktotal_count = 0;
 	static int addlist_num = 5;
@@ -17,6 +17,15 @@ public class SmsTaskQuery
 	public SmsTaskQuery()
 	{
 		Log.e("autophone","create sms send query "+ String.valueOf(m_sendlist.size()));
+	}
+	
+	synchronized public static void init_sendlist()
+	{
+		m_sendlist = new LinkedList<>();
+		m_sendlist.clear();
+		m_sendlist_count = 0;
+		tasktotal_count = 0;
+		Log.e("autophone","init query success");
 	}
 
 	synchronized public static int insert_sendlist(SmsBase smsBase)

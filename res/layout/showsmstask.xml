@@ -29,6 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/btn_deltask"
         android:focusable="false"
-        android:text="▶" />
+        android:text="开始" />
     
 </RelativeLayout>

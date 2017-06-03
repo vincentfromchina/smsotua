@@ -481,9 +481,9 @@ public class AutoSMSActivity extends Activity
 			}
 		});
 			
-	     m_SmsTaskQuery = new SmsTaskQuery();
-	     send_sms m_sendsms = new send_sms();
-	     m_sendsms.start();
+	 //    m_SmsTaskQuery = new SmsTaskQuery();
+	 //    send_sms m_sendsms = new send_sms();
+	 //    m_sendsms.start();
 			
 		checkupdate ck = new checkupdate();
 		ck.start();
@@ -621,8 +621,8 @@ public class AutoSMSActivity extends Activity
 		 mdDownloadapk.start();
 	 }
 		 
-		 private class Downloadapk extends Thread
-	{
+ private class Downloadapk extends Thread
+	  {
 			 Dialog dialog;
 			 public void setcontext(Dialog dialog)
 			 {
@@ -694,7 +694,7 @@ public class AutoSMSActivity extends Activity
 			}
 	}
 
-		private void updateprogessbar(int process)
+	private void updateprogessbar(int process)
 		{
 			mProgressBar.setProgress(process);
 		}
@@ -703,7 +703,7 @@ public class AutoSMSActivity extends Activity
 			 * @param time
 			 * @return boolean
 			 */
-			public boolean bijiaotime(String time1,String time2) //比较当前系统时间与传进来的时间大小
+	public boolean bijiaotime(String time1,String time2) //比较当前系统时间与传进来的时间大小
 			{
 				   
 				   SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

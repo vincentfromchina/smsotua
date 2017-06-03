@@ -1,6 +1,5 @@
 package com.dayu.autosms.m;
 
-import android.R.integer;
 
 public class SmsTask
 {
@@ -9,7 +8,10 @@ public class SmsTask
 	String Taskname;
 	String Taskfilepath;
 	String Taskfilename;
+	String platename;
+	String platecontent;
 	
+	int Taskid = 0;
 	int Tasksuccess = 0;
 	int Taskfail = 0;
 	int Tasktotal = 0;
@@ -85,6 +87,30 @@ public class SmsTask
 	public void setTaskcontentplate(int taskcontentplate)
 	{
 		Taskcontentplate = taskcontentplate;
+	}
+	public String getPlatename()
+	{
+		return platename;
+	}
+	public void setPlatename(String platename)
+	{
+		this.platename = platename;
+	}
+	public String getPlatecontent()
+	{
+		return platecontent;
+	}
+	public void setPlatecontent(String platecontent)
+	{
+		this.platecontent = platecontent;
+	}
+	public int getTaskid()
+	{
+		return Taskid;
+	}
+	public void setTaskid(int taskid)
+	{
+		Taskid = taskid;
 	}
 	
 	

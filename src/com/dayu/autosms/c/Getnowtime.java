@@ -8,7 +8,7 @@ public class Getnowtime
 	 SimpleDateFormat nowdate;
 	 SimpleDateFormat nowtime;
 	 Date date;
-	 
+	 //"yyyy-M-d HH:mm"
 
 	public Getnowtime()
 	{
