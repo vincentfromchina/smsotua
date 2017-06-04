@@ -2,6 +2,7 @@ package com.dayu.autosms;
 
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.telephony.gsm.SmsMessage;
 import android.text.Editable;
 import android.text.StaticLayout;
 import android.text.TextWatcher;
@@ -24,8 +25,11 @@ import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,9 +47,11 @@ public class StartSMStaskActivity extends Activity
 	PendingIntent paIntent;
 	PendingIntent deliverPI;
     SmsManager smsManager;
-    static String send_target[];
-    static int    send_num = 0;
+    String send_target[];
+    int    send_num = 0;
     static int    send_totalnum = 0;
+    static int    send_success = 0;
+    static int    send_fail = 0;
     static int    send_interval = 1;
     private static int progessperct = 0;
 	private DBHelper sqldb;
@@ -54,7 +60,7 @@ public class StartSMStaskActivity extends Activity
 	private Cursor m_Cursor;
 	static boolean keep_going = false;
 	static SmsTaskQuery m_SmsTaskQuery = null;
-	static SmsTask m_SmsTask = null;
+    SmsTask m_SmsTask = null;
 	static send_sms m_sendsms = null;
     load_smstask m_loadsmstask = null;
 	static ProgressBar mProgressBar;
@@ -66,7 +72,9 @@ public class StartSMStaskActivity extends Activity
 	static long filesize = 0;
 	final static Object loadsmstask_lock = "导入数据共享锁";
 	final static Object sendsmstask_lock = "发送进程共享锁";
-	static TextView tv_sendstatus;
+    static TextView tv_sendstatus;
+    static TextView tv_successorfail;
+    BroadcastReceiver brc_smssendstatus;
 	
 
 	@Override
@@ -78,9 +86,11 @@ public class StartSMStaskActivity extends Activity
 		Bundle bundle = this.getIntent().getExtras();
 		taskid = bundle.getInt("taskid");
 		
+		
 		mProgressBar = (ProgressBar)findViewById(R.id.pbr);
 		tv_sendstatus = (TextView)findViewById(R.id.tv_sendstatus);
 		edt_sendinteval = (EditText)findViewById(R.id.edt_sendinteval);
+		tv_successorfail = (TextView)findViewById(R.id.tv_successorfail);
 		
 		edt_sendinteval.setSelection(edt_sendinteval.getText().length()); //将光标设置在文本最后面
 		
@@ -105,6 +115,44 @@ public class StartSMStaskActivity extends Activity
 			@Override
 			public void afterTextChanged(Editable s)
 			{
+				/*
+				if (edt_sendinteval.getText().toString().equals(""))
+				{
+					edt_sendinteval.setText("1");
+				}
+				
+				send_interval = Integer.valueOf(edt_sendinteval.getText().toString());
+			    
+				if (send_interval>120) {
+					edt_sendinteval.setText("120");
+				}else if (send_interval<1)
+				{
+					edt_sendinteval.setText("1");
+				}
+				
+				edt_sendinteval.setSelection(edt_sendinteval.getText().length());
+				*/
+			}
+		});
+		
+	
+		
+		sqldb = new DBHelper(StartSMStaskActivity.this, "smstask.db", null);
+		m_SmsTask = new SmsTask();
+		m_SmsTask.setTaskid(taskid);
+		
+		Log.e(TAG,"m_SmsTask.getTaskfail()"+ m_SmsTask.getTaskfail());
+	   
+		init_task();
+		
+	    btn_start = (Button)findViewById(R.id.btn_start);
+		btn_start.setVisibility(send_isstart ? View.INVISIBLE : View.VISIBLE);
+		btn_start.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
 				if (edt_sendinteval.getText().toString().equals(""))
 				{
 					edt_sendinteval.setText("1");
@@ -121,44 +169,22 @@ public class StartSMStaskActivity extends Activity
 				
 				edt_sendinteval.setSelection(edt_sendinteval.getText().length());
 				
-			}
-		});
-		
-		edt_sendinteval.setOnFocusChangeListener(new OnFocusChangeListener()
-		{
-			
-			@Override
-			public void onFocusChange(View v, boolean hasFocus)
-			{
-				Log.e(TAG, "onFocusChange happen");
-				
-			}
-		});
-		
-	
-		
-		sqldb = new DBHelper(StartSMStaskActivity.this, "smstask.db", null);
-		m_SmsTask = new SmsTask();
-		m_SmsTask.setTaskid(taskid);
-	   
-		init_task();
-		
-	    btn_start = (Button)findViewById(R.id.btn_start);
-		btn_start.setVisibility(send_isstart ? View.INVISIBLE : View.VISIBLE);
-		btn_start.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
 				send_isstart = true;
 				keep_going = true;
 				progessperct = 0;
 				SmsTaskQuery.init_sendlist();
 			     send_target = new String[10];
 			     send_num = 0;
+			     send_success = 0;
+			     send_fail = 0;
 			     send_totalnum = 0;
 			     progessperct = 0;
+
+			     Log.e(TAG, "send_totalnum" + send_totalnum);
+			     m_SmsTask.setTasktotal(0);
+                 m_SmsTask.setTaskfail(0);
+                 m_SmsTask.setTasksuccess(0);
+                 Log.e(TAG,"m_SmsTask.getTaskfail()2:"+ m_SmsTask.getTaskfail());
 			     
 			      if (m_sendsms==null)
 					{
@@ -275,6 +301,129 @@ public class StartSMStaskActivity extends Activity
 			}
 		});
 		
+		  String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
+	      Intent sentIntent = new Intent(SENT_SMS_ACTION);  
+	      paIntent = PendingIntent.getBroadcast(this, 0, sentIntent, 0); 
+	      smsManager = SmsManager.getDefault();
+	      
+	      brc_smssendstatus = new BroadcastReceiver()
+	    		  {
+
+					@Override
+					public void onReceive(Context context, Intent intent)
+					{
+						switch (getResultCode()) {  
+		    	        case Activity.RESULT_OK:  
+		    	        	Log.e(TAG,"发送成功"); 
+		    	        	 send_success++;
+		    	        	StringBuilder sb1 = new StringBuilder()
+		    	        	    .append("发送成功：").append(send_success)
+							    .append("\t\t发送失败：").append(send_fail);
+		    	        	 
+		    	        	 tv_successorfail.setText(sb1.toString());
+		    	        break;  
+		    	        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
+		    	        	Log.e(TAG,"RESULT_ERROR_GENERIC_FAILURE");
+		    	        	send_fail++;
+		    	        	 sb1 = new StringBuilder()
+			    	        	    .append("发送成功：").append(send_success)
+								    .append("\t\t发送失败：").append(send_fail);
+			    	        	 
+			    	        	 tv_successorfail.setText(sb1.toString());
+		    	        break;  
+		    	        case SmsManager.RESULT_ERROR_RADIO_OFF:  
+		    	        	Log.e(TAG,"RESULT_ERROR_RADIO_OFF");
+		    	        	send_fail++;
+		    	        	 sb1 = new StringBuilder()
+			    	        	    .append("发送成功：").append(send_success)
+								    .append("\t\t发送失败：").append(send_fail);
+			    	        	 
+			    	        	 tv_successorfail.setText(sb1.toString());
+		    	        break;  
+		    	        case SmsManager.RESULT_ERROR_NULL_PDU:  
+		    	        	Log.e(TAG,"RESULT_ERROR_NULL_PDU");
+		    	        	send_fail++;
+		    	        	 sb1 = new StringBuilder()
+			    	        	    .append("发送成功：").append(send_success)
+								    .append("\t\t发送失败：").append(send_fail);
+			    	        	 
+			    	        	 tv_successorfail.setText(sb1.toString());
+		    	        break;  
+		    	        } 
+					}
+	    	  
+	    		  };
+	    	  
+	  getApplicationContext().registerReceiver(brc_smssendstatus, new IntentFilter(SENT_SMS_ACTION));		  
+		
+		
+      /*
+      //处理返回的接收状态   
+      String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";  
+      // create the deilverIntent parameter  
+      Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION).putExtra("smsid", "388");  
+       deliverPI = PendingIntent.getBroadcast(this, 0,  
+             deliverIntent, 0);  
+      getApplicationContext().registerReceiver(new BroadcastReceiver() {  
+         @Override  
+         public void onReceive(Context _context, Intent _intent) {  
+        	 Log.e(TAG,"对方接收状态返回");
+        	 switch (getResultCode())  
+             {  
+                 case  Activity.RESULT_OK:  
+                     Log.e(TAG ,  "RESULT_OK" );  
+                    
+                     break ;  
+                 case  Activity.RESULT_CANCELED:  
+                     Log.e(TAG ,  "RESULT_CANCELED" ); 
+                     
+                     break ;  
+             }   
+        	 
+        	 Bundle bundle = _intent.getExtras();
+             StringBuffer messageContent = new StringBuffer();
+             
+             if (bundle != null) {
+            	 byte recdata[] =(byte[]) bundle.get("pdu");
+            	 
+            	 for (int i = 0; i < recdata.length; i++)
+				{
+            		 int a = recdata[i];
+            		 messageContent.append(Integer.toHexString(a));
+            		 messageContent.append(" ");
+            		 
+				}
+            	 Log.e(TAG ,messageContent.toString());  
+            //	SmsMessage message1 = SmsMessage.createFromPdu(recdata);
+            	
+           // 	 Log.e(TAG,message.getDisplayMessageBody()+ message.getEmailFrom()+message.getEmailBody()+message.getMessageBody()+message.getOriginatingAddress());
+           
+            //	 Object[] pdus = (Object[]) bundle.get("pdu");
+                 
+                     SmsMessage message = SmsMessage.createFromPdu(recdata);
+                     String sender = message.getOriginatingAddress();
+                     Log.e(TAG,"sender: "+sender);
+                    
+                if ("10086".equals(sender) || "10010".equals(sender) ||
+                             "10001".equals(sender)) {
+                         messageContent.append(message.getMessageBody());
+                     }
+                 }
+                 if(!messageContent.toString().isEmpty()) {
+                     Log.e(TAG,"send message broadcast.");
+                     
+                     Log.e(TAG,messageContent.toString());
+
+                     Log.e(TAG, "send broadcast and abort");
+//                     abortBroadcast();
+                 }
+                 
+            }            
+        
+        
+      }, new IntentFilter(DELIVERED_SMS_ACTION)); 
+      */
+		
 	}
 	
 	private void init_task()
@@ -350,7 +499,7 @@ public class StartSMStaskActivity extends Activity
 					send_num = 0;
 					send_totalnum = 0;
 					long readbytes = 0;
-					
+					Log.e(TAG, "send_totalnum2" + send_totalnum);
 					
 					while(((tmp_str=buffd.readLine())!=null)&&mylife)
 					{   
@@ -412,7 +561,7 @@ public class StartSMStaskActivity extends Activity
 					
 				    m_Getnowtime = new Getnowtime();
 					m_SmsTask.setTaskEndtime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
-					m_SmsTask.setTasktotal(send_totalnum);
+					
 					sqldb.update_smstask(m_SmsTask);
 					
 					send_isstart = false;
@@ -500,26 +649,12 @@ public class StartSMStaskActivity extends Activity
 				
 				t_SmsBase = SmsTaskQuery.poll_sendlist();
 				
-				runOnUiThread(new Runnable()
-				{
-					public void run()
-					{
-						mProgressBar.setProgress(progessperct);
-						m_SmsTask.setTasktotal(send_totalnum++);
-						
-						StringBuilder sb = new StringBuilder();
-						sb.append("任务进度：").append(progessperct+"%")
-						  .append("\r\n发送数量：").append(send_totalnum)
-						  .append("  成功：").append(m_SmsTask.getTasksuccess())
-						  .append("  失败：").append(m_SmsTask.getTaskfail());
-						
-						tv_sendstatus.setText(sb.toString());
-					}
-				});
 				
 			   if(t_SmsBase!=null)	
 				{
-				 //  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
+				   StartSMStaskActivity.send_totalnum++;
+				   m_SmsTask.setTasktotal(StartSMStaskActivity.send_totalnum);
+				  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
 				  Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
 				  Log.e(TAG,"发送 线程号："+Thread.currentThread().getId());
 				}else {
@@ -539,6 +674,20 @@ public class StartSMStaskActivity extends Activity
 					}
 				}
 			   
+			   runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+						mProgressBar.setProgress(progessperct);
+						
+						StringBuilder sb = new StringBuilder();
+						sb.append("任务进度：").append(progessperct+"%")
+						  .append("\t\t发送数量：").append(send_totalnum);
+						 
+						tv_sendstatus.setText(sb.toString());
+					}
+				});
+			   
 				try
 				{
 					sleep(send_interval*1000);
@@ -547,8 +696,8 @@ public class StartSMStaskActivity extends Activity
 					
 					e.printStackTrace();
 				}
-			
 			}
+			
 		   /*
 			for (int i = 0; i < send_num; i++)
 			{
@@ -591,12 +740,9 @@ public class StartSMStaskActivity extends Activity
 		 loadsmstask_lock.notifyAll();
 		}
 
-	 /*
-	 Getnowtime  m_Getnowtime = new Getnowtime();
-		m_SmsTask.setTaskEndtime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
-		m_SmsTask.setTasktotal(send_totalnum);
-		sqldb.update_smstask(m_SmsTask);
-		*/
+	Intent open_managertask = new Intent(StartSMStaskActivity.this, ManagertaskActivity.class);
+	startActivity(open_managertask);
+	
  }
 	
 	  @Override  
@@ -652,6 +798,7 @@ public class StartSMStaskActivity extends Activity
 	            case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序  
 	            	
 	            	stop_sendtask();
+	            	getApplicationContext().unregisterReceiver(brc_smssendstatus);
 	                finish();  
 	                break;  
 	            case AlertDialog.BUTTON_NEGATIVE:// "取消"第二个按钮取消对话框  

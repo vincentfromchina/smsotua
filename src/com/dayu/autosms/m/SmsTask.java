@@ -56,27 +56,27 @@ public class SmsTask
 	{
 		Taskfilename = taskfilename;
 	}
-	public int getTasksuccess()
+	 public int getTasksuccess()
 	{
 		return Tasksuccess;
 	}
-	public void setTasksuccess(int tasksuccess)
+	 public void setTasksuccess(int tasksuccess)
 	{
 		Tasksuccess = tasksuccess;
 	}
-	public int getTaskfail()
+	 public int getTaskfail()
 	{
 		return Taskfail;
 	}
-	public void setTaskfail(int taskfail)
+	 public void setTaskfail(int taskfail)
 	{
 		Taskfail = taskfail;
 	}
-	public int getTasktotal()
+	 public int getTasktotal()
 	{
 		return Tasktotal;
 	}
-	public void setTasktotal(int tasktotal)
+	 public void setTasktotal(int tasktotal)
 	{
 		Tasktotal = tasktotal;
 	}

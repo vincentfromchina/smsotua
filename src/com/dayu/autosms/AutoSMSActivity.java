@@ -153,30 +153,31 @@ public class AutoSMSActivity extends Activity
 		 JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
          JPushInterface.init(this);     		// 初始化 JPush
          
+         final byte[] keyBytes = {
+     	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+     	      };
+     	      
+     	      final byte[] keyBytes2 = {
+     	  	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
+     	  	      };
+     	      
+     	      String szSrc = "厉害了 is a 3DES test. 测试";  
+     	      
+     	       Log.e(TAG,"加密前的字符串:" + szSrc);  
+     	        
+     	        byte[] encoded = ThreeDES.encryptMode(keyBytes, szSrc.getBytes());  
+     	        Log.e(TAG,"加密后的字符串:" + new String(encoded));  
+     	  
+     	        byte[] srcBytes = ThreeDES.decryptMode(keyBytes2, encoded);  
+     	        Log.e(TAG,"解密后的字符串:" + (new String(srcBytes)));  
+         
 	      manager.listen(new MyPhoneListener(),PhoneStateListener.LISTEN_CALL_STATE);
 	      String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
 	      Intent sentIntent = new Intent(SENT_SMS_ACTION);  
 	      paIntent = PendingIntent.getBroadcast(this, 0, sentIntent, 0); 
 	      smsManager = SmsManager.getDefault();
 	      
-	      final byte[] keyBytes = {
-	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
-	      };
-	      
-	      final byte[] keyBytes2 = {
-	  	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
-	  	      };
-	      
-	      String szSrc = "厉害了 is a 3DES test. 测试";  
-	      
-	       Log.e(TAG,"加密前的字符串:" + szSrc);  
-	        
-	        byte[] encoded = ThreeDES.encryptMode(keyBytes, szSrc.getBytes());  
-	        Log.e(TAG,"加密后的字符串:" + new String(encoded));  
-	  
-	        byte[] srcBytes = ThreeDES.decryptMode(keyBytes2, encoded);  
-	        Log.e(TAG,"解密后的字符串:" + (new String(srcBytes)));  
-	      
+	      /*
 	      getApplicationContext().registerReceiver(new BroadcastReceiver() {  
 	    	    @Override  
 	    	    public void onReceive(Context _context, Intent _intent) {  
@@ -265,6 +266,7 @@ public class AutoSMSActivity extends Activity
 	        
 	        
 	      }, new IntentFilter(DELIVERED_SMS_ACTION));  
+	      */
 	      
 	      edt_phonenum = (EditText)findViewById(R.id.edt_phonenum);
 	      
