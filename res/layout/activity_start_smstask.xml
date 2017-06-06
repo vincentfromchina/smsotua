@@ -39,6 +39,7 @@
         android:background="@drawable/edit_bg"
         android:ems="2"
         android:text="1"
+        android:maxLength="3"
         android:gravity="center"
         android:inputType="number" >
     </EditText>

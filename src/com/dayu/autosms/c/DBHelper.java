@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 6;    
+    private static final int DB_VERSION = 7;    
     private static final String CREATE_smstask = "create table if not exists smstask("  
             + "taskStarttime DATETEXT(19,19),"
             + "taskEndtime DATETEXT(19,19),"
@@ -39,7 +39,11 @@ public class DBHelper extends SQLiteOpenHelper
     		+ ")";
     
     private static final String CREATE_config = "CREATE TABLE if not exists config ("
-    		 +"sendinteval INT DEFAULT 1)";
+    		+"sign VARCHAR2(50)," 
+    		+"sendinteval INT DEFAULT 1)";
+    
+    private static final String update_config = "insert into config(sendinteval)"
+    		+"values(1)";
    
 
 	public DBHelper(Context context, String dbname, CursorFactory factory)
@@ -97,6 +101,8 @@ public class DBHelper extends SQLiteOpenHelper
         sql = CREATE_config;
         db.execSQL(sql);
         
+        sql = update_config;
+        db.execSQL(sql);
         
         Log.e("database","数据库更新成功");
 	}
@@ -179,6 +185,13 @@ public class DBHelper extends SQLiteOpenHelper
         db.execSQL("update smstask set taskname='"+taskname+"' where taskid="+taskid);
     }
     
+    public void update_inteval(int inteval)
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	Log.e("database","update config set sendinteval="+inteval);  
+        db.execSQL("update config set sendinteval="+inteval);
+    }
+    
     
     public Cursor query_smscontentplate()
     {
@@ -204,7 +217,7 @@ public class DBHelper extends SQLiteOpenHelper
     			         
     }
     
-    public Cursor get_sendinteval()
+    public Cursor get_config()
     {
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","select * from config");  
