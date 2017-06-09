@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper
 {
 	
 	private static final String DB_NAME = "smstask.db";  
-    private static final int DB_VERSION = 7;    
+    private static final int DB_VERSION = 8;    
     private static final String CREATE_smstask = "create table if not exists smstask("  
             + "taskStarttime DATETEXT(19,19),"
             + "taskEndtime DATETEXT(19,19),"
@@ -39,10 +39,10 @@ public class DBHelper extends SQLiteOpenHelper
     		+ ")";
     
     private static final String CREATE_config = "CREATE TABLE if not exists config ("
-    		+"sign VARCHAR2(50)," 
+    		+"sign BLOB(200)," 
     		+"sendinteval INT DEFAULT 1)";
     
-    private static final String update_config = "insert into config(sendinteval)"
+    private static final String insert_config = "insert into config(sendinteval)"
     		+"values(1)";
    
 
@@ -101,7 +101,7 @@ public class DBHelper extends SQLiteOpenHelper
         sql = CREATE_config;
         db.execSQL(sql);
         
-        sql = update_config;
+        sql = insert_config;
         db.execSQL(sql);
         
         Log.e("database","数据库更新成功");
@@ -190,6 +190,16 @@ public class DBHelper extends SQLiteOpenHelper
     	SQLiteDatabase db = getReadableDatabase();
     	Log.e("database","update config set sendinteval="+inteval);  
         db.execSQL("update config set sendinteval="+inteval);
+    }
+    
+    public void update_serial(byte[] encoded)
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	Log.e("database","update config set sign="+encoded);  
+    	String sqlstr = "update config set sign= ?";
+
+        Object[] args = new Object[]{encoded};
+         db.execSQL(sqlstr,args);  
     }
     
     

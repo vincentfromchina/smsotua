@@ -12,6 +12,7 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.SmsMessage;
 import android.text.style.ReplacementSpan;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -33,6 +34,8 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,21 +95,15 @@ public class AutoSMSActivity extends Activity
     SmsManager smsManager;
     EditText edt_phonenum;
     static private String mfilePath="",owner="";
-    static String send_target[] = new String[10];
-    static int    send_num = 0;
-    static int    send_totalnum = 0;
+   
 	private DBHelper sqldb;
-	static SmsTaskQuery m_SmsTaskQuery = null;
-	static SmsTask m_SmsTask = null;
-	static load_smstask m_loadsmstask = null;
+	
 	static long filesize = 0;
-	final static Object loadsmstask_lock = "导入数据共享锁";
-	final static Object sendsmstask_lock = "发送进程共享锁";
+	
     static public Boolean isdebug = true;
     static public ProgressBar mProgressBar;
 	HttpURLConnection urlConn = null;  
 	static boolean cancelupdate = false;
-    static boolean send_isstart = true;
 	private static int progessperct = 0;
 	private static final int DOWNLOAD_ING = 37, DOWNLOAD_FINISH = 39;
 	private static String mSavepath = "", apkurl = "", apkname = "", apkversion = "";
@@ -153,120 +150,26 @@ public class AutoSMSActivity extends Activity
 		 JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
          JPushInterface.init(this);     		// 初始化 JPush
          
-         final byte[] keyBytes = {
-     	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
-     	      };
-     	      
-     	      final byte[] keyBytes2 = {
-     	  	        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
-     	  	      };
-     	      
-     	      String szSrc = "厉害了 is a 3DES test. 测试";  
-     	      
-     	       Log.e(TAG,"加密前的字符串:" + szSrc);  
-     	        
-     	        byte[] encoded = ThreeDES.encryptMode(keyBytes, szSrc.getBytes());  
-     	        Log.e(TAG,"加密后的字符串:" + new String(encoded));  
-     	  
-     	        byte[] srcBytes = ThreeDES.decryptMode(keyBytes2, encoded);  
-     	        Log.e(TAG,"解密后的字符串:" + (new String(srcBytes)));  
+         sqldb = new DBHelper(getBaseContext(),"smstask.db", null) ;
+	     
+		 Cursor c = null;
+		 c = sqldb.query_count();
+		 if (c!=null)	
+		  {
+			 c.moveToFirst();
+			 int count = c.getInt(0);
+			 c.close();
+			 if (count==0)
+			 {
+				 Toast.makeText(getBaseContext(), "无数据，请先导入文件", Toast.LENGTH_LONG).show();
+				
+			 }
+		  }
+         
+		 
          
 	      manager.listen(new MyPhoneListener(),PhoneStateListener.LISTEN_CALL_STATE);
-	      String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
-	      Intent sentIntent = new Intent(SENT_SMS_ACTION);  
-	      paIntent = PendingIntent.getBroadcast(this, 0, sentIntent, 0); 
-	      smsManager = SmsManager.getDefault();
-	      
-	      /*
-	      getApplicationContext().registerReceiver(new BroadcastReceiver() {  
-	    	    @Override  
-	    	    public void onReceive(Context _context, Intent _intent) {  
-	    	        switch (getResultCode()) {  
-	    	        case Activity.RESULT_OK:  
-	    	        	Log.e(TAG,"发送成功"); 
-	    	        	 m_SmsTask.setTasksuccess(m_SmsTask.getTasksuccess()+1);
-	    	        break;  
-	    	        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
-	    	        	Log.e(TAG,"RESULT_ERROR_GENERIC_FAILURE");
-	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
-	    	        break;  
-	    	        case SmsManager.RESULT_ERROR_RADIO_OFF:  
-	    	        	Log.e(TAG,"RESULT_ERROR_RADIO_OFF");
-	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
-	    	        break;  
-	    	        case SmsManager.RESULT_ERROR_NULL_PDU:  
-	    	        	Log.e(TAG,"RESULT_ERROR_NULL_PDU");
-	    	        	m_SmsTask.setTaskfail(m_SmsTask.getTaskfail()+1);
-	    	        break;  
-	    	        }  
-	    	    }  
-	    	}, new IntentFilter(SENT_SMS_ACTION)); 
-	      
-	      //处理返回的接收状态   
-	      String DELIVERED_SMS_ACTION = "DELIVERED_SMS_ACTION";  
-	      // create the deilverIntent parameter  
-	      Intent deliverIntent = new Intent(DELIVERED_SMS_ACTION).putExtra("smsid", "388");  
-	       deliverPI = PendingIntent.getBroadcast(this, 0,  
-	             deliverIntent, 0);  
-	      getApplicationContext().registerReceiver(new BroadcastReceiver() {  
-	         @Override  
-	         public void onReceive(Context _context, Intent _intent) {  
-	        	 Log.e(TAG,"对方接收状态返回");
-	        	 switch (getResultCode())  
-	             {  
-	                 case  Activity.RESULT_OK:  
-	                     Log.e(TAG ,  "RESULT_OK" );  
-	                    
-	                     break ;  
-	                 case  Activity.RESULT_CANCELED:  
-	                     Log.e(TAG ,  "RESULT_CANCELED" ); 
-	                     
-	                     break ;  
-	             }   
-	        	 
-	        	 Bundle bundle = _intent.getExtras();
-	             StringBuffer messageContent = new StringBuffer();
-	             
-	             if (bundle != null) {
-	            	 byte recdata[] =(byte[]) bundle.get("pdu");
-	            	 
-	            	 for (int i = 0; i < recdata.length; i++)
-					{
-	            		 int a = recdata[i];
-	            		 messageContent.append(Integer.toHexString(a));
-	            		 messageContent.append(" ");
-	            		 
-					}
-	            	 Log.e(TAG ,messageContent.toString());  
-	            //	SmsMessage message1 = SmsMessage.createFromPdu(recdata);
-	            	
-	           // 	 Log.e(TAG,message.getDisplayMessageBody()+ message.getEmailFrom()+message.getEmailBody()+message.getMessageBody()+message.getOriginatingAddress());
-	           
-	            //	 Object[] pdus = (Object[]) bundle.get("pdu");
-	                 
-	                     SmsMessage message = SmsMessage.createFromPdu(recdata);
-	                     String sender = message.getOriginatingAddress();
-	                     Log.e(TAG,"sender: "+sender);
-	                    
-	                if ("10086".equals(sender) || "10010".equals(sender) ||
-	                             "10001".equals(sender)) {
-	                         messageContent.append(message.getMessageBody());
-	                     }
-	                 }
-	                 if(!messageContent.toString().isEmpty()) {
-	                     Log.e(TAG,"send message broadcast.");
-	                     
-	                     Log.e(TAG,messageContent.toString());
-
-	                     Log.e(TAG, "send broadcast and abort");
-//	                     abortBroadcast();
-	                 }
-	                 
-	            }            
-	        
-	        
-	      }, new IntentFilter(DELIVERED_SMS_ACTION));  
-	      */
+	   
 	      
 	      edt_phonenum = (EditText)findViewById(R.id.edt_phonenum);
 	      
@@ -305,24 +208,6 @@ public class AutoSMSActivity extends Activity
 				
 			}
 		});
-	  
-	     
-	     sqldb = new DBHelper(getBaseContext(),"smstask.db", null) ;
-	     
-		 Cursor c = null;
-		 c = sqldb.query_count();
-		 if (c!=null)	
-		  {
-			 c.moveToFirst();
-			 int count = c.getInt(0);
-			 c.close();
-			 if (count==0)
-			 {
-				 Toast.makeText(getBaseContext(), "无数据，请先导入文件", Toast.LENGTH_LONG).show();
-				
-			 }
-		  }
-		  
 	     
 	     Button btn_sms = (Button)findViewById(R.id.btn_sms);
 	     btn_sms.setOnClickListener(new OnClickListener()
@@ -366,8 +251,7 @@ public class AutoSMSActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				send_thread m_st = new send_thread();
-				m_st.start();
+				
 			}
 		});
 	     
@@ -378,8 +262,7 @@ public class AutoSMSActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				m_loadsmstask = new load_smstask();
-				m_loadsmstask.start();
+				
 				
 			}
 		});
@@ -404,19 +287,8 @@ public class AutoSMSActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				send_isstart = !send_isstart;
-			   if (send_isstart )
-			   {
-				   synchronized (sendsmstask_lock)
-					  {
-						sendsmstask_lock.notifyAll();
-					  }
-				   btn_startorpuase.setText("暂停");
-			   }else
-			   { 
-				   btn_startorpuase.setText("开始");
-			   }				
-		}
+				
+		   }
 	 });
 	     
 	     Button btn_managecontentplate = (Button)findViewById(R.id.btn_managecontentplate);
@@ -483,14 +355,32 @@ public class AutoSMSActivity extends Activity
 			}
 		});
 			
-	 //    m_SmsTaskQuery = new SmsTaskQuery();
-	 //    send_sms m_sendsms = new send_sms();
-	 //    m_sendsms.start();
-			
-		checkupdate ck = new checkupdate();
-		ck.start();
+	//检查软件版本
+	//	checkupdate ck = new checkupdate();
+	//	ck.start();
 			
 	}
+	
+	public static String getMD5(String val)
+    {  
+	        MessageDigest md5;
+			try
+			{
+				md5 = MessageDigest.getInstance("MD5");
+				 md5.update(val.getBytes());  
+			        byte[] m = md5.digest();//加密  
+			        StringBuffer sb = new StringBuffer();  
+			         for(int i = 0; i < m.length; i ++){  
+			          sb.append(m[i]);  
+			         }  
+			         return sb.toString();  
+			} catch (NoSuchAlgorithmException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+	       return "1";
+	 }  
 	
 	void copydbfile()
 	{
@@ -810,7 +700,7 @@ public class AutoSMSActivity extends Activity
 
 	   };
 	   
-  private void installapk()
+    private void installapk()
 		{
 			File apkfile = new File(mSavepath,apkname);
 			if (!apkfile.exists())
@@ -822,319 +712,6 @@ public class AutoSMSActivity extends Activity
 			startActivity(ins);
  }
 	
-	class unlock_sendsmsthread extends Thread
-	{
-
-		@Override
-		public void run()
-		{
-		  while(true)	
-		  {	if (m_SmsTaskQuery.query_sendlist_count()==0)
-			{
-				synchronized (loadsmstask_lock)
-				{
-					loadsmstask_lock.notify();
-				}
-			}else
-			{
-				Log.e(TAG, "the query not empty");
-			}
-			
-			try
-			{
-				Thread.sleep(1500);
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		  }
-		}
-		
-	}
-	
-	
-	class send_sms extends Thread
-	{
-
-		@Override
-		public void run()
-		{
-			while (true)
-			{
-				if (!send_isstart)
-				{
-					synchronized (sendsmstask_lock)
-					{
-						try
-						{
-							sendsmstask_lock.wait();
-						} catch (InterruptedException e)
-						{
-							
-							e.printStackTrace();
-						}
-					}
-				}
-				
-				SmsBase t_SmsBase = null;
-				
-				t_SmsBase = SmsTaskQuery.poll_sendlist();
-				
-			   if(t_SmsBase!=null)	
-				{
-				 //  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
-				  Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
-				}else {
-					if (m_SmsTaskQuery.query_sendlist_count()==0)
-					{
-						synchronized (loadsmstask_lock)
-						{
-							loadsmstask_lock.notify();
-						}
-					}else
-					{
-						Log.e(TAG, "the query not empty");
-					}
-				}
-			   
-				try
-				{
-					sleep(200);
-				} catch (InterruptedException e)
-				{
-					
-					e.printStackTrace();
-				}
-			
-			}
-		   /*
-			for (int i = 0; i < send_num; i++)
-			{
-				String phonenum = edt_phonenum.getText().toString();
-				
-				String content = "this is from 宇宙，don't reply.";		
-				smsManager.sendTextMessage(send_target[i], null, content, paIntent, null); 
-			//	smsManager.sendDataMessage("18620470826", null, (short) 0, hah.getBytes(), paIntent, deliverPI); 
-						
-				try
-				{
-					sleep(2000);
-				} catch (InterruptedException e)
-				{
-					
-					e.printStackTrace();
-				}
-			
-			}
-			*/
-			
-		}
-		 
-	}
-	
-	class load_smstask extends Thread
-	{
-
-		@Override
-		public void run()
-		{
-			m_SmsTask = new SmsTask();
-			
-			File feFile = new File(mfilePath);
-			m_SmsTask.setTaskfilepath(feFile.getParent());
-			m_SmsTask.setTaskfilename(feFile.getName());
-			
-			Log.e(TAG, "open file  AbsolutePath"+feFile.getAbsolutePath());
-			
-			Log.e(TAG, "open file  name" +feFile.getName());
-			if(feFile.canRead())
-			{
-				Log.e(TAG, "open file  3");
-				FileReader frd = null;
-				filesize = feFile.length();
-				Log.e(TAG,"filesize is"+ String.valueOf(filesize));
-				BufferedReader buffd = null;
-				try
-				{
-					Getnowtime m_Getnowtime = new Getnowtime();
-					m_SmsTask.setTaskStarttime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
-					
-					frd = new FileReader(feFile);
-					
-					 buffd = new BufferedReader(frd);
-					
-					String tmp_str = "";
-					send_num = 0;
-					long readbytes = 0;
-			
-					
-					while((tmp_str=buffd.readLine())!=null)
-					{   
-						if (!send_isstart)
-						{
-							synchronized (sendsmstask_lock)
-							{
-								try
-								{
-									sendsmstask_lock.wait();
-								} catch (InterruptedException e)
-								{
-									
-									e.printStackTrace();
-								}
-							}
-						}
-						readbytes += tmp_str.getBytes().length+2;
-						tmp_str = tmp_str.trim();
-						if((tmp_str.length()>0)&&(tmp_str.length()==11)&&tmp_str.startsWith("1"))
-						 {	
-							m_SmsTask.setTasktotal(send_num+1);
-							send_target[send_num] = tmp_str;
-							Log.e(TAG, send_target[send_num]);
-							send_num++;
-						 }
-						
-                        Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
-						
-						progessperct =  Math.round((float)readbytes/filesize*100);
-						
-						Log.e(TAG, String.valueOf(progessperct)+"%");
-						
-						if (send_num==10||progessperct>=100)
-						{
-							for (int i = 0; i < send_num; i++)
-							{
-								String sms_sendtext = "wello ni {|@|} 好东西 {|d|}";
-								SmsBase t_smsbase = new SmsBase(send_target[i],GernatorSMSText.getSMSresult(sms_sendtext));
-								m_SmsTaskQuery.insert_sendlist(t_smsbase);
-							}
-							
-							synchronized (loadsmstask_lock)
-							{
-								try
-								{
-									loadsmstask_lock.wait();
-								} catch (InterruptedException e)
-								{
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-							send_num=0;
-							
-						}
-						
-						
-					}
-					
-					while (m_SmsTaskQuery.query_sendlist_count()!=0)
-					{
-						; //等待队列清空然后更新数据库任务表		
-					}
-					
-				    m_Getnowtime = new Getnowtime();
-					m_SmsTask.setTaskEndtime(m_Getnowtime.getnowtime("yyyy-M-d HH:mm"));
-					
-					sqldb.insert_smstask(m_SmsTask);
-					
-
-					
-				} catch (FileNotFoundException e)
-				{
-					
-					e.printStackTrace();
-				} catch (IOException e)
-				{
-					
-					e.printStackTrace();
-				}finally {
-					if (buffd!=null)
-					{
-						try
-						{
-							buffd.close();
-						} catch (IOException e)
-						{
-							
-							e.printStackTrace();
-						}
-					}
-					
-					if (frd!=null)
-					{
-						try
-						{
-							frd.close();
-						} catch (IOException e)
-						{
-							
-							e.printStackTrace();
-						}
-					}
-				}
-				
-			}else
-			{
-				Log.e(TAG, "读取文件出错");
-			}
-		}
-		
-	}
-	
-	class send_thread extends Thread
-	{
-
-		@Override
-		public void run()
-		{
-			Socket m_client = null;
-			 m_client = new Socket();
-		     InetSocketAddress isa1 = new InetSocketAddress("192.168.1.101", 8085);
-		     OutputStream os1 = null;
-		     
-		     try
-			{
-				m_client.connect(isa1);
-				
-					Log.e(TAG,"conn ok");
-					os1 = m_client.getOutputStream();
-					
-					if(os1!=null)
-					 {							
-						Log.e(TAG,"send pk start");
-						os1.write(sendbuf.getBytes());		
-					 }
-				 }				
-			 catch (IOException e)
-			{
-				Log.e(TAG,e.toString());
-				e.printStackTrace();
-			}finally {
-				if (os1 != null)
-				{
-					try
-					{
-						os1.close();
-					} catch (IOException e)
-					{
-						Log.e(TAG,e.toString());
-						e.printStackTrace();
-					}
-				}
-				try
-				{
-					m_client.close();
-				} catch (IOException e)
-				{
-					Log.e(TAG,e.toString());
-					e.printStackTrace();
-				}
-			}
-			
-		}
-		
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)

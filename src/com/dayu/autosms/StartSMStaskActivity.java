@@ -1,11 +1,14 @@
 package com.dayu.autosms;
 
 import android.os.Bundle;
+
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.telephony.gsm.SmsMessage;
 import android.text.Editable;
 import android.text.StaticLayout;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -13,11 +16,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.dayu.autosms.c.DBHelper;
 import com.dayu.autosms.c.GernatorSMSText;
 import com.dayu.autosms.c.Getnowtime;
+import com.dayu.autosms.dummy.ThreeDES;
 import com.dayu.autosms.m.SmsBase;
 import com.dayu.autosms.m.SmsTask;
 import com.dayu.autosms.m.SmsTaskQuery;
@@ -79,7 +101,7 @@ public class StartSMStaskActivity extends Activity
     BroadcastReceiver brc_smssendstatus;
     String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
     Intent sentIntent = new Intent(SENT_SMS_ACTION); 
-	
+	static boolean teac = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -89,6 +111,8 @@ public class StartSMStaskActivity extends Activity
 		
 		Bundle bundle = this.getIntent().getExtras();
 		taskid = bundle.getInt("taskid");
+		
+		new Thread(r_sign).start();
 		
 		
 		mProgressBar = (ProgressBar)findViewById(R.id.pbr);
@@ -103,38 +127,23 @@ public class StartSMStaskActivity extends Activity
 		{
 			
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count)
+			public void afterTextChanged(Editable s)
 			{
-				// TODO Auto-generated method stub
+				edt_sendinteval.setSelection(edt_sendinteval.getText().length());
 				
 			}
-			
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after)
 			{
 				// TODO Auto-generated method stub
 				
 			}
-			
+
 			@Override
-			public void afterTextChanged(Editable s)
+			public void onTextChanged(CharSequence s, int start, int before, int count)
 			{
-				/*
-				if (edt_sendinteval.getText().toString().equals(""))
-				{
-					edt_sendinteval.setText("1");
-				}
-				
-				send_interval = Integer.valueOf(edt_sendinteval.getText().toString());
-			    
-				if (send_interval>120) {
-					edt_sendinteval.setText("120");
-				}else if (send_interval<1)
-				{
-					edt_sendinteval.setText("1");
-				}
-				*/
-				edt_sendinteval.setSelection(edt_sendinteval.getText().length());
+				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -419,6 +428,13 @@ public class StartSMStaskActivity extends Activity
 		
 	}
 	
+	Runnable r_sign = new Runnable(){
+	    @Override
+	    public void run() {
+	    	Sign();
+	    }
+	};
+	
 	private void init_task()
 	{
 		m_Cursor =  sqldb.get_sendtask(taskid);
@@ -476,7 +492,6 @@ public class StartSMStaskActivity extends Activity
 			Log.e(TAG, "open file  name" +feFile.getName());
 			if(feFile.canRead())
 			{
-				Log.e(TAG, "open file  3");
 				FileReader frd = null;
 				filesize = feFile.length();
 				Log.e(TAG,"filesize is"+ String.valueOf(filesize));
@@ -494,7 +509,6 @@ public class StartSMStaskActivity extends Activity
 					send_num = 0;
 					send_totalnum = 0;
 					long readbytes = 0;
-					Log.e(TAG, "send_totalnum2" + send_totalnum);
 					
 					while(((tmp_str=buffd.readLine())!=null)&&mylife)
 					{   
@@ -504,7 +518,6 @@ public class StartSMStaskActivity extends Activity
 						if((tmp_str.length()>0)&&(tmp_str.length()==11)&&tmp_str.startsWith("1"))
 						 {	
 							send_target[send_num] = tmp_str;
-							Log.e(TAG,"this num；"+ send_target[send_num]);
 							send_num++;
 						 }
 						
@@ -692,8 +705,9 @@ public class StartSMStaskActivity extends Activity
 				//  Log.e(TAG, "divideContents size" + divideContents.size());
 				   ArrayList<PendingIntent> PendingIntents = new ArrayList<PendingIntent>(divideContents.size());
 				//   Log.e(TAG, "PendingIntents size" + PendingIntents.size());
+				   int divideContentssize = divideContents.size();
 				   
-				   for (int i = 0; i < divideContents.size(); i++)
+				   for (int i = 0; i < divideContentssize; i++)
 				    {
 					   PendingIntents.add(i, PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, 0));
 				    }
@@ -702,7 +716,7 @@ public class StartSMStaskActivity extends Activity
 				   smsManager.sendMultipartTextMessage(t_SmsBase.getSms_sendphone(), null,divideContents , PendingIntents, null); 
 				
                   //  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
-				   send_totalnum += divideContents.size() ;
+				   send_totalnum += divideContentssize ;
 				   m_SmsTask.setTasktotal(send_totalnum);
 				   
 				  Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
@@ -731,7 +745,7 @@ public class StartSMStaskActivity extends Activity
 
 					try
 					{
-						sleep(send_interval*1000);
+						sleep(send_interval*1000*divideContentssize);
 					} catch (InterruptedException e)
 					{
 						
@@ -818,52 +832,54 @@ public class StartSMStaskActivity extends Activity
 	@Override  
 	    public boolean onKeyDown(int keyCode, KeyEvent event)  
 	    {  
-		if (m_loadsmstask!=null)
-		   {
-			  if (m_loadsmstask.isAlive())
-				{
-				  AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
-		            // 设置对话框标题  
-		            isExit.setTitle("短信群发王");  
-		            // 设置对话框消息  
-		            isExit.setMessage("发送任务正在执行，要退出吗？");  
-		            // 添加选择按钮并注册监听  
-		            isExit.setButton("朕确定", listener);  
-		            isExit.setButton2("取消了", listener);  
-		            // 显示对话框  
-		            isExit.show();
-			   		
-			   		Log.e("gushiriji", "m_loadsmstask.isAlive");
-				}else
-				{
-					 // 创建退出对话框  
-		            AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
-		            // 设置对话框标题  
-		            isExit.setTitle("短信群发王");  
-		            // 设置对话框消息  
-		            isExit.setMessage("确定要退出吗？");  
-		            // 添加选择按钮并注册监听  
-		            isExit.setButton("朕确定", listener);  
-		            isExit.setButton2("取消了", listener);  
-		            // 显示对话框  
-		            isExit.show();  
-					Log.e("gushiriji", "m_loadsmstask not Alive");
+		  if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+				if (m_loadsmstask!=null)
+				   {
+					  if (m_loadsmstask.isAlive())
+						{
+						  AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
+				            // 设置对话框标题  
+				            isExit.setTitle("短信群发王");  
+				            // 设置对话框消息  
+				            isExit.setMessage("发送任务正在执行，要退出吗？");  
+				            // 添加选择按钮并注册监听  
+				            isExit.setButton("朕确定", listener);  
+				            isExit.setButton2("取消了", listener);  
+				            // 显示对话框  
+				            isExit.show();
+					   		
+					   		Log.e("gushiriji", "m_loadsmstask.isAlive");
+						}else
+						{
+							 // 创建退出对话框  
+				            AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
+				            // 设置对话框标题  
+				            isExit.setTitle("短信群发王");  
+				            // 设置对话框消息  
+				            isExit.setMessage("确定要退出吗？");  
+				            // 添加选择按钮并注册监听  
+				            isExit.setButton("朕确定", listener);  
+				            isExit.setButton2("取消了", listener);  
+				            // 显示对话框  
+				            isExit.show();  
+							Log.e("gushiriji", "m_loadsmstask not Alive");
+						}
+				   }else {
+					   // 创建退出对话框  
+			            AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
+			            // 设置对话框标题  
+			            isExit.setTitle("短信群发王");  
+			            // 设置对话框消息  
+			            isExit.setMessage("确定要退出吗？");  
+			            // 添加选择按钮并注册监听  
+			            isExit.setButton("朕确定", listener);  
+			            isExit.setButton2("取消了", listener);  
+			            // 显示对话框  
+			            isExit.show();  
 				}
-		   }else {
-			   // 创建退出对话框  
-	            AlertDialog isExit = new AlertDialog.Builder(StartSMStaskActivity.this).create();  
-	            // 设置对话框标题  
-	            isExit.setTitle("短信群发王");  
-	            // 设置对话框消息  
-	            isExit.setMessage("确定要退出吗？");  
-	            // 添加选择按钮并注册监听  
-	            isExit.setButton("朕确定", listener);  
-	            isExit.setButton2("取消了", listener);  
-	            // 显示对话框  
-	            isExit.show();  
-		}
-	          
-	        return false;  
+		    }
+			          
+			        return false;  
 	    } 
 	  
 	  /**监听对话框里面的button点击事件*/  
@@ -887,13 +903,146 @@ public class StartSMStaskActivity extends Activity
 	        }  
 	    };    
 	    
-	    @Override
-		public boolean onCreateOptionsMenu(Menu menu)
+	    //加密
+	    public static String getBase64(String str) {  
+	        byte[] b = null;  
+	        String s = null;  
+	        try {  
+	            b = str.getBytes("utf-8");  
+	        } catch (UnsupportedEncodingException e) {  
+	            e.printStackTrace();  
+	        }  
+	        if (b != null) {  
+	        	
+	            s = Base64.encodeToString(b, Base64.NO_WRAP);
+	        }  
+	        return s;  
+	    }  
+	  
+	    // 解密  
+	    public static String getFromBase64(String s) {  
+	        byte[] b = null;  
+	        String result = null;  
+	        if (s != null) {  
+	              
+	            try {  
+	                b = Base64.decode(s.getBytes(), Base64.DEFAULT);
+	                result = new String(b, "UTF-8");  
+	            } catch (Exception e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	        return result;  
+	    }
+	    
+	   private void Sign()
 		{
-			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.start_smstask, menu);
-			return true;
-		}
+		 	HttpClient mHttpClient = new DefaultHttpClient();
+		 	String Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+			 String uri = getResources().getString(R.string.url)+"/AutoSms_Sign";
+			  Log.e("loghere", Imei);
+			    HttpPost httppost = new HttpPost(uri);   
+			    List<NameValuePair> params = new ArrayList<NameValuePair>();
+			     // 添加要传递的参数
+			    NameValuePair pair1 = new BasicNameValuePair("serialno", Base64.encodeToString(Imei.getBytes(), Base64.DEFAULT));
+			    params.add(pair1);
+			   
+			    HttpEntity mHttpEntity;
+			 			try
+			 			{
+			 				mHttpEntity = new UrlEncodedFormEntity(params, "gbk");
+			 			
+			 				httppost.setEntity(mHttpEntity); 
+			 			Log.e("url", "发送数据");
+			 			} catch (UnsupportedEncodingException e1)
+			 			{
+			 				// TODO Auto-generated catch block
+			 			Log.e("url", "数据传递出错了");
+			 				e1.printStackTrace();
+			 			}
+			 		    		
+			 			mHttpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 4000);	
+			 		     
+			 		    HttpResponse httpresponse = null;  
+			 		    try
+			 			{
+			 				httpresponse = mHttpClient.execute(httppost);
+			 				
+			 			   if (httpresponse.getStatusLine().getStatusCode()==200)	
+			 			   {
+			 				  String response = EntityUtils.toString(httpresponse.getEntity(), "utf-8");
+			 				 
+			 				 JSONObject mJsonObject = new JSONObject(response);
+			 				Log.e("url","rescode:"+httpresponse.getStatusLine().getStatusCode());
+			 				Log.e("loghere", response);
+							try
+							{
+								String resp = mJsonObject.getString("resp");
+								switch (resp)
+								{
+								case "0": //SIGN_OK
+									String baseencode_serialid = mJsonObject.getString("baseencode_serialid");
+									Log.e(TAG,"baseencode_serialid:"+ baseencode_serialid);
+									String tp = getBase64(getMD5(Imei));
+									 Log.e(TAG, getMD5(Imei));
+							         Log.e(TAG, getBase64(getMD5(Imei)));
+									if (baseencode_serialid.equals(tp))
+									{
+										Log.e(TAG,"认证成功");
+									}
+									
+									teac = true;
+									break;
+								case "2": //SIGN_NOREG
+									Log.e(TAG,"认证失败");
+									teac = false;
+									break;
+								
+								default:
+									
+									break;
+								} 
+							} catch (JSONException e)
+							{
+								e.printStackTrace();
+							}
+						 		
+			 			   }
+			 				
+			 			} catch (ClientProtocolException e1)
+						{
+							e1.printStackTrace();
+						} catch (IOException e1)
+						{
+							e1.printStackTrace();
+						   Log.e("loghere", "sockettimeout");
+							
+						} catch (JSONException e1)
+						{
+							e1.printStackTrace();
+						} 
+		      } 
+	   
+	   public static String getMD5(String val)
+	    {  
+		        MessageDigest md5;
+				try
+				{
+					md5 = MessageDigest.getInstance("MD5");
+					 md5.update(val.getBytes());  
+				        byte[] m = md5.digest();//加密  
+				        StringBuffer sb = new StringBuffer();  
+				         for(int i = 0; i < m.length; i ++){  
+				          sb.append(m[i]);  
+				         }  
+				         return sb.toString();  
+				} catch (NoSuchAlgorithmException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  
+		       return "1";
+		 }  
 
 	@Override
 	protected void onRestart()
