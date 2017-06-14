@@ -33,12 +33,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddsmstaskActivity extends Activity
 {
-	private static final String TAG = "autophone";
+	final static String TAG = "autosms";
 	private static EditText edt_showcontent;
 	private static EditText edt_newtaskname;
 	private static ListView lv_chooseplate;
@@ -71,7 +72,7 @@ public class AddsmstaskActivity extends Activity
 		tv_contentplatename = (TextView)findViewById(R.id.tv_contentname);
 		
 		Button btn_addnewtask = (Button)findViewById(R.id.btn_addnewtask);
-		Button btn_selectsmsplate = (Button)findViewById(R.id.btn_selectsmsplate);
+		final Button btn_selectsmsplate = (Button)findViewById(R.id.btn_selectsmsplate);
 		Button btn_fromfile = (Button)findViewById(R.id.btn_fromfile);
 		Button btn_fromcontart = (Button)findViewById(R.id.btn_fromcontart);
 		
@@ -120,7 +121,8 @@ public class AddsmstaskActivity extends Activity
                 case R.id.btn_selectsmsplate:
                 	lv_chooseplate.setVisibility(View.VISIBLE);
                 	 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-                	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
+                     imm.hideSoftInputFromInputMethod(btn_selectsmsplate.getWindowToken(), 0);
+                	 //	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
 					break;
                 case R.id.btn_fromfile:
                 	pickFile(v);
@@ -159,14 +161,21 @@ public class AddsmstaskActivity extends Activity
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				contentplateid =  plateid.get(position);
-				Log.e(TAG, "plateid:"+plateid.get(position));
+				if (AutoSMSActivity.isdebug) Log.e(TAG, "plateid:"+plateid.get(position));
 				lv_chooseplate.setVisibility(View.GONE);
 				tv_contentplatename.setText(platename.get(position));
+				
 				edt_showcontent.setText(GernatorSMSText.getSMSresult(platecontent.get(position)));
 			}
 			
 		});
 		
+	}
+	
+	void copydbfile()
+	{
+		String dbfilepath = getApplication().getDatabasePath("smstask.db").toString();
+		DBHelper.copyDataBaseToSD(dbfilepath);
 	}
 	
 	class platelistadapter extends BaseAdapter
@@ -175,7 +184,7 @@ public class AddsmstaskActivity extends Activity
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-			 ViewHolder holder;
+			 final ViewHolder holder;
 	            //观察convertView随ListView滚动情况
 	     
 	            if (convertView == null) {
@@ -184,19 +193,22 @@ public class AddsmstaskActivity extends Activity
 	                     holder = new ViewHolder();
 	                    /*得到各个控件的对象*/
 	                    holder.contenplatename = (TextView) convertView.findViewById(R.id.tv_contentname);
+	                   
 	                    
-	                    Log.e("autophone", ""+position+"--"+plateid.get(position));
+	                    if (AutoSMSActivity.isdebug)  Log.e(TAG, ""+position+"--"+plateid.get(position));
 	                    
 	                    convertView.setTag(holder);//绑定ViewHolder对象
-	                    Log.v("autophone", "getView " + position + " " + convertView);
+	                    
+	                    if (AutoSMSActivity.isdebug) Log.v(TAG, "getView " + position + " " + convertView);
 	          }
 	          else{
 	                    holder = (ViewHolder)convertView.getTag();//取出ViewHolder对象
-	                    Log.e("autophone", "会执行");
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "会执行");
 	                  }
 	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
 	            holder.contenplatename.setText((String)getItem(position));
 	            
+	         
 	            /*为Button添加点击事件*/
 	            return convertView;
 		}
@@ -224,11 +236,13 @@ public class AddsmstaskActivity extends Activity
 			return platename.size();
 		}
 		
-	   class ViewHolder{
+		class ViewHolder{
 		    public TextView contenplatename;
-
+		   
 		    }
 	};
+	
+	
 	
 	public void update_dataset()
 	{
@@ -237,7 +251,7 @@ public class AddsmstaskActivity extends Activity
 		platecontent = new ArrayList<>();
 		
 	    m_Cursor =  sqldb.query_smscontentplate();
-	    Log.e("autophone","m_Cursor.getCount"+ m_Cursor.getCount());
+	    if (AutoSMSActivity.isdebug) Log.e(TAG,"m_Cursor.getCount"+ m_Cursor.getCount());
 	    
 		while (m_Cursor.moveToNext())
 		{
@@ -300,8 +314,8 @@ public class AddsmstaskActivity extends Activity
         while(contacts.moveToNext()) {
             String contactId = contacts.getString(contactIdIndex);
             String name = contacts.getString(nameIndex);
-            Log.e(TAG, contactId);
-            Log.e(TAG, name);
+            if (AutoSMSActivity.isdebug) Log.e(TAG, contactId);
+            if (AutoSMSActivity.isdebug) Log.e(TAG, name);
             
             /*
              * 查找该联系人的phone信息
@@ -314,7 +328,7 @@ public class AddsmstaskActivity extends Activity
             }
             while(phones.moveToNext()) {
                 String phoneNumber = phones.getString(phoneIndex);
-                Log.e(TAG, phoneNumber);
+                if (AutoSMSActivity.isdebug) Log.e(TAG, phoneNumber);
             }
             
             if (phones!=null)

@@ -1,141 +1,264 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#ffededf4"
+    android:orientation="vertical"
+    android:paddingBottom="2dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="2dp"
     tools:context=".AutoSMSActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#7ddfdfe7" />
 
-    <EditText
-        android:id="@+id/edt_phonenum"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="phone" >
+        android:orientation="vertical" >
 
-        <requestFocus />
-    </EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/btn_call"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/edt_phonenum"
-        android:layout_marginTop="17dp"
-        android:text="call" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#7d6366e3" />
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_sendpk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_call"
-        android:layout_alignBottom="@+id/btn_call"
-        android:layout_alignRight="@+id/edt_phonenum"
-        android:text="发送报文" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
+            android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/btn_sms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_call"
-        android:layout_alignBottom="@+id/btn_call"
-        android:layout_toRightOf="@+id/btn_call"
-        android:text="SMS" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
 
-    <Button
-        android:id="@+id/btn_openfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_call"
-        android:layout_below="@+id/btn_call"
-        android:layout_marginTop="21dp"
-        android:text="打开文件" />
+            <LinearLayout
+                android:id="@+id/linearLayout1_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btn_fenxifile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_openfile"
-        android:layout_alignBottom="@+id/btn_openfile"
-        android:layout_centerHorizontal="true"
-        android:text="分析文件" />
+                <ImageButton
+                    android:id="@+id/btn_jiaocheng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    
+                    android:background="@drawable/pic_12" />
 
-    <Button
-        android:id="@+id/btn_content_set"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_fenxifile"
-        android:layout_alignBottom="@+id/btn_fenxifile"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/btn_fenxifile"
-        android:text="样式" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:text="使用说明" />
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_startorpuase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/btn_fenxifile"
-        android:layout_marginTop="22dp"
-        android:text="暂停" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
 
-    <Button
-        android:id="@+id/btn_managecontentplate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_startorpuase"
-        android:layout_alignBottom="@+id/btn_startorpuase"
-        android:layout_toLeftOf="@+id/btn_content_set"
-        android:text="管理模板" />
+            <LinearLayout
+                android:id="@+id/linearLayout1_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/btn_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/pic_14" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="激活设备" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout1_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/btn_managertask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/pic_6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="管理任务" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#7d6366e3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/btn_addsmstask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/pic_15" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="添加任务" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/btn_managerplate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/pic_2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="短信模板" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/btn_othersoft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/pic_16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="好用软件" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#7d6366e3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#7d6366e3" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#7ddfdfe7" >
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_cpdb"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_content_set"
-        android:layout_alignTop="@+id/btn_managecontentplate"
-        android:text="cpdb" />
+        android:text="cpdb"
+        android:visibility="gone" />
 
-    <Button
-        android:id="@+id/btn_jiaocheng"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_startorpuase"
-        android:layout_below="@+id/btn_managecontentplate"
-        android:layout_marginTop="17dp"
-        android:text="教程" />
-
-    <Button
-        android:id="@+id/btn_managertask"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_jiaocheng"
-        android:layout_alignBottom="@+id/btn_jiaocheng"
-        android:layout_alignLeft="@+id/btn_fenxifile"
-        android:text="管理任务记录" />
-
-    <Button
-        android:id="@+id/btn_openaddtask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_cpdb"
-        android:layout_alignTop="@+id/btn_managertask"
-        android:text="任务" />
-
-</RelativeLayout>
+</LinearLayout>

@@ -44,6 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/edt_showresult"
         android:layout_alignParentTop="true"
+        android:layout_margin="2dp"
+        android:textSize="18sp"
+            android:background="@drawable/bg_button"
         android:text="添加短信模板" />
 
   </RelativeLayout>

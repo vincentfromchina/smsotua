@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class GernatorSMSText
 {
+	final static String TAG = "autosms";
 	//{|n|} {|@|}  {| |} {|A|} {|a|}  {|d|} {|t|}
 		final static String spc[] = {"^","|","`","&","*","%","$","#","@"};
 		final static String little_a[] = {"a","b","c","d","e","f","g","h",

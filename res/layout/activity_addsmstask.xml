@@ -13,7 +13,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minLines="1"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             android:text="新建发送任务名称：" />
     
     <EditText
@@ -39,6 +40,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/bg_button"
+        android:layout_margin="2dp"
         android:text="选择联系人" />
 
     <Button
@@ -46,6 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="从文件导入" />
     </LinearLayout>
     
@@ -66,13 +71,16 @@
          android:id="@+id/btn_selectsmsplate"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
+         android:background="@drawable/bg_button"
          android:text="选择短信模板" />
      
       <TextView
             android:id="@+id/tv_contentname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
             android:text="" />
       
       <ListView
@@ -89,6 +97,7 @@
           android:id="@+id/btn_addnewtask"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@drawable/bg_button"
           android:text="添加任务" />
  
 <ScrollView

@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 
 public class WebActivity extends Activity
 {
+	final static String TAG = "autosms";
 	private WebView v_help;
 	private ProgressBar bar ;
 	

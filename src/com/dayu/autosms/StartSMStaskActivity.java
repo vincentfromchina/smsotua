@@ -63,10 +63,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StartSMStaskActivity extends Activity
 {
-	final static String TAG = "autophone";
+	final static String TAG = "autosms";
 	PendingIntent paIntent;
 	PendingIntent deliverPI;
     SmsManager smsManager;
@@ -102,6 +103,7 @@ public class StartSMStaskActivity extends Activity
     String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
     Intent sentIntent = new Intent(SENT_SMS_ACTION); 
 	static boolean teac = false;
+	static byte[] signfromdb ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -154,7 +156,7 @@ public class StartSMStaskActivity extends Activity
 		m_SmsTask = new SmsTask();
 		m_SmsTask.setTaskid(taskid);
 		
-		Log.e(TAG,"m_SmsTask.getTaskfail()"+ m_SmsTask.getTaskfail());
+		if (AutoSMSActivity.isdebug) Log.e(TAG,"m_SmsTask.getTaskfail()"+ m_SmsTask.getTaskfail());
 	   
 		init_task();
 		
@@ -182,31 +184,31 @@ public class StartSMStaskActivity extends Activity
 			     send_totalnum = 0;
 			     progessperct = 0;
 
-			     Log.e(TAG, "send_totalnum" + send_totalnum);
+			     if (AutoSMSActivity.isdebug) Log.e(TAG, "send_totalnum" + send_totalnum);
 			     m_SmsTask.setTasktotal(0);
                  m_SmsTask.setTaskfail(0);
                  m_SmsTask.setTasksuccess(0);
-                 Log.e(TAG,"m_SmsTask.getTaskfail()2:"+ m_SmsTask.getTaskfail());
+                 if (AutoSMSActivity.isdebug)  Log.e(TAG,"m_SmsTask.getTaskfail()2:"+ m_SmsTask.getTaskfail());
 			     
 			      if (m_sendsms==null)
 					{
 						 m_sendsms = new send_sms();
 					     m_sendsms.start();
 					}else {
-						Log.e(TAG, "m_sendsms is not null");
+						if (AutoSMSActivity.isdebug) Log.e(TAG, "m_sendsms is not null");
 					}
 			      
 			    if (m_SmsTaskQuery==null)
 				{
 			    	  m_SmsTaskQuery = new SmsTaskQuery();
 				}else {
-					Log.e(TAG, "m_SmsTaskQuery is not null");
+					if (AutoSMSActivity.isdebug) Log.e(TAG, "m_SmsTaskQuery is not null");
 				}
 			    if (send_isstart )
 				   {
 					   synchronized (sendsmstask_lock)
 						  {
-						    Log.e(TAG, "通知你解锁了："+Thread.currentThread().getId());
+						   if (AutoSMSActivity.isdebug) Log.e(TAG, "通知你解锁了："+Thread.currentThread().getId());
 							sendsmstask_lock.notifyAll();
 						  }
 				   }
@@ -246,7 +248,7 @@ public class StartSMStaskActivity extends Activity
 			            // 显示对话框  
 			            isExit.show();
 				   		
-				   		Log.e("gushiriji", "m_loadsmstask.isAlive");
+			            if (AutoSMSActivity.isdebug) Log.e(TAG, "m_loadsmstask.isAlive");
 					}else
 					{
 						 // 创建退出对话框  
@@ -260,7 +262,7 @@ public class StartSMStaskActivity extends Activity
 			            isExit.setButton2("取消了", listener);  
 			            // 显示对话框  
 			            isExit.show();  
-						Log.e("gushiriji", "m_loadsmstask not Alive");
+			            if (AutoSMSActivity.isdebug) Log.e(TAG, "m_loadsmstask not Alive");
 					}
 			   }else {
 				   // 创建退出对话框  
@@ -292,7 +294,7 @@ public class StartSMStaskActivity extends Activity
 				   {
 					   synchronized (sendsmstask_lock)
 						  {
-						    Log.e(TAG, "通知你解锁了："+Thread.currentThread().getId());
+						   if (AutoSMSActivity.isdebug) Log.e(TAG, "通知你解锁了："+Thread.currentThread().getId());
 							sendsmstask_lock.notifyAll();
 						  }
 					   btn_sendpause.setText("暂停");
@@ -316,7 +318,7 @@ public class StartSMStaskActivity extends Activity
 					{
 						switch (getResultCode()) {  
 		    	        case Activity.RESULT_OK:  
-		    	        	Log.e(TAG,"发送成功"); 
+		    	        	if (AutoSMSActivity.isdebug) Log.e(TAG,"发送成功"); 
 		    	        	 send_success++;
 		    	        	StringBuilder sb1 = new StringBuilder()
 		    	        	    .append("发送成功：").append(send_success)
@@ -325,7 +327,7 @@ public class StartSMStaskActivity extends Activity
 		    	        	 tv_successorfail.setText(sb1.toString());
 		    	        break;  
 		    	        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:  
-		    	        	Log.e(TAG,"RESULT_ERROR_GENERIC_FAILURE");
+		    	        	if (AutoSMSActivity.isdebug) Log.e(TAG,"RESULT_ERROR_GENERIC_FAILURE");
 		    	        	send_fail++;
 		    	        	 sb1 = new StringBuilder()
 			    	        	    .append("发送成功：").append(send_success)
@@ -334,7 +336,7 @@ public class StartSMStaskActivity extends Activity
 			    	        	 tv_successorfail.setText(sb1.toString());
 		    	        break;  
 		    	        case SmsManager.RESULT_ERROR_RADIO_OFF:  
-		    	        	Log.e(TAG,"RESULT_ERROR_RADIO_OFF");
+		    	        	if (AutoSMSActivity.isdebug) Log.e(TAG,"RESULT_ERROR_RADIO_OFF");
 		    	        	send_fail++;
 		    	        	 sb1 = new StringBuilder()
 			    	        	    .append("发送成功：").append(send_success)
@@ -343,7 +345,7 @@ public class StartSMStaskActivity extends Activity
 			    	        	 tv_successorfail.setText(sb1.toString());
 		    	        break;  
 		    	        case SmsManager.RESULT_ERROR_NULL_PDU:  
-		    	        	Log.e(TAG,"RESULT_ERROR_NULL_PDU");
+		    	        	if (AutoSMSActivity.isdebug) Log.e(TAG,"RESULT_ERROR_NULL_PDU");
 		    	        	send_fail++;
 		    	        	 sb1 = new StringBuilder()
 			    	        	    .append("发送成功：").append(send_success)
@@ -438,7 +440,7 @@ public class StartSMStaskActivity extends Activity
 	private void init_task()
 	{
 		m_Cursor =  sqldb.get_sendtask(taskid);
-	    Log.e("autophone","m_Cursor.get_sendtask");
+		if (AutoSMSActivity.isdebug)  Log.e(TAG,"m_Cursor.get_sendtask");
 	    
 		while (m_Cursor.moveToNext())
 		{
@@ -458,12 +460,18 @@ public class StartSMStaskActivity extends Activity
 	    edt_showresult.setText(GernatorSMSText.getSMSresult(m_SmsTask.getPlatecontent()));
 	    
 		m_Cursor =  sqldb.get_config();
-	    Log.e("autophone","m_Cursor.get_sendinteval");
+		if (AutoSMSActivity.isdebug) Log.e(TAG,"m_Cursor.get_sendinteval");
 	    
 		while (m_Cursor.moveToNext())
 		{
 			send_interval = m_Cursor.getInt(m_Cursor.getColumnIndex("sendinteval"));
 			edt_sendinteval.setText(String.valueOf(send_interval));
+			signfromdb = m_Cursor.getBlob(m_Cursor.getColumnIndex("sign"));
+			if (signfromdb != null)
+			{
+				if (AutoSMSActivity.isdebug) Log.e(TAG, "signfromdb:" + new String(signfromdb));
+			}
+			
 		}
 		
 		
@@ -487,14 +495,14 @@ public class StartSMStaskActivity extends Activity
 			
 			File feFile = new File(mfilePath);
 			
-			Log.e(TAG, "open file  AbsolutePath"+feFile.getAbsolutePath());
+			if (AutoSMSActivity.isdebug) Log.e(TAG, "open file  AbsolutePath"+feFile.getAbsolutePath());
 			
-			Log.e(TAG, "open file  name" +feFile.getName());
+			if (AutoSMSActivity.isdebug) Log.e(TAG, "open file  name" +feFile.getName());
 			if(feFile.canRead())
 			{
 				FileReader frd = null;
 				filesize = feFile.length();
-				Log.e(TAG,"filesize is"+ String.valueOf(filesize));
+				if (AutoSMSActivity.isdebug) Log.e(TAG,"filesize is"+ String.valueOf(filesize));
 				BufferedReader buffd = null;
 				try
 				{
@@ -512,7 +520,7 @@ public class StartSMStaskActivity extends Activity
 					
 					while(((tmp_str=buffd.readLine())!=null)&&mylife)
 					{   
-						Log.e(TAG,"load_file 线程号："+Thread.currentThread().getId());
+						if (AutoSMSActivity.isdebug) Log.e(TAG,"load_file 线程号："+Thread.currentThread().getId());
 						readbytes += tmp_str.getBytes().length+2;
 						tmp_str = tmp_str.trim();
 						if((tmp_str.length()>0)&&(tmp_str.length()==11)&&tmp_str.startsWith("1"))
@@ -521,11 +529,11 @@ public class StartSMStaskActivity extends Activity
 							send_num++;
 						 }
 						
-                        Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
+						if (AutoSMSActivity.isdebug) Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
 						
 						progessperct =  Math.round((float)readbytes/filesize*100);
 						
-						Log.e(TAG, String.valueOf(progessperct)+"%");
+						if (AutoSMSActivity.isdebug) Log.e(TAG, String.valueOf(progessperct)+"%");
 						
 						if (progessperct<0)
 						{
@@ -538,6 +546,7 @@ public class StartSMStaskActivity extends Activity
 						
 						if (send_num==10||progessperct>=100)
 						{
+							
 							for (int i = 0; i < send_num; i++)
 							{
 								String sms_sendtext = m_SmsTask.getPlatecontent();
@@ -550,11 +559,36 @@ public class StartSMStaskActivity extends Activity
 								sendsmstask_lock.notifyAll();
 							}
 							
+							if (send_num >= 10 && !teac)
+							{
+								mylife = false;
+								
+								if (AutoSMSActivity.isdebug)  Log.e(TAG,"signfromdbd"+ signfromdb.toString());
+							  if (signfromdb != null)
+							   {
+								  runOnUiThread(new Runnable()
+									{
+										public void run()
+										{
+											Toast.makeText(StartSMStaskActivity.this, "无法连接网络", Toast.LENGTH_LONG).show();
+										}
+									});
+							   }else{
+									runOnUiThread(new Runnable()
+									{
+										public void run()
+										{
+											Toast.makeText(StartSMStaskActivity.this, "未激活设备，只能发送10条", Toast.LENGTH_LONG).show();
+										}
+									});
+							   }
+							}
+							
 							synchronized (loadsmstask_lock) //暂停导入线程
 							{
 								try
 								{
-									 Log.e(TAG, "锁住了："+Thread.currentThread().getId());
+									if (AutoSMSActivity.isdebug) Log.e(TAG, "锁住了："+Thread.currentThread().getId());
 									loadsmstask_lock.wait();
 								} catch (InterruptedException e)
 								{
@@ -624,7 +658,7 @@ public class StartSMStaskActivity extends Activity
 				
 			}else
 			{
-				Log.e(TAG, "读取文件出错");
+				if (AutoSMSActivity.isdebug) Log.e(TAG, "读取文件出错");
 			}
 		}
 		
@@ -636,7 +670,7 @@ public class StartSMStaskActivity extends Activity
 		@Override
 		public void run()
 		{
-			Log.e(TAG,"send_sms 启动 线程号："+Thread.currentThread().getId());
+			if (AutoSMSActivity.isdebug) Log.e(TAG,"send_sms 启动 线程号："+Thread.currentThread().getId());
 			
 			while (true)
 			{
@@ -667,7 +701,7 @@ public class StartSMStaskActivity extends Activity
 					{
 						try
 						{
-							Log.e(TAG, "任务发送完毕锁住："+Thread.currentThread().getId());
+							if (AutoSMSActivity.isdebug) Log.e(TAG, "任务发送完毕锁住："+Thread.currentThread().getId());
 							sendsmstask_lock.wait();
 						} catch (InterruptedException e)
 						{
@@ -683,7 +717,7 @@ public class StartSMStaskActivity extends Activity
 					{
 						try
 						{
-							Log.e(TAG, "暂停锁住了："+Thread.currentThread().getId());
+							if (AutoSMSActivity.isdebug) Log.e(TAG, "暂停锁住了："+Thread.currentThread().getId());
 							sendsmstask_lock.wait();
 						} catch (InterruptedException e)
 						{
@@ -702,25 +736,24 @@ public class StartSMStaskActivity extends Activity
 				{
 				   
 				   ArrayList<String> divideContents = smsManager.divideMessage(t_SmsBase.getSms_sendtext()); 
-				//  Log.e(TAG, "divideContents size" + divideContents.size());
+				
 				   ArrayList<PendingIntent> PendingIntents = new ArrayList<PendingIntent>(divideContents.size());
-				//   Log.e(TAG, "PendingIntents size" + PendingIntents.size());
+				
 				   int divideContentssize = divideContents.size();
 				   
 				   for (int i = 0; i < divideContentssize; i++)
 				    {
 					   PendingIntents.add(i, PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, 0));
 				    }
-				//   Log.e(TAG, "PendingIntents size" + PendingIntents.size());
 				   
-				   smsManager.sendMultipartTextMessage(t_SmsBase.getSms_sendphone(), null,divideContents , PendingIntents, null); 
+				//   smsManager.sendMultipartTextMessage(t_SmsBase.getSms_sendphone(), null,divideContents , PendingIntents, null); 
 				
                   //  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
 				   send_totalnum += divideContentssize ;
 				   m_SmsTask.setTasktotal(send_totalnum);
 				   
-				  Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
-				  Log.e(TAG,"发送 线程号："+Thread.currentThread().getId());
+				   if (AutoSMSActivity.isdebug) Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
+				   if (AutoSMSActivity.isdebug) Log.e(TAG,"发送 线程号："+Thread.currentThread().getId());
 				  
 				   runOnUiThread(new Runnable()
 					{
@@ -758,7 +791,7 @@ public class StartSMStaskActivity extends Activity
 					  {
 						  synchronized (loadsmstask_lock)
 							{
-								Log.e(TAG, "解锁导入线程了："+Thread.currentThread().getId());
+							  if (AutoSMSActivity.isdebug) Log.e(TAG, "解锁导入线程了："+Thread.currentThread().getId());
 								loadsmstask_lock.notifyAll();
 							}
 						  
@@ -766,7 +799,7 @@ public class StartSMStaskActivity extends Activity
 						   {
 							  try
 							{
-							    Log.e(TAG, "等待队列导入锁住："+Thread.currentThread().getId());
+								  if (AutoSMSActivity.isdebug)  Log.e(TAG, "等待队列导入锁住："+Thread.currentThread().getId());
 								sendsmstask_lock.wait();
 							} catch (InterruptedException e)
 							{
@@ -776,7 +809,7 @@ public class StartSMStaskActivity extends Activity
 					   }
 					}else
 					{
-						Log.e(TAG, "the query not empty");
+						if (AutoSMSActivity.isdebug) Log.e(TAG, "the query not empty");
 					}
 				}
 			}
@@ -796,7 +829,7 @@ public class StartSMStaskActivity extends Activity
      
 	 synchronized (loadsmstask_lock)
 		{
-		 Log.e(TAG, "帮你解锁了："+Thread.currentThread().getId());
+		 if (AutoSMSActivity.isdebug) Log.e(TAG, "帮你解锁了："+Thread.currentThread().getId());
 		 SmsTaskQuery.init_sendlist();
 		 loadsmstask_lock.notifyAll();
 		}
@@ -848,7 +881,7 @@ public class StartSMStaskActivity extends Activity
 				            // 显示对话框  
 				            isExit.show();
 					   		
-					   		Log.e("gushiriji", "m_loadsmstask.isAlive");
+				            if (AutoSMSActivity.isdebug) Log.e(TAG, "m_loadsmstask.isAlive");
 						}else
 						{
 							 // 创建退出对话框  
@@ -862,7 +895,7 @@ public class StartSMStaskActivity extends Activity
 				            isExit.setButton2("取消了", listener);  
 				            // 显示对话框  
 				            isExit.show();  
-							Log.e("gushiriji", "m_loadsmstask not Alive");
+				            if (AutoSMSActivity.isdebug) Log.e(TAG, "m_loadsmstask not Alive");
 						}
 				   }else {
 					   // 创建退出对话框  
@@ -940,7 +973,7 @@ public class StartSMStaskActivity extends Activity
 		 	HttpClient mHttpClient = new DefaultHttpClient();
 		 	String Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 			 String uri = getResources().getString(R.string.url)+"/AutoSms_Sign";
-			  Log.e("loghere", Imei);
+			 if (AutoSMSActivity.isdebug) Log.e(TAG, Imei);
 			    HttpPost httppost = new HttpPost(uri);   
 			    List<NameValuePair> params = new ArrayList<NameValuePair>();
 			     // 添加要传递的参数
@@ -953,11 +986,11 @@ public class StartSMStaskActivity extends Activity
 			 				mHttpEntity = new UrlEncodedFormEntity(params, "gbk");
 			 			
 			 				httppost.setEntity(mHttpEntity); 
-			 			Log.e("url", "发送数据");
+			 				if (AutoSMSActivity.isdebug) Log.e(TAG, "发送数据");
 			 			} catch (UnsupportedEncodingException e1)
 			 			{
 			 				// TODO Auto-generated catch block
-			 			Log.e("url", "数据传递出错了");
+			 				if (AutoSMSActivity.isdebug) Log.e(TAG, "数据传递出错了");
 			 				e1.printStackTrace();
 			 			}
 			 		    		
@@ -973,8 +1006,8 @@ public class StartSMStaskActivity extends Activity
 			 				  String response = EntityUtils.toString(httpresponse.getEntity(), "utf-8");
 			 				 
 			 				 JSONObject mJsonObject = new JSONObject(response);
-			 				Log.e("url","rescode:"+httpresponse.getStatusLine().getStatusCode());
-			 				Log.e("loghere", response);
+			 				if (AutoSMSActivity.isdebug) Log.e(TAG,"rescode:"+httpresponse.getStatusLine().getStatusCode());
+			 				if (AutoSMSActivity.isdebug) Log.e(TAG, response);
 							try
 							{
 								String resp = mJsonObject.getString("resp");
@@ -982,19 +1015,20 @@ public class StartSMStaskActivity extends Activity
 								{
 								case "0": //SIGN_OK
 									String baseencode_serialid = mJsonObject.getString("baseencode_serialid");
-									Log.e(TAG,"baseencode_serialid:"+ baseencode_serialid);
+									 if (AutoSMSActivity.isdebug) Log.e(TAG,"baseencode_serialid:"+ baseencode_serialid);
 									String tp = getBase64(getMD5(Imei));
-									 Log.e(TAG, getMD5(Imei));
-							         Log.e(TAG, getBase64(getMD5(Imei)));
+									 if (AutoSMSActivity.isdebug) Log.e(TAG, getMD5(Imei));
+									 if (AutoSMSActivity.isdebug) Log.e(TAG, tp);
 									if (baseencode_serialid.equals(tp))
 									{
-										Log.e(TAG,"认证成功");
+										if (AutoSMSActivity.isdebug) Log.e(TAG,"认证成功");
+										teac = true;
+										sqldb.update_serial(baseencode_serialid.getBytes());
 									}
 									
-									teac = true;
 									break;
 								case "2": //SIGN_NOREG
-									Log.e(TAG,"认证失败");
+									if (AutoSMSActivity.isdebug) Log.e(TAG,"认证失败");
 									teac = false;
 									break;
 								
@@ -1015,7 +1049,7 @@ public class StartSMStaskActivity extends Activity
 						} catch (IOException e1)
 						{
 							e1.printStackTrace();
-						   Log.e("loghere", "sockettimeout");
+							if (AutoSMSActivity.isdebug) Log.e(TAG, "sockettimeout");
 							
 						} catch (JSONException e1)
 						{
@@ -1044,48 +1078,49 @@ public class StartSMStaskActivity extends Activity
 		       return "1";
 		 }  
 
+	/*
 	@Override
 	protected void onRestart()
 	{
-		Log.e(TAG, "onRestart");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "onRestart");
 		super.onRestart();
 	}
 
 	@Override
 	protected void onResume()
 	{
-		Log.e(TAG, "onResume");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "onResume");
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause()
 	{
-		Log.e(TAG, "onPause");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "onPause");
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop()
 	{
-		Log.e(TAG, "onStop");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "onStop");
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		Log.e(TAG, "onDestroy");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "onDestroy");
 		super.onDestroy();
 	}
 
 	@Override
 	public void recreate()
 	{
-		Log.e(TAG, "recreate");
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "recreate");
 		super.recreate();
 	}
 	
-	
+	*/
 
 }

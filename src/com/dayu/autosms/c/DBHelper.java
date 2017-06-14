@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import com.dayu.autosms.AutoSMSActivity;
 import com.dayu.autosms.m.SmsTask;
 
 import android.R.integer;
@@ -64,7 +65,13 @@ public class DBHelper extends SQLiteOpenHelper
         sql = CREATE_contentplate;
         db.execSQL(sql);
         
-        Log.e("database","数据库创建成功");
+        sql = CREATE_config;
+        db.execSQL(sql);
+        
+        sql = insert_config;
+        db.execSQL(sql);
+        
+        if (AutoSMSActivity.isdebug) Log.e("database","数据库创建成功");
 	}
 
 	@Override
@@ -104,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper
         sql = insert_config;
         db.execSQL(sql);
         
-        Log.e("database","数据库更新成功");
+        if (AutoSMSActivity.isdebug) Log.e("database","数据库更新成功");
 	}
 	
 	public void delrec_smstask(Integer taskid)
@@ -119,13 +126,13 @@ public class DBHelper extends SQLiteOpenHelper
 		String sql ="delete from contentplate where plateid =" +plateid;
 		SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
-    	Log.e("database","delete成功"); 
+    	if (AutoSMSActivity.isdebug) Log.e("database","delete成功"); 
 	}
 
     public Cursor query_count()
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","query访问成功");  
     	Cursor c = db.rawQuery("select count(*) as tol from smstask", null);
     	return c;
     }
@@ -143,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper
     	SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
     	
-        Log.e("database","数据库insert成功");
+    	if (AutoSMSActivity.isdebug) Log.e("database","数据库insert成功");
     }
     
     public void insert_smscontentplate(String platename,String contentplate,String opttime)
@@ -154,48 +161,48 @@ public class DBHelper extends SQLiteOpenHelper
     	SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
     	
-        Log.e("database","数据库insert成功");
+    	if (AutoSMSActivity.isdebug) Log.e("database","数据库insert成功");
     }
    
     public void update_smstask(SmsTask s)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update_smstask成功");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update_smstask成功");  
         db.execSQL("update smstask set taskEndtime='"+s.getTaskEndtime()+ "',tasksuccess=" +s.getTasksuccess()+ ",Taskfail="+ s.getTaskfail()+",tasktotal="+s.getTasktotal()+ " where taskid="+s.getTaskid());
     }
     
     public void update_contentplate(int plateid,String contentplate)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update contentplate成功");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update contentplate成功");  
         db.execSQL("update contentplate set platecontent='"+contentplate+"' where plateid="+plateid);
     }
     
     public void update_contentplatename(int plateid,String contentplatename)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update contentplate set platename='"+contentplatename+"' where plateid="+plateid);  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update contentplate set platename='"+contentplatename+"' where plateid="+plateid);  
         db.execSQL("update contentplate set platename='"+contentplatename+"' where plateid="+plateid);
     }
     
     public void update_smstaskname(int taskid,String taskname)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update smstask set taskname='"+taskname+"' where taskid="+taskid);  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update smstask set taskname='"+taskname+"' where taskid="+taskid);  
         db.execSQL("update smstask set taskname='"+taskname+"' where taskid="+taskid);
     }
     
     public void update_inteval(int inteval)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update config set sendinteval="+inteval);  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update config set sendinteval="+inteval);  
         db.execSQL("update config set sendinteval="+inteval);
     }
     
     public void update_serial(byte[] encoded)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","update config set sign="+encoded);  
+    	if (AutoSMSActivity.isdebug) Log.e("database","update config set sign="+encoded);  
     	String sqlstr = "update config set sign= ?";
 
         Object[] args = new Object[]{encoded};
@@ -206,7 +213,7 @@ public class DBHelper extends SQLiteOpenHelper
     public Cursor query_smscontentplate()
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","query访问成功");  
     	return db.rawQuery("select * from contentplate order by plateaddtime desc", null);
     }
     
@@ -215,14 +222,14 @@ public class DBHelper extends SQLiteOpenHelper
     	String order;
     	order = asc ? "asc" : "desc";
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","query访问成功");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","query访问成功");  
     	return db.rawQuery("select * from smstask order by taskEndtime "+ order, null);
     }
     
     public Cursor get_sendtask(int taskid)
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","select * from smstask where taskid=" + taskid);  
+    	if (AutoSMSActivity.isdebug) Log.e("database","select * from smstask where taskid=" + taskid);  
     	return db.rawQuery("select * from smstask,contentplate where taskid=" + taskid +" and smstask.taskcontentplate=contentplate.plateid",null);
     			         
     }
@@ -230,7 +237,7 @@ public class DBHelper extends SQLiteOpenHelper
     public Cursor get_config()
     {
     	SQLiteDatabase db = getReadableDatabase();
-    	Log.e("database","select * from config");  
+    	if (AutoSMSActivity.isdebug) Log.e("database","select * from config");  
     	return db.rawQuery("select * from config",null);
     			         
     }
@@ -241,7 +248,7 @@ public class DBHelper extends SQLiteOpenHelper
 	{
 		// TODO Auto-generated method stub
 		super.onOpen(db);
-		Log.e("database","数据库open成功");
+		if (AutoSMSActivity.isdebug) Log.e("database","数据库open成功");
 	}
 
 	public static void copyDataBaseToSD(String dbfilepath){  
@@ -259,7 +266,7 @@ public class DBHelper extends SQLiteOpenHelper
 	        outChannel = new FileOutputStream(file).getChannel();  
 	        inChannel.transferTo(0, inChannel.size(), outChannel);  
 	    } catch (Exception e) {  
-	        Log.e("database", "copy dataBase to SD error.");  
+	    	if (AutoSMSActivity.isdebug) Log.e("database", "copy dataBase to SD error.");  
 	        e.printStackTrace();  
 	    }finally{  
 	        try {  
@@ -272,7 +279,7 @@ public class DBHelper extends SQLiteOpenHelper
 	                outChannel = null;  
 	            }  
 	        } catch (IOException e) {  
-	            Log.e("database", "file close error.");  
+	        	if (AutoSMSActivity.isdebug) Log.e("database", "file close error.");  
 	            e.printStackTrace();  
 	        }  
 	    }  

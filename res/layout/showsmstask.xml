@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium Text"
+        android:textSize="23sp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -20,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:focusable="false"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="删除" />
      
      <Button
@@ -29,6 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/btn_deltask"
         android:focusable="false"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="开始" />
     
 </RelativeLayout>

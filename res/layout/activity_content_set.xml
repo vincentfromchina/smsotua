@@ -42,6 +42,8 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_below="@+id/edt_content"
+           android:background="@drawable/bg_button"
+           android:layout_marginTop="5dp"
            android:text="特殊字" />
        
         <Button
@@ -51,36 +53,11 @@
            android:layout_height="wrap_content"
            android:layout_below="@+id/edt_content"
            android:layout_toRightOf="@+id/btn_insertspc"
+           android:layout_marginLeft="5dp"
+           android:layout_marginRight="5dp"
+           android:layout_alignBaseline="@+id/btn_insertspc"
+           android:background="@drawable/bg_button"
            android:text="大写A" />
-
-   
-
-    <Button
-        android:id="@+id/btn_insertnum"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/edt_content"
-        android:layout_alignParentRight="true"
-        android:text="数字" />
-
-    <Button
-        android:id="@+id/btn_insertdate"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_insertnum"
-        android:layout_alignLeft="@+id/btn_insertnum"
-        android:text="日期" />
-
-    <Button
-        android:id="@+id/btn_inserttime"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_insertdate"
-        android:layout_alignLeft="@+id/btn_insertdate"
-        android:text="时间" />
 
     <TextView
         android:id="@+id/txv_totalcount"
@@ -105,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/btn_insertspc"
-        android:layout_below="@+id/btn_insertspc"
+        android:layout_below="@+id/btn_ok"
         android:layout_marginTop="7dp"
         android:text="短信预览"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -146,15 +123,6 @@
     </RelativeLayout>
 
      <Button
-         android:id="@+id/btn_insertlitter_a"
-         style="?android:attr/buttonStyleSmall"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_above="@+id/txv_yulan"
-         android:layout_toRightOf="@+id/btn_insertbig_a"
-         android:text="小写a" />
-
-     <Button
          android:id="@+id/btn_insertblank"
          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
@@ -162,25 +130,70 @@
          android:layout_above="@+id/txv_yulan"
          android:visibility="gone"
          android:layout_toRightOf="@+id/btn_insertlitter_a"
+         android:background="@drawable/bg_button"
          android:text="空格" />
+
+     <Button
+         android:id="@+id/btn_ok"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:background="@drawable/bg_button"
+         android:layout_alignLeft="@+id/btn_insertspc"
+         android:layout_below="@+id/btn_insertspc"
+         android:layout_marginTop="8dp"
+         android:text="确 定" />
+
+     <Button
+         android:id="@+id/btn_inserttime"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/btn_insertdate"
+         android:layout_alignTop="@+id/edt_content"
+         android:background="@drawable/bg_button"
+         android:text="时间" />
+
+     <Button
+         android:id="@+id/btn_insertdate"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/btn_insertnum"
+         android:layout_below="@+id/btn_inserttime"
+         android:layout_marginTop="5dp"
+         android:layout_marginBottom="5dp"
+         android:background="@drawable/bg_button"
+         android:text="日期" />
+
+     <Button
+         android:id="@+id/btn_insertnum"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignRight="@+id/rel_xiaoguo"
+         android:layout_below="@+id/btn_insertdate"
+         android:background="@drawable/bg_button"
+         android:text="数字" />
+
+     <Button
+         android:id="@+id/btn_insertlitter_a"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/btn_ok"
+         android:layout_toRightOf="@+id/btn_insertbig_a"
+         android:background="@drawable/bg_button"
+         android:text="小写a" />
 
      <Button
          android:id="@+id/btn_unlock"
          style="?android:attr/buttonStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_above="@+id/txv_yulan"
-         android:layout_alignLeft="@+id/btn_insertnum"
+         android:layout_alignRight="@+id/btn_ok"
+         android:layout_below="@+id/edt_content"
          android:text="解锁" />
-
-     <Button
-         android:id="@+id/btn_ok"
-         style="?android:attr/buttonStyleSmall"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/btn_inserttime"
-         android:layout_alignTop="@+id/txv_calculate"
-         android:text="确定" />
 
   </RelativeLayout>
   

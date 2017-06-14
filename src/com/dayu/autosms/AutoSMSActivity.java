@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.CallLog;
 import android.provider.MediaStore.Images.Thumbnails;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
@@ -65,12 +66,14 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.media.Image;
 import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -79,25 +82,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
   
 
-public class AutoSMSActivity extends Activity
+public class AutoSMSActivity extends Activity implements OnClickListener
 {
 
-	final static String TAG = "autophone";
-	String sendbuf = "send ok!";
-	PendingIntent paIntent;
-	PendingIntent deliverPI;
-    SmsManager smsManager;
-    EditText edt_phonenum;
+	final static String TAG = "autosms";
     static private String mfilePath="",owner="";
-   
-	private DBHelper sqldb;
-	
 	static long filesize = 0;
 	
     static public Boolean isdebug = true;
@@ -134,7 +131,7 @@ public class AutoSMSActivity extends Activity
 						
 						}
 					}
-				}, "txt","xls","TXT","XLS");  //不定长参数使用方法
+				}, "txt","TXT");  //不定长参数使用方法
 		picker.show();
 	}
     
@@ -145,11 +142,12 @@ public class AutoSMSActivity extends Activity
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		 TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+	//	 TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
-		 JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+		 JPushInterface.setDebugMode(isdebug); 	// 设置开启日志,发布时请关闭日志
          JPushInterface.init(this);     		// 初始化 JPush
          
+         /*
          sqldb = new DBHelper(getBaseContext(),"smstask.db", null) ;
 	     
 		 Cursor c = null;
@@ -165,146 +163,53 @@ public class AutoSMSActivity extends Activity
 				
 			 }
 		  }
-         
+         */
 		 
          
-	      manager.listen(new MyPhoneListener(),PhoneStateListener.LISTEN_CALL_STATE);
+	  //    manager.listen(new MyPhoneListener(),PhoneStateListener.LISTEN_CALL_STATE);
+	  
+	      findViewById(R.id.linearLayout1_1).setOnClickListener(this);
+	      findViewById(R.id.linearLayout1_2).setOnClickListener(this);
+	      findViewById(R.id.linearLayout1_3).setOnClickListener(this);
+	      findViewById(R.id.linearLayout2_1).setOnClickListener(this);
+	      findViewById(R.id.linearLayout2_2).setOnClickListener(this);
+	      findViewById(R.id.linearLayout2_3).setOnClickListener(this);
+	      
+	      findViewById(R.id.btn_active).setOnClickListener(this);
+	      findViewById(R.id.btn_managertask).setOnClickListener(this);
+	      findViewById(R.id.btn_addsmstask).setOnClickListener(this);
+	      findViewById(R.id.btn_managerplate).setOnClickListener(this);
+	      findViewById(R.id.btn_jiaocheng).setOnClickListener(this);
+	      findViewById(R.id.btn_othersoft).setOnClickListener(this);
+	      
+	      
+	  /*    
+	    LinearLayout  linearLayout1_1 = (LinearLayout)findViewById(R.id.linearLayout1_1);
+	    linearLayout1_1.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Log.e(TAG, "you click 1_1");
+				
+			}
+		});
+	  
+	    ImageButton btn_jiaocheng = (ImageButton)findViewById(R.id.btn_jiaocheng);
+	     btn_jiaocheng.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				jiaocheng();
+				Log.e(TAG, "you click 1_1");
+			}
+		});
 	   
-	      
-	      edt_phonenum = (EditText)findViewById(R.id.edt_phonenum);
-	      
-	      Button btn_openfile = (Button)findViewById(R.id.btn_openfile);
-	      btn_openfile.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				pickFile(v);
-				
-			}
-		});
-	      
-	     Button btn_call = (Button)findViewById(R.id.btn_call);
-	     btn_call.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				
-				String phonenum = edt_phonenum.getText().toString();
-				if(edt_phonenum.getText().toString().equals(""))
-				{
-					Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+10011));  
-	                startActivity(intent);  
-				}else
-				{
-					
-					Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+phonenum));  
-	                startActivity(intent); 
-	               
-				}
-				
-			}
-		});
-	     
-	     Button btn_sms = (Button)findViewById(R.id.btn_sms);
-	     btn_sms.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				/*
-				String test = "接下来的流程和普通短信一样，最终通过RILJ将短信发送出去，并且注册回调消息为EVENT_SEND_SMS_COMPLETE。"
-						+ "也就是说，对于长短信而言，如果运营商不支持，那么就拆分为一个个普通短信然后逐条发送，如果运营商支持长短信，则会对每个分"
-						+ "组短信添加SmsHeader的信息头，然后逐条发送。 所以当SMSDispatcher接收到EVENT_SEND_SMS_COMPLETE消息"
-						+ "时，就说明，无论是普通短信或者长短信，都已经发送完毕。以上就是长短信的发送流程。";
-			    */
-				
-				String test = "联通收到吗？";
-				Log.e("TAG",String.valueOf(test.getBytes().length));
-				
-				smsManager.sendTextMessage("13538948083", null, test, paIntent, null); 
-				
-				ArrayList<String> divideContents = smsManager.divideMessage(test);   
-		        
-				ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(divideContents.size()); 
-				
-		    //    smsManager.sendMultipartTextMessage("13538948083", null, divideContents, null sentIntents, null); 
-		        
-				/*
-				if (send_num>0)
-				   {
-					  send_sms mt_sms = new send_sms();
-						mt_sms.start();
-				   }
-				*/
-			}
-		});
-	     
-	     Button btn_sendpk = (Button)findViewById(R.id.btn_sendpk);
-	     btn_sendpk.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				
-			}
-		});
-	     
-	     Button btn_fenxifile = (Button)findViewById(R.id.btn_fenxifile);
-	     btn_fenxifile.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				
-				
-			}
-		});
-	     
-	     Button btn_content_set = (Button)findViewById(R.id.btn_content_set);
-	     btn_content_set.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent itopen = new Intent();
-				itopen.setClass(AutoSMSActivity.this, ContentSetActivity.class);
-				startActivity(itopen);
-			}
-		});
-	     
-	     final Button btn_startorpuase = (Button)findViewById(R.id.btn_startorpuase);
-	     btn_startorpuase.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				
-		   }
-	 });
-	     
-	     Button btn_managecontentplate = (Button)findViewById(R.id.btn_managecontentplate);
-	     btn_managecontentplate.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent mIntent = new Intent();
-				mIntent.setClass(AutoSMSActivity.this, ManagercontentplateActivity.class);
-				startActivity(mIntent);
-			}
-		});
-	     
-	     Button btn_cpdb = (Button)findViewById(R.id.btn_cpdb);
+	    
+	     ImageButton btn_cpdb = (ImageButton)findViewById(R.id.btn_cpdb);
 	     btn_cpdb.setOnClickListener(new OnClickListener()
 		{
 			
@@ -315,19 +220,9 @@ public class AutoSMSActivity extends Activity
 			}
 		});
 	     
-	     Button btn_jiaocheng = (Button)findViewById(R.id.btn_jiaocheng);
-	     btn_jiaocheng.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				jiaocheng();
-				
-			}
-		});
+	    
 	     
-	     Button btn_managertask = (Button)findViewById(R.id.btn_managertask);
+	     ImageButton btn_managertask = (ImageButton)findViewById(R.id.btn_managertask);
 	     btn_managertask.setOnClickListener(new OnClickListener()
 		{
 			
@@ -341,7 +236,7 @@ public class AutoSMSActivity extends Activity
 			}
 		});
 	     
-	     Button btn_openaddtask = (Button)findViewById(R.id.btn_openaddtask);
+	     ImageButton btn_openaddtask = (ImageButton)findViewById(R.id.btn_addsmstask);
 	     btn_openaddtask.setOnClickListener(new OnClickListener()
 		{
 			
@@ -354,39 +249,83 @@ public class AutoSMSActivity extends Activity
 				
 			}
 		});
+	     
+	     ImageButton btn_active = (ImageButton)findViewById(R.id.btn_active);
+	     btn_active.setOnClickListener(new OnClickListener()
+		{
 			
+			@Override
+			public void onClick(View v)
+			{
+				Intent mIntent = new Intent();
+				mIntent.setClass(AutoSMSActivity.this, SetActivity.class);
+				startActivity(mIntent);
+				
+			}
+		});
+	     
+	     */
+	     
 	//检查软件版本
 	//	checkupdate ck = new checkupdate();
 	//	ck.start();
 			
 	}
 	
-	public static String getMD5(String val)
-    {  
-	        MessageDigest md5;
-			try
-			{
-				md5 = MessageDigest.getInstance("MD5");
-				 md5.update(val.getBytes());  
-			        byte[] m = md5.digest();//加密  
-			        StringBuffer sb = new StringBuffer();  
-			         for(int i = 0; i < m.length; i ++){  
-			          sb.append(m[i]);  
-			         }  
-			         return sb.toString();  
-			} catch (NoSuchAlgorithmException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}  
-	       return "1";
-	 }  
-	
-	void copydbfile()
+
+	@Override
+	public void onClick(View v)
 	{
-		String dbfilepath = getApplication().getDatabasePath("smstask.db").toString();
-		sqldb.copyDataBaseToSD(dbfilepath);
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "id is:"+v.getId());
+		switch(v.getId())
+		{
+		  case R.id.linearLayout1_1 :
+			  if (AutoSMSActivity.isdebug) Log.e(TAG, "you click jiaocheng");
+			  jiaocheng();
+			break;
+		  case R.id.btn_jiaocheng:
+			  jiaocheng();
+			  break;
+		  case R.id.linearLayout1_2 :
+			  open_activity(SetActivity.class);
+				break;
+		  case R.id.btn_active :
+			  open_activity(SetActivity.class);
+				break;
+		  case R.id.linearLayout1_3 :
+			  open_activity(ManagertaskActivity.class);
+				break;
+		  case R.id.btn_managertask :
+			  open_activity(ManagertaskActivity.class);
+				break;
+		  case R.id.linearLayout2_1 :
+			  open_activity(AddsmstaskActivity.class);
+				break;
+		  case R.id.btn_addsmstask :
+			  open_activity(AddsmstaskActivity.class);
+				break;
+		  case R.id.linearLayout2_2 :
+			  open_activity(ManagercontentplateActivity.class);
+				break;
+		  case R.id.btn_managerplate :
+			  open_activity(ManagercontentplateActivity.class);
+				break;
+		  case R.id.linearLayout2_3 :
+			  
+				break;
+		default:
+	    	break;
+		}
+		
 	}
+	
+	public void open_activity(Class<?> act)
+	{
+		Intent mIntent = new Intent();
+		mIntent.setClass(AutoSMSActivity.this, act);
+		startActivity(mIntent);
+	}
+	
 	
 	public class checkupdate extends Thread
 	 {
@@ -423,7 +362,7 @@ public class AutoSMSActivity extends Activity
 					}
 
 					if (AutoSMSActivity.isdebug)
-						Log.e("gps", "resultData:" + resultData);
+						if (AutoSMSActivity.isdebug) Log.e(TAG, "resultData:" + resultData);
 
 					JSONObject mJsonObject;
 					try
@@ -528,7 +467,7 @@ public class AutoSMSActivity extends Activity
 				{
 					String sdpath = Environment.getExternalStorageDirectory()+"/";
 					mSavepath = sdpath +"download/";
-					if (isdebug) Log.e("gps", mSavepath);
+					if (AutoSMSActivity.isdebug) Log.e(TAG, mSavepath);
 					
 					try
 					{
@@ -654,7 +593,7 @@ public class AutoSMSActivity extends Activity
 
 			            recode = urlConn.getResponseCode();
 			            
-			            if (AutoSMSActivity.isdebug) Log.e("gps", String.valueOf(recode));
+			            if (AutoSMSActivity.isdebug) Log.e(TAG, String.valueOf(recode));
 			        }catch(Exception e){  
 			            
 			            e.printStackTrace();  
@@ -721,67 +660,41 @@ public class AutoSMSActivity extends Activity
 		return true;
 	}
 	
+	
+	 /**
+
+     * 当电话状态改变了将会执行该方法
+
+     */
+	/*
 	 class MyPhoneListener extends PhoneStateListener{
 
-	      /**
-
-	       * 当电话状态改变了将会执行该方法
-
-	       */
+	     
 
 	      @Override
 
 	      public void onCallStateChanged(int state, String incomingNumber) {
 
-	         Log.i(TAG,"incomingNumber:"+incomingNumber);
+	         Log.e(TAG,"incomingNumber:"+incomingNumber);
 
 	         switch(state) {
 
 	         case TelephonyManager.CALL_STATE_IDLE:
 
-	            Log.i(TAG,"CALL_STATE_IDLE");
+	            Log.e(TAG,"CALL_STATE_IDLE");
 
 	            break;
 
 	         case TelephonyManager.CALL_STATE_OFFHOOK:
 
-	            Log.i(TAG,"CALL_STATE_OFFHOOK");
+	            Log.e(TAG,"CALL_STATE_OFFHOOK");
 
 	            break;
 
 	         case TelephonyManager.CALL_STATE_RINGING:
 
-	            Log.i(TAG,"CALL_STATE_RINGING");
-	            /*
-	            try {
-	                Method method = Class.forName("android.os.ServiceManager")
-	                        .getMethod("getService", String.class);
-	               
-	                IBinder binder = (IBinder) method.invoke(null, new Object[]{TELEPHONY_SERVICE});
-	               ITelephony telephony = ITelephony.Stub.asInterface(binder);
-	                telephony.answerRingingCall();               
-	            } catch (NoSuchMethodException e) {
-	                Log.d("Sandy", "", e);
-	            } catch (ClassNotFoundException e) {
-	                Log.d("Sandy", "", e);
-	            }catch (Exception e) {
-	                Log.d("Sandy", "", e);
-	                try{
-	                    Log.e("Sandy", "for version 4.1 or larger");
-	                    Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
-	                    KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
-	                    intent.putExtra("android.intent.extra.KEY_EVENT",keyEvent);
-
-	                    sendOrderedBroadcast(intent,"android.permission.CALL_PRIVILEGED");
-	                } catch (Exception e2) {
-	                    Log.d("Sandy", "", e2);
-	                    Intent meidaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-	                               KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
-	                               meidaButtonIntent.putExtra(Intent.EXTRA_KEY_EVENT,keyEvent);
-	                               sendOrderedBroadcast(meidaButtonIntent, null);
-	                }
-	            }
-	            */
+	            Log.e(TAG,"CALL_STATE_RINGING");
+	           
 	            break;
 
 	         }
@@ -789,7 +702,38 @@ public class AutoSMSActivity extends Activity
 	      }
 
 	   }
+   */
+	 
 	/*
+	 private void showlogcat()
+	 {
+		 Process localProcess;
+		try
+		{
+			localProcess = Runtime.getRuntime().exec("logcat -s InCall");
+			InputStream lips = localProcess.getInputStream();
+	        InputStreamReader lisr = new InputStreamReader(lips);
+	        BufferedReader lbfr = new BufferedReader(lisr);
+	        String str = lbfr.readLine();
+	        
+	        if (str!=null)
+			{  
+	        		Log.e(TAG, str);
+					
+				Log.e(TAG, "get logcat info ok");
+			}else {
+				Log.e(TAG, "no info...");
+			}
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        
+	 }
+	 
+	
+	
 	BroadcastReceiver br1 = new BroadcastReceiver()
 	{	
 		@Override
@@ -803,14 +747,14 @@ public class AutoSMSActivity extends Activity
 					        
 					        switch(state){  
 					        case TelephonyManager.CALL_STATE_RINGING:  
-					            Log.i(TAG, "[Broadcast]等待接电话="+phoneNumber);  
+					            Log.e(TAG, "[Broadcast]等待接电话="+phoneNumber);  
 					             
 					            break;  
 					        case TelephonyManager.CALL_STATE_IDLE:  
-					            Log.i(TAG, "[Broadcast]电话挂断="+phoneNumber);  
+					            Log.e(TAG, "[Broadcast]电话挂断="+phoneNumber);  
 					            break;  
 					        case TelephonyManager.CALL_STATE_OFFHOOK:  
-					            Log.i(TAG, "[Broadcast]通话中="+phoneNumber);  
+					            Log.e(TAG, "[Broadcast]通话中="+phoneNumber);  
 					            break;  
 					        } 
 		}

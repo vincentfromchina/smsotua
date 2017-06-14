@@ -44,6 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:background="@drawable/bg_button"
+            android:layout_margin="2dp"
             android:text="@android:string/cancel" />
 
         <Button
@@ -52,6 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+            android:layout_margin="2dp"
+            android:background="@drawable/bg_button"
             android:text="@android:string/ok" />
     </LinearLayout>
 

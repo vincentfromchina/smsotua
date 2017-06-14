@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.dayu.autosms.AutoSMSActivity;
 import com.dayu.autosms.R;
 
 import android.app.Dialog;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 public class FolderFilePicker extends Dialog {
 
+	final static String TAG = "autosms";
 	private static final String ROOT = Environment
 			.getExternalStorageDirectory().toString()+"/";
 	private final int SELECTED_COLOR = 0xffadbcb6;
@@ -50,7 +52,7 @@ public class FolderFilePicker extends Dialog {
 				: extensions;
 		for (String s : mExtensions)
 		{
-			Log.e("gushiriji", s.toString());
+			if (AutoSMSActivity.isdebug) Log.e(TAG, s.toString());
 		}
 		init();
 		

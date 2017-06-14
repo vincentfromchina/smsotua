@@ -22,7 +22,7 @@
 
     <item name="mod_key_first_tag" type="id"></item>
     <item name="mod_key_second_tag" type="id"></item>
-
+    <string name="title_activity_reg">激活设备</string>
     <string name="title_activity_managertask">管理任务</string>
     <string name="title_activity_start_smstask">发送任务监控</string>
     <string name="title_activity_addsmstask">添加发送任务</string>

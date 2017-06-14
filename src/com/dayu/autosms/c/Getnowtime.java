@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Getnowtime
 {
+	final static String TAG = "autosms";
 	 SimpleDateFormat nowdate;
 	 SimpleDateFormat nowtime;
 	 Date date;

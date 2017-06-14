@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 public class Showresult extends View
 {
-
+	final static String TAG = "autosms";
 	 private static final int LAYER_FLAGS = Canvas.MATRIX_SAVE_FLAG | Canvas.CLIP_SAVE_FLAG  
              | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG  
              | Canvas.CLIP_TO_LAYER_SAVE_FLAG;  
@@ -43,7 +43,7 @@ public class Showresult extends View
 	private Bitmap bp, bitmap2;
 	
 	 InputStream is;
-	private String sum_zonglirun,sum_yongjin,sum_buytimes,sum_selltimes,
+	private String sum_zonglirun,sum_buytimes,sum_selltimes,
 	sum_zongjine,sum_completed,sum_fenhong,max_zonglirun,max_lirunpercent,
 	max_cjrq,min_cjrq;
 	private TextPaint tp;

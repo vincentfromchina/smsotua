@@ -47,7 +47,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class ContentSetActivity extends Activity {
 
-	final String TAG = "autophone";
+	final static String TAG = "autosms";
 	public static String Imei = "";
 	public static String serverip = "dayuinf.com";
 	private static final int REG_OK = 1001,REG_EXITS = 1002,REG_FAIL = 1007,REG_BACKLIST = 1004;
@@ -81,7 +81,7 @@ public class ContentSetActivity extends Activity {
 		}
         
         
-        Log.e("autophone", type + " " + plateid);
+        if (AutoSMSActivity.isdebug) Log.e(TAG, type + " " + plateid);
         
         
         final TextView txv_calculate = (TextView)findViewById(R.id.txv_calculate);
@@ -298,7 +298,7 @@ public class ContentSetActivity extends Activity {
 	 	HttpClient mHttpClient = new DefaultHttpClient();
 	 	Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 		 String uri = "http://"+serverip+"/AutoSms_Reg";
-		 if( AutoSMSActivity.isdebug ) Log.e("loghere", Imei);
+		 if( AutoSMSActivity.isdebug ) Log.e(TAG, Imei);
 		    HttpPost httppost = new HttpPost(uri);   
 		    List<NameValuePair> params = new ArrayList<NameValuePair>();
 		     // 添加要传递的参数
@@ -311,11 +311,11 @@ public class ContentSetActivity extends Activity {
 		 				mHttpEntity = new UrlEncodedFormEntity(params, "gbk");
 		 			
 		 				httppost.setEntity(mHttpEntity); 
-		 				if( AutoSMSActivity.isdebug )Log.e("url", "发送数据");
+		 				if( AutoSMSActivity.isdebug )Log.e(TAG, "发送数据");
 		 			} catch (UnsupportedEncodingException e1)
 		 			{
 		 				// TODO Auto-generated catch block
-		 				if( AutoSMSActivity.isdebug )Log.e("url", "数据传递出错了");
+		 				if( AutoSMSActivity.isdebug )Log.e(TAG, "数据传递出错了");
 		 				e1.printStackTrace();
 		 			}
 		 		    		
@@ -333,7 +333,7 @@ public class ContentSetActivity extends Activity {
 		 				 
 		 				 JSONObject mJsonObject = new JSONObject(response);
 		 				
-		 				if( AutoSMSActivity.isdebug )Log.e("loghere", mJsonObject.toString());
+		 				if( AutoSMSActivity.isdebug )Log.e(TAG, mJsonObject.toString());
 						try
 						{
 							String resp = mJsonObject.getString("resp");
@@ -350,7 +350,7 @@ public class ContentSetActivity extends Activity {
 								break;
 							case "4":
 								serialid = mJsonObject.getString("serialid");
-								Log.e("loghere", serialid);
+								if (AutoSMSActivity.isdebug) Log.e(TAG, serialid);
 								mHandler.sendEmptyMessage(REG_BACKLIST);
 								break;
 							default:
@@ -362,9 +362,9 @@ public class ContentSetActivity extends Activity {
 							e.printStackTrace();
 						}
 					 		
-						if( AutoSMSActivity.isdebug )	Log.e("url",response);
+						if( AutoSMSActivity.isdebug )	Log.e(TAG,response);
 		 			   }
-		 			  if( AutoSMSActivity.isdebug )Log.e("url","rescode:"+httpresponse.getStatusLine().getStatusCode());
+		 			  if( AutoSMSActivity.isdebug ) Log.e(TAG,"rescode:"+httpresponse.getStatusLine().getStatusCode());
 		 				
 		 				
 		 			} catch (ClientProtocolException e1)
@@ -373,7 +373,7 @@ public class ContentSetActivity extends Activity {
 					} catch (IOException e1)
 					{
 						e1.printStackTrace();
-						if( AutoSMSActivity.isdebug )Log.e("loghere", "sockettimeout");
+						if( AutoSMSActivity.isdebug ) Log.e(TAG, "sockettimeout");
 						
 					} catch (JSONException e1)
 					{
@@ -418,7 +418,7 @@ public class ContentSetActivity extends Activity {
  	            	
  	            	break;
  	        default:
- 	        	if( AutoSMSActivity.isdebug ) Log.i(TAG, "Unhandled msg - " + msg.what);
+ 	        	if( AutoSMSActivity.isdebug ) Log.e(TAG, "Unhandled msg - " + msg.what);
  	        }
  	    }                                       
  	};
@@ -434,7 +434,7 @@ public class ContentSetActivity extends Activity {
     public String getcontent()
     {
        EditText tv_edit = (EditText)findViewById(R.id.edt_content);
-       Log.e("autophone","send contentplate"+ tv_edit.getText().toString());
+       if (AutoSMSActivity.isdebug) Log.e(TAG,"send contentplate"+ tv_edit.getText().toString());
        return tv_edit.getText().toString();
     }
     

@@ -42,6 +42,7 @@ import android.widget.Toast;
 public class ManagercontentplateActivity extends Activity
 {
     DBHelper sqldb ;
+    final static String TAG = "autosms";
 	private String contentplate;
 	boolean rec_contentplate = false;
 	EditText edt_contentplate;
@@ -113,7 +114,7 @@ public class ManagercontentplateActivity extends Activity
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				//点击后在标题上显示点击了第几行
-                Log.e("autophone","你点击了第"+position +"id:"+id);
+				if (AutoSMSActivity.isdebug) Log.e(TAG,"你点击了第"+position +"id:"+id);
                 
                if (isfirstlongclick)
 			   {
@@ -133,7 +134,7 @@ public class ManagercontentplateActivity extends Activity
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 			{
 				pressplateid = plateid.get(position);
-				Log.e("autophone","你长按了第"+position+"模板名"+platename.get(position));
+				if (AutoSMSActivity.isdebug) Log.e(TAG,"你长按了第"+position+"模板名"+platename.get(position));
 				show_modplatenameDialog(platename.get(position));
 			
 				return false;
@@ -163,13 +164,13 @@ public class ManagercontentplateActivity extends Activity
 	                    holder.mod_plate.setTag(R.id.mod_key_first_tag,plateid.get(position));
 	                    holder.mod_plate.setTag(R.id.mod_key_second_tag, position);
 	                    holder.delete_plate.setTag(plateid.get(position));
-	                    Log.e("autophone", ""+position+"--"+plateid.get(position));
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+plateid.get(position));
 	                    
 	                    holder.mod_plate.setOnClickListener(new OnClickListener() {
 	                        
 	                        @Override
 	                        public void onClick(View v) {
-	                         Log.v("MyListViewBase", "你点击了修改按钮" + v.getTag(R.id.mod_key_first_tag));                                //打印Button的点击信息
+	                        	if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了修改按钮" + v.getTag(R.id.mod_key_first_tag));                                //打印Button的点击信息
 	                         rec_contentplate = false;
 	                     	Intent open_conentsetactivity = new Intent();
 	         				open_conentsetactivity.setClass(ManagercontentplateActivity.this, ContentSetActivity.class);
@@ -181,7 +182,7 @@ public class ManagercontentplateActivity extends Activity
 
 	         				startActivityForResult(open_conentsetactivity, REQUEST_CODE, null);
 
-	         				Log.e("autophone", "start update");
+	         				if (AutoSMSActivity.isdebug) Log.e(TAG, "start update");
 	         				
 	                       }
 	                    });
@@ -192,7 +193,7 @@ public class ManagercontentplateActivity extends Activity
 							@Override
 							public void onClick(View v)
 							{
-								Log.v("MyListViewBase", "你点击了删除按钮" + v.getTag()); 
+								if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
 								sqldb.delrec_smscontentplate((Integer)v.getTag());
 								 update_dataset();
 							     m_datasetadpter.notifyDataSetChanged();
@@ -201,11 +202,11 @@ public class ManagercontentplateActivity extends Activity
 						});
 	                    
 	                    convertView.setTag(holder);//绑定ViewHolder对象
-	                    Log.v("autophone", "getView " + position + " " + convertView);
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "getView " + position + " " + convertView);
 	          }
 	          else{
 	                    holder = (ViewHolder)convertView.getTag();//取出ViewHolder对象
-	                    Log.e("autophone", "会执行");
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "会执行");
 	                  }
 	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
 	            holder.contenplatename.setText((String)getItem(position));
@@ -251,7 +252,7 @@ public class ManagercontentplateActivity extends Activity
 		platecontent = new ArrayList<>();
 		
 	    m_Cursor =  sqldb.query_smscontentplate();
-	    Log.e("autophone","m_Cursor.getCount"+ m_Cursor.getCount());
+	    if (AutoSMSActivity.isdebug) Log.e(TAG,"m_Cursor.getCount"+ m_Cursor.getCount());
 	    
 		while (m_Cursor.moveToNext())
 		{
@@ -363,7 +364,7 @@ public class ManagercontentplateActivity extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Log.e("autophone", "requestCode"+requestCode+"resultCode"+resultCode);
+		if (AutoSMSActivity.isdebug) Log.e(TAG, "requestCode"+requestCode+"resultCode"+resultCode);
 		if (requestCode==307) //请求编辑短信模板
 		{
 			if (resultCode==308) //返回短信模板
@@ -371,14 +372,14 @@ public class ManagercontentplateActivity extends Activity
 				Bundle m_Bundle = data.getExtras();
 			    contentplate = m_Bundle.getString("contentplate");
 			    rec_contentplate = true;
-			    Log.e("autophone", contentplate);
+			    if (AutoSMSActivity.isdebug) Log.e(TAG, contentplate);
 			    edt_showresult.setText(GernatorSMSText.getSMSresult(contentplate));
 			}
 			if (resultCode==309)
 			{					
 				Bundle m_Bundle = data.getExtras();
 			    contentplate = m_Bundle.getString("contentplate");
-			    Log.e("autophone", "back contentplate"+contentplate);
+			    if (AutoSMSActivity.isdebug) Log.e(TAG, "back contentplate"+contentplate);
 			    edt_showresult.setText(GernatorSMSText.getSMSresult(contentplate));
 				sqldb.update_contentplate(m_Bundle.getInt("plateid"), contentplate);
 				

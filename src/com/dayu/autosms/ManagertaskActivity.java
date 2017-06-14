@@ -33,6 +33,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 public class ManagertaskActivity extends Activity
 {
+	final static String TAG = "autosms";
 	DBHelper sqldb ;
 	Cursor m_Cursor;
 	private LayoutInflater mInflater;//得到一个LayoutInfalter对象用来导入布局
@@ -72,7 +73,7 @@ public class ManagertaskActivity extends Activity
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 		{
 			//点击后在标题上显示点击了第几行
-            Log.e("autophone","你点击了第"+position +"id:"+id);
+			if (AutoSMSActivity.isdebug) Log.e(TAG,"你点击了第"+position +"id:"+id);
             
            if (isfirstlongclick)
 		   {
@@ -93,7 +94,7 @@ public class ManagertaskActivity extends Activity
 		public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
 		{
 			pressplateid = taskid.get(position);
-			Log.e("autophone","你长按了第"+position+"模板名"+taskname.get(position));
+			if (AutoSMSActivity.isdebug) Log.e(TAG,"你长按了第"+position+"模板名"+taskname.get(position));
 			show_modtasknameDialog(taskname.get(position));
 		
 			return false;
@@ -122,7 +123,7 @@ public class ManagertaskActivity extends Activity
 	                    holder.start_task = (Button) convertView.findViewById(R.id.btn_starttask);
 	                    holder.start_task.setTag(taskid.get(position));
 	                    holder.delete_task.setTag(taskid.get(position));
-	                    Log.e("autophone", ""+position+"--"+taskid.get(position));
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+taskid.get(position));
 	                    
 	                   
 	                    holder.delete_task.setOnClickListener(new OnClickListener()
@@ -131,7 +132,7 @@ public class ManagertaskActivity extends Activity
 							@Override
 							public void onClick(View v)
 							{
-								Log.v("MyListViewBase", "你点击了删除按钮" + v.getTag()); 
+								if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
 								sqldb.delrec_smstask((Integer)v.getTag());
 								 update_dataset();
 							     m_datasetadpter.notifyDataSetChanged();
@@ -159,11 +160,11 @@ public class ManagertaskActivity extends Activity
 						});
 	                    
 	                    convertView.setTag(holder);//绑定ViewHolder对象
-	                    Log.v("autophone", "getView " + position + " " + convertView);
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "getView " + position + " " + convertView);
 	          }
 	          else{
 	                    holder = (ViewHolder)convertView.getTag();//取出ViewHolder对象
-	                    Log.e("autophone", "会执行");
+	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "会执行");
 	                  }
 	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
 	            holder.taskname.setText((String)getItem(position));
@@ -209,7 +210,7 @@ public class ManagertaskActivity extends Activity
 		taskinfo = new ArrayList<>();
 		
 	    m_Cursor =  sqldb.query_smstask(false);
-	    Log.e("autophone","m_Cursor.getCount"+ m_Cursor.getCount());
+	    if (AutoSMSActivity.isdebug) Log.e(TAG,"m_Cursor.getCount"+ m_Cursor.getCount());
 	    
 		while (m_Cursor.moveToNext())
 		{

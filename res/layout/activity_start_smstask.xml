@@ -21,6 +21,13 @@
         android:textColor="#ff0000ff"
         android:text="任务信息" />
     
+    <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/tv_sendinfo"
+                android:layout_marginBottom="10dp"
+                android:background="#7d000000" />
+    
     <TextView
         android:id="@+id/tv_jiange"
         android:layout_width="wrap_content"
@@ -58,6 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_jiange"     
         android:layout_marginTop="5dp" 
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="开始" />
     
     <Button
@@ -67,6 +76,8 @@
         android:layout_toRightOf="@+id/btn_start"
         android:layout_alignBaseline="@+id/btn_start"
         android:visibility="invisible"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="暂停" />
     
      <Button
@@ -75,6 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_start"
         android:layout_toRightOf="@+id/btn_sendpause"
+        android:layout_margin="2dp"
+        android:background="@drawable/bg_button"
         android:text="结束" />
 
     <TextView
@@ -84,7 +97,7 @@
         android:layout_below="@+id/btn_start"
         android:layout_marginTop="10dp"
         android:textSize="16sp"
-        android:text="任务状态" />
+        android:text="任务状态:" />
     
     <TextView
         android:id="@+id/tv_successorfail"
@@ -93,7 +106,7 @@
         android:layout_below="@+id/tv_sendstatus"
         android:layout_marginTop="3dp"
         android:textSize="16sp"
-        android:text="发送成功：   发送失败：" />
+        android:text="发送成功:   发送失败:" />
 
     <ProgressBar
         android:id="@+id/pbr"
