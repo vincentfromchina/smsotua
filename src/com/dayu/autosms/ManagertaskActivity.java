@@ -121,43 +121,6 @@ public class ManagertaskActivity extends Activity
 	                    holder.taskname = (TextView) convertView.findViewById(R.id.tv_listsmstask);
 	                    holder.delete_task = (Button) convertView.findViewById(R.id.btn_deltask);
 	                    holder.start_task = (Button) convertView.findViewById(R.id.btn_starttask);
-	                    holder.start_task.setTag(taskid.get(position));
-	                    holder.delete_task.setTag(taskid.get(position));
-	                    if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+taskid.get(position));
-	                    
-	                   
-	                    holder.delete_task.setOnClickListener(new OnClickListener()
-						{
-							
-							@Override
-							public void onClick(View v)
-							{
-								if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
-								sqldb.delrec_smstask((Integer)v.getTag());
-								 update_dataset();
-							     m_datasetadpter.notifyDataSetChanged();
-							   //  lv_contentplate.setAdapter(m_datasetadpter);
-							}
-						});
-	                    
-	                    holder.start_task.setOnClickListener(new OnClickListener()
-						{
-							
-							@Override
-							public void onClick(View v)
-							{
-								Intent open_starttaskactivity = new Intent();
-								open_starttaskactivity.setClass(ManagertaskActivity.this, StartSMStaskActivity.class);
-		         				
-								Bundle bundle = new Bundle();
-		         				bundle.putInt("taskid", (int)v.getTag());
-		         				open_starttaskactivity.putExtras(bundle);
-		         				
-								startActivity(open_starttaskactivity);
-								
-								finish();
-							}
-						});
 	                    
 	                    convertView.setTag(holder);//绑定ViewHolder对象
 	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "getView " + position + " " + convertView);
@@ -167,8 +130,43 @@ public class ManagertaskActivity extends Activity
 	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "会执行");
 	                  }
 	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
+	            holder.start_task.setTag(taskid.get(position));
+                holder.delete_task.setTag(taskid.get(position));
 	            holder.taskname.setText((String)getItem(position));
-	            
+	            if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+taskid.get(position));
+                
+                holder.delete_task.setOnClickListener(new OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
+						sqldb.delrec_smstask((Integer)v.getTag());
+						 update_dataset();
+					     m_datasetadpter.notifyDataSetChanged();
+					   //  lv_contentplate.setAdapter(m_datasetadpter);
+					}
+				});
+                
+                holder.start_task.setOnClickListener(new OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						Intent open_starttaskactivity = new Intent();
+						open_starttaskactivity.setClass(ManagertaskActivity.this, StartSMStaskActivity.class);
+         				
+						Bundle bundle = new Bundle();
+         				bundle.putInt("taskid", (int)v.getTag());
+         				open_starttaskactivity.putExtras(bundle);
+         				
+						startActivity(open_starttaskactivity);
+						
+						finish();
+					}
+				});
 	            /*为Button添加点击事件*/
 	            return convertView;
 		}

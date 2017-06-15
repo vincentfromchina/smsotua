@@ -1,15 +1,22 @@
 package com.dayu.autosms;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dayu.autosms.c.ContactPicker;
+import com.dayu.autosms.c.ContactPicker.PickContactEvent;
 import com.dayu.autosms.c.DBHelper;
 import com.dayu.autosms.c.FolderFilePicker;
 import com.dayu.autosms.c.FolderFilePicker.PickPathEvent;
@@ -18,7 +25,10 @@ import com.dayu.autosms.c.Getnowtime;
 import com.dayu.autosms.m.SmsTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -45,6 +55,9 @@ public class AddsmstaskActivity extends Activity
 	private static ListView lv_chooseplate;
 	private static TextView tv_contentplatename;
 	static private String mfilePath="";
+	private String msavefilepath ;
+	private static final String ROOT = Environment
+			.getExternalStorageDirectory().toString()+"/autosms/";
 	private static int contentplateid = 0;
 	Cursor m_Cursor;
 	private List<String> platename ;
@@ -119,10 +132,22 @@ public class AddsmstaskActivity extends Activity
 					
 					break;
                 case R.id.btn_selectsmsplate:
-                	lv_chooseplate.setVisibility(View.VISIBLE);
-                	 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-                     imm.hideSoftInputFromInputMethod(btn_selectsmsplate.getWindowToken(), 0);
-                	 //	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
+                	switch(lv_chooseplate.getVisibility())
+                	{
+                	  case View.VISIBLE :
+                		  lv_chooseplate.setVisibility(View.GONE);
+                		  InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+                          imm.hideSoftInputFromInputMethod(btn_selectsmsplate.getWindowToken(), 0);
+                     	 //	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
+                		  break;
+                	  case View.GONE :
+                		  lv_chooseplate.setVisibility(View.VISIBLE);
+                		   imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+                          imm.hideSoftInputFromInputMethod(btn_selectsmsplate.getWindowToken(), 0);
+                     	 //	 imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS); 
+                		  break;
+                	}
+                	
 					break;
                 case R.id.btn_fromfile:
                 	pickFile(v);
@@ -132,7 +157,8 @@ public class AddsmstaskActivity extends Activity
                 	
 					break;
                 case R.id.btn_fromcontart:
-                	readAllContacts();
+                	//readAllContacts();
+                	pickContact(v);
 					break;
 
 				default:
@@ -296,6 +322,107 @@ public class AddsmstaskActivity extends Activity
 					}
 				}, "txt","csv","TXT","CSV");  //不定长参数使用方法
 		picker.show();
+	}
+	
+	public void pickContact(View v) {
+		ContactPicker picker = new ContactPicker(this,
+				new PickContactEvent() {
+
+					@Override
+					public void onPickEvent(List<String[]> contact) {
+						
+						Getnowtime mgGetnowtime = new Getnowtime();
+						File feFile = null;
+						FileWriter fwd = null;
+						BufferedWriter bufwrd = null;
+						try
+						{
+							createdir(ROOT);
+							msavefilepath = ROOT+mgGetnowtime.getnowtime("yyyy-M-d_HH-mm")+".txt";
+							if (AutoSMSActivity.isdebug) Log.e(TAG, msavefilepath);
+							
+							
+							feFile = new File(msavefilepath);
+							 fwd = new FileWriter(feFile);
+							 bufwrd = new BufferedWriter(fwd);
+						
+							for (String[] onecontact : contact)
+							{
+								if (onecontact[2].equals("1") && (onecontact[1] != null))
+								{
+									if (AutoSMSActivity.isdebug) Log.e(TAG, onecontact[0] + onecontact[1]);
+									bufwrd.write(onecontact[1]);
+									bufwrd.newLine();
+								}
+							}
+							
+							showfiledialog(msavefilepath);
+							
+						}catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}finally {
+							try
+							{
+							     if (bufwrd != null) bufwrd.close();
+							     if (fwd != null) fwd.close();
+							     
+							} catch (IOException e)
+								{
+									e.printStackTrace();
+								}
+							
+						}
+						
+					}
+				});  
+		picker.show();
+	}
+	
+	 private void showfiledialog(String filepath)
+	 {
+		 Log.e(TAG,"show filepath");
+		 final Builder adAlertDialog = new Builder(AddsmstaskActivity.this);
+		 adAlertDialog.setMessage("文件已生成，保存路径：\r\n"+filepath);
+	//	 adAlertDialog.setTitle("软件更新");
+		 adAlertDialog.setPositiveButton("好的，知道了", new DialogInterface.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+			}
+		});
+		 
+		 adAlertDialog.show();
+	 }
+	
+	public void createdir(String path)
+	{
+
+		File f = new File(path);
+
+		if (!f.exists())
+		{
+			f.mkdirs();
+		}
+
+		/*
+		File file = new File(f, fileName);
+		if (!file.exists())
+		{
+			try
+			{
+				file.createNewFile();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		 */
 	}
 	
 	/*

@@ -94,7 +94,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 {
 
 	final static String TAG = "autosms";
-    static private String mfilePath="",owner="";
+    static private String owner="";
 	static long filesize = 0;
 	
     static public Boolean isdebug = true;
@@ -112,28 +112,6 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/jiaocheng.jsp");
 		startActivity(excel);
     }
-    
-    public void pickFile(View v) {
-		FolderFilePicker picker = new FolderFilePicker(this,
-				new PickPathEvent() {
-
-					@Override
-					public void onPickEvent(String resultPath) {
-						mfilePath = resultPath;
-						if (mfilePath==null)
-						{
-							Toast.makeText(AutoSMSActivity.this, "请选择文件",
-									Toast.LENGTH_LONG).show();
-						}else{
-						
-						TextView tv1 = (TextView)findViewById(R.id.textView1);
-						tv1.setText("文件："+mfilePath+",请点击分析文件");
-						
-						}
-					}
-				}, "txt","TXT");  //不定长参数使用方法
-		picker.show();
-	}
     
 	
 	@Override
@@ -181,90 +159,6 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	      findViewById(R.id.btn_managerplate).setOnClickListener(this);
 	      findViewById(R.id.btn_jiaocheng).setOnClickListener(this);
 	      findViewById(R.id.btn_othersoft).setOnClickListener(this);
-	      
-	      
-	  /*    
-	    LinearLayout  linearLayout1_1 = (LinearLayout)findViewById(R.id.linearLayout1_1);
-	    linearLayout1_1.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Log.e(TAG, "you click 1_1");
-				
-			}
-		});
-	  
-	    ImageButton btn_jiaocheng = (ImageButton)findViewById(R.id.btn_jiaocheng);
-	     btn_jiaocheng.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				jiaocheng();
-				Log.e(TAG, "you click 1_1");
-			}
-		});
-	   
-	    
-	     ImageButton btn_cpdb = (ImageButton)findViewById(R.id.btn_cpdb);
-	     btn_cpdb.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				copydbfile();				
-			}
-		});
-	     
-	    
-	     
-	     ImageButton btn_managertask = (ImageButton)findViewById(R.id.btn_managertask);
-	     btn_managertask.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent mIntent = new Intent();
-				mIntent.setClass(AutoSMSActivity.this, ManagertaskActivity.class);
-				startActivity(mIntent);
-				
-			}
-		});
-	     
-	     ImageButton btn_openaddtask = (ImageButton)findViewById(R.id.btn_addsmstask);
-	     btn_openaddtask.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent mIntent = new Intent();
-				mIntent.setClass(AutoSMSActivity.this, AddsmstaskActivity.class);
-				startActivity(mIntent);
-				
-			}
-		});
-	     
-	     ImageButton btn_active = (ImageButton)findViewById(R.id.btn_active);
-	     btn_active.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent mIntent = new Intent();
-				mIntent.setClass(AutoSMSActivity.this, SetActivity.class);
-				startActivity(mIntent);
-				
-			}
-		});
-	     
-	     */
 	     
 	//检查软件版本
 	//	checkupdate ck = new checkupdate();
@@ -472,7 +366,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 					try
 					{
 						URL downurl = new URL(apkurl);
-						if (isdebug) Log.e("gps", downurl.toString());
+						if (isdebug) Log.e(TAG, downurl.toString());
 						HttpURLConnection conn = (HttpURLConnection) downurl.openConnection();
 						conn.connect();
 						int apklength = conn.getContentLength();

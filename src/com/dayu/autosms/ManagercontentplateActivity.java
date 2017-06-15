@@ -161,46 +161,6 @@ public class ManagercontentplateActivity extends Activity
 	                    holder.delete_plate = (Button) convertView.findViewById(R.id.btn_delplate);
 	                    holder.mod_plate = (Button) convertView.findViewById(R.id.btn_modplate);
 	                    
-	                    holder.mod_plate.setTag(R.id.mod_key_first_tag,plateid.get(position));
-	                    holder.mod_plate.setTag(R.id.mod_key_second_tag, position);
-	                    holder.delete_plate.setTag(plateid.get(position));
-	                    if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+plateid.get(position));
-	                    
-	                    holder.mod_plate.setOnClickListener(new OnClickListener() {
-	                        
-	                        @Override
-	                        public void onClick(View v) {
-	                        	if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了修改按钮" + v.getTag(R.id.mod_key_first_tag));                                //打印Button的点击信息
-	                         rec_contentplate = false;
-	                     	Intent open_conentsetactivity = new Intent();
-	         				open_conentsetactivity.setClass(ManagercontentplateActivity.this, ContentSetActivity.class);
-	         				Bundle bundle = new Bundle();
-	         				bundle.putString("type", "mod");
-	         				bundle.putInt("plateid", (int)v.getTag(R.id.mod_key_first_tag));
-	         				bundle.putString("platecontent", platecontent.get((Integer)v.getTag(R.id.mod_key_second_tag)));
-	         				open_conentsetactivity.putExtras(bundle);
-
-	         				startActivityForResult(open_conentsetactivity, REQUEST_CODE, null);
-
-	         				if (AutoSMSActivity.isdebug) Log.e(TAG, "start update");
-	         				
-	                       }
-	                    });
-	                    
-	                    holder.delete_plate.setOnClickListener(new OnClickListener()
-						{
-							
-							@Override
-							public void onClick(View v)
-							{
-								if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
-								sqldb.delrec_smscontentplate((Integer)v.getTag());
-								 update_dataset();
-							     m_datasetadpter.notifyDataSetChanged();
-							   //  lv_contentplate.setAdapter(m_datasetadpter);
-							}
-						});
-	                    
 	                    convertView.setTag(holder);//绑定ViewHolder对象
 	                    if (AutoSMSActivity.isdebug) Log.e(TAG, "getView " + position + " " + convertView);
 	          }
@@ -210,7 +170,45 @@ public class ManagercontentplateActivity extends Activity
 	                  }
 	            /*设置TextView显示的内容，即我们存放在动态数组中的数据*/
 	            holder.contenplatename.setText((String)getItem(position));
-	            
+	            holder.mod_plate.setTag(R.id.mod_key_first_tag,plateid.get(position));
+                holder.mod_plate.setTag(R.id.mod_key_second_tag, position);
+                holder.delete_plate.setTag(plateid.get(position));
+                if (AutoSMSActivity.isdebug) Log.e(TAG, ""+position+"--"+plateid.get(position));
+                
+                holder.mod_plate.setOnClickListener(new OnClickListener() {
+                    
+                    @Override
+                    public void onClick(View v) {
+                    	if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了修改按钮" + v.getTag(R.id.mod_key_first_tag));                                //打印Button的点击信息
+                     rec_contentplate = false;
+                 	Intent open_conentsetactivity = new Intent();
+     				open_conentsetactivity.setClass(ManagercontentplateActivity.this, ContentSetActivity.class);
+     				Bundle bundle = new Bundle();
+     				bundle.putString("type", "mod");
+     				bundle.putInt("plateid", (int)v.getTag(R.id.mod_key_first_tag));
+     				bundle.putString("platecontent", platecontent.get((Integer)v.getTag(R.id.mod_key_second_tag)));
+     				open_conentsetactivity.putExtras(bundle);
+
+     				startActivityForResult(open_conentsetactivity, REQUEST_CODE, null);
+
+     				if (AutoSMSActivity.isdebug) Log.e(TAG, "start update");
+     				
+                   }
+                });
+                
+                holder.delete_plate.setOnClickListener(new OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
+						sqldb.delrec_smscontentplate((Integer)v.getTag());
+						 update_dataset();
+					     m_datasetadpter.notifyDataSetChanged();
+					   //  lv_contentplate.setAdapter(m_datasetadpter);
+					}
+				});
 	            /*为Button添加点击事件*/
 	            return convertView;
 		}

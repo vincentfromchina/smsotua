@@ -142,6 +142,7 @@
          android:layout_alignLeft="@+id/btn_insertspc"
          android:layout_below="@+id/btn_insertspc"
          android:layout_marginTop="8dp"
+         android:textSize="18dp"
          android:text="确 定" />
 
      <Button

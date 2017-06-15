@@ -23,7 +23,6 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -160,6 +159,11 @@
             android:name=".AddsmstaskActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_addsmstask" >
+        </activity>
+        <activity
+            android:name=".SetActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_reg" >
         </activity>
     </application>
 
