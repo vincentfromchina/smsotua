@@ -194,6 +194,7 @@
          android:layout_height="wrap_content"
          android:layout_alignRight="@+id/btn_ok"
          android:layout_below="@+id/edt_content"
+         android:visibility="invisible"
          android:text="解锁" />
 
   </RelativeLayout>

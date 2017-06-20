@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.dayu.autosms.AddsmstaskActivity;
 import com.dayu.autosms.AutoSMSActivity;
 import com.dayu.autosms.R;
 
@@ -11,6 +12,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -22,7 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ public class ContactPicker extends Dialog {
 		init(context);
 		
 	}
+
 
 	public interface PickContactEvent {
 		public void onPickEvent(List<String[]> contact);
@@ -190,6 +193,8 @@ public class ContactPicker extends Dialog {
 		
 		mContactLvAdapter.setList(contact);
 		mContactLvAdapter.setSelectedIndex(-1);
+		
+	   	
 	}
 
 	

@@ -105,14 +105,6 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	private static final int DOWNLOAD_ING = 37, DOWNLOAD_FINISH = 39;
 	private static String mSavepath = "", apkurl = "", apkname = "", apkversion = "";
     
-    void jiaocheng()
-    {
-    	Intent excel = new Intent();		
-		excel.setClass(AutoSMSActivity.this, WebActivity.class);
-	    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/jiaocheng.jsp");
-		startActivity(excel);
-    }
-    
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -205,13 +197,32 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 			  open_activity(ManagercontentplateActivity.class);
 				break;
 		  case R.id.linearLayout2_3 :
-			  
+			  othersoft();
 				break;
+		  case R.id.btn_othersoft :
+			  othersoft();
+			    break;
 		default:
 	    	break;
 		}
 		
 	}
+	
+	 void jiaocheng()
+	    {
+	    	Intent excel = new Intent();		
+			excel.setClass(AutoSMSActivity.this, WebActivity.class);
+		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/jiaocheng.jsp");
+			startActivity(excel);
+	    }
+	    
+    void othersoft()
+	    {
+	    	Intent excel = new Intent();		
+			excel.setClass(AutoSMSActivity.this, WebActivity.class);
+		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/othersoft/index.jsp");
+			startActivity(excel);
+	    }
 	
 	public void open_activity(Class<?> act)
 	{

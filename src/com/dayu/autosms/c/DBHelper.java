@@ -123,9 +123,15 @@ public class DBHelper extends SQLiteOpenHelper
 	
 	public void delrec_smscontentplate(Integer plateid)
 	{
-		String sql ="delete from contentplate where plateid =" +plateid;
+		String sql ="delete from smstask where taskcontentplate =" +plateid;
 		SQLiteDatabase db = getReadableDatabase();
     	db.execSQL(sql);
+    	
+		sql ="delete from contentplate where plateid =" +plateid;
+	    db = getReadableDatabase();
+    	db.execSQL(sql);
+    	
+    	
     	if (AutoSMSActivity.isdebug) Log.e("database","delete成功"); 
 	}
 
@@ -215,6 +221,14 @@ public class DBHelper extends SQLiteOpenHelper
     	SQLiteDatabase db = getReadableDatabase();
     	if (AutoSMSActivity.isdebug) Log.e("database","query访问成功");  
     	return db.rawQuery("select * from contentplate order by plateaddtime desc", null);
+    }
+     
+    public int query_contentplate_withtask(int plateid) //获取已关联任务
+    {
+    	SQLiteDatabase db = getReadableDatabase();
+    	if (AutoSMSActivity.isdebug) Log.e("database","query访问成功");  
+    	Cursor cr = db.rawQuery("select * from smstask,contentplate where smstask.taskcontentplate=contentplate.plateid and plateid ="+plateid, null);
+    	return cr.getCount();
     }
     
     public Cursor query_smstask(boolean asc)

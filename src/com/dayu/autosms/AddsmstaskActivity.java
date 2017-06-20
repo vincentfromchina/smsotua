@@ -15,6 +15,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.auth.MalformedChallengeException;
+
 import com.dayu.autosms.c.ContactPicker;
 import com.dayu.autosms.c.ContactPicker.PickContactEvent;
 import com.dayu.autosms.c.DBHelper;
@@ -26,11 +28,14 @@ import com.dayu.autosms.m.SmsTask;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -42,6 +47,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -195,7 +201,6 @@ public class AddsmstaskActivity extends Activity
 			}
 			
 		});
-		
 	}
 	
 	void copydbfile()
@@ -324,12 +329,16 @@ public class AddsmstaskActivity extends Activity
 		picker.show();
 	}
 	
-	public void pickContact(View v) {
+	public void pickContact(View v)
+	{
+		Toast.makeText(getApplicationContext(), "正在导入联系人，请稍等", Toast.LENGTH_LONG).show();
+		
 		ContactPicker picker = new ContactPicker(this,
 				new PickContactEvent() {
 
 					@Override
 					public void onPickEvent(List<String[]> contact) {
+						
 						
 						Getnowtime mgGetnowtime = new Getnowtime();
 						File feFile = null;
@@ -471,6 +480,7 @@ public class AddsmstaskActivity extends Activity
         	contacts.close();
 		}
     }
+    
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)

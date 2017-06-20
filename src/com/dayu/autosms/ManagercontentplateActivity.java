@@ -145,6 +145,7 @@ public class ManagercontentplateActivity extends Activity
 	
 	class platelistadapter extends BaseAdapter
 	{
+		int  nowclickid = 0;
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent)
@@ -203,15 +204,55 @@ public class ManagercontentplateActivity extends Activity
 					public void onClick(View v)
 					{
 						if (AutoSMSActivity.isdebug) Log.e(TAG, "你点击了删除按钮" + v.getTag()); 
-						sqldb.delrec_smscontentplate((Integer)v.getTag());
-						 update_dataset();
-					     m_datasetadpter.notifyDataSetChanged();
-					   //  lv_contentplate.setAdapter(m_datasetadpter);
+						
+						int contentplate_withtask = sqldb.query_contentplate_withtask((Integer)v.getTag());
+						
+						if (contentplate_withtask>0)
+						{
+							nowclickid = (int)v.getTag();
+							AlertDialog isExit = new AlertDialog.Builder(ManagercontentplateActivity.this).create();  
+				            // 设置对话框标题  
+				            isExit.setTitle("短信群发王");  
+				            // 设置对话框消息  
+				            isExit.setMessage("是否将已关联此短信模板的发送任务一起删除？");  
+				            // 添加选择按钮并注册监听  
+				            isExit.setButton("朕确定", listener);  
+				            isExit.setButton2("取消了", listener);  
+				            // 显示对话框  
+				            isExit.show();
+						}else
+						{
+							sqldb.delrec_smscontentplate((Integer)v.getTag());
+							 update_dataset();
+						     m_datasetadpter.notifyDataSetChanged();
+						}
+						
 					}
 				});
 	            /*为Button添加点击事件*/
 	            return convertView;
 		}
+		
+		 /**监听对话框里面的button点击事件*/  
+	    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener()  
+	    {  
+	        public void onClick(DialogInterface dialog, int which)  
+	        {  
+	            switch (which)  
+	            {  
+	            case AlertDialog.BUTTON_POSITIVE:// "确认"按钮退出程序  
+	            	
+	            	sqldb.delrec_smscontentplate(nowclickid);
+					 update_dataset();
+				     m_datasetadpter.notifyDataSetChanged();
+	                break;  
+	            case AlertDialog.BUTTON_NEGATIVE:// "取消"第二个按钮取消对话框  
+	                break;  
+	            default:  
+	                break;  
+	            }  
+	        }  
+	    };   
 		
 		@Override
 		public long getItemId(int position)

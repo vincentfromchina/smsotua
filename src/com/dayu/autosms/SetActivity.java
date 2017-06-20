@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import android.R.color;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.view.Menu;
@@ -47,6 +48,7 @@ public class SetActivity extends Activity
 {
 	final static String TAG = "autosms";
 	private static String serialid = "";
+	TextView showinfo ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -54,9 +56,23 @@ public class SetActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_set);
 		
+		showinfo = (TextView)findViewById(R.id.showinfo);
+		
+		Button btn_active = (Button)findViewById(R.id.button1);
+		btn_active.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent excel = new Intent();		
+				excel.setClass(SetActivity.this, WebActivity.class);
+			    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/active.jsp");
+				startActivity(excel);
+			}
+		});
+		
 		Button btn_zhuce = (Button)findViewById(R.id.button2);
-		
-		
 		btn_zhuce.setOnClickListener(new OnClickListener()
 		{
 			
@@ -141,6 +157,14 @@ public class SetActivity extends Activity
 	
 	private void Register()
 	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				showinfo.setText("正在连接服务器...");
+			}
+		});
+		
 	 	HttpClient mHttpClient = new DefaultHttpClient();
 	 	String Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
 		 String uri = getResources().getString(R.string.url)+"/AutoSms_Reg";
@@ -191,6 +215,7 @@ public class SetActivity extends Activity
 								{
 									public void run()
 									{
+										showinfo.setText("");
 										tv1.setText("本设备机器码：\n"+serialid);
 									}
 								});
@@ -202,6 +227,7 @@ public class SetActivity extends Activity
 								{
 									public void run()
 									{
+										showinfo.setText("");
 										tv1.setText("本设备机器码：\n"+serialid);
 									}
 								});
@@ -213,6 +239,7 @@ public class SetActivity extends Activity
 								{
 									public void run()
 									{
+										showinfo.setText("");
 										tv1.setText("本设备不允许激活！请更换设备");
 									}
 								});
@@ -244,6 +271,9 @@ public class SetActivity extends Activity
 					} catch (IOException e1)
 					{
 						e1.printStackTrace();
+						
+						ShowOnUI("无法连接服务器，请检查网络");
+						
 						if (AutoSMSActivity.isdebug) Log.e(TAG, "sockettimeout");
 						
 					} catch (JSONException e1)
@@ -252,5 +282,15 @@ public class SetActivity extends Activity
 					} 
 	      }        
 	
+	void ShowOnUI(final String s)
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				showinfo.setText(s);
+			}
+		});
+	}
 
 }

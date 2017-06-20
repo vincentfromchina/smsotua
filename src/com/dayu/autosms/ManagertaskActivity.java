@@ -225,7 +225,7 @@ public class ManagertaskActivity extends Activity
         final View layout = inflater.inflate(R.layout.modtasknamedialog, null);//获取自定义布局  
         builder.setView(layout);  
     //    builder.setIcon(R.drawable.ic_launcher);//设置标题图标  
-        builder.setTitle("编辑短信模板名称");//设置标题内容  
+        builder.setTitle("编辑任务名称");//设置标题内容  
         //builder.setMessage("");//显示自定义布局内容  
         final EditText edt_modtaskname = (EditText)layout.findViewById(R.id.edt_modtaskname);
         edt_modtaskname.setText(platename);  
