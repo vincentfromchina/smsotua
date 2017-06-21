@@ -64,6 +64,8 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:focusable="false"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="使用说明" />
             </LinearLayout>
 
@@ -92,6 +94,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="激活设备" />
             </LinearLayout>
 
@@ -106,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                
                 android:orientation="vertical" >
 
                 <ImageButton
@@ -120,6 +125,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="管理任务" />
             </LinearLayout>
 
@@ -171,6 +178,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="添加任务" />
             </LinearLayout>
 
@@ -199,6 +208,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="短信模板" />
             </LinearLayout>
 
@@ -227,6 +238,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginTop="5dp"
                     android:text="好用软件" />
             </LinearLayout>
 
@@ -260,5 +273,13 @@
         android:layout_height="wrap_content"
         android:text="cpdb"
         android:visibility="gone" />
+    
+    <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:layout_margin="10dp"
+                    android:textSize="16sp"
+                    android:text="快速使用：\n1、编辑短信模板\n2、添加任务\n3、发送短信" />
 
 </LinearLayout>

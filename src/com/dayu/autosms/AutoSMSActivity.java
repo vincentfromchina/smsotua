@@ -556,16 +556,6 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 			startActivity(ins);
  }
 	
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	
-	
 	 /**
 
      * 当电话状态改变了将会执行该方法

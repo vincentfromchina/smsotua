@@ -1148,31 +1148,32 @@ android.support.v7.widget.SuggestionsAdapter:
     172:174:public void close()
 com.dayu.autosms.AddsmstaskActivity:
     static final java.lang.String TAG
-    189:191:void copydbfile()
+    208:210:void copydbfile()
+    441:482:public void readAllContacts()
 com.dayu.autosms.AutoSMSActivity:
     static final java.lang.String TAG
     private static final int DOWNLOAD_ING
     private static final int DOWNLOAD_FINISH
-    318:341:private void shownoticedialog()
-    345:369:private void showdownloaddialog()
-    456:477:public boolean bijiaotime(java.lang.String,java.lang.String)
-    482:518:private int HttpURLConnection_update()
-    480:480:static synthetic int access$3(com.dayu.autosms.AutoSMSActivity)
+    307:330:private void shownoticedialog()
+    334:358:private void showdownloaddialog()
+    445:466:public boolean bijiaotime(java.lang.String,java.lang.String)
+    471:507:private int HttpURLConnection_update()
+    469:469:static synthetic int access$3(com.dayu.autosms.AutoSMSActivity)
     106:106:static synthetic void access$4(java.lang.String)
     106:106:static synthetic void access$5(java.lang.String)
     106:106:static synthetic void access$6(java.lang.String)
     106:106:static synthetic java.lang.String access$7()
-    316:316:static synthetic void access$8(com.dayu.autosms.AutoSMSActivity)
+    305:305:static synthetic void access$8(com.dayu.autosms.AutoSMSActivity)
     106:106:static synthetic void access$9(java.lang.String)
     106:106:static synthetic java.lang.String access$10()
     106:106:static synthetic java.lang.String access$11()
     106:106:static synthetic java.lang.String access$12()
     104:104:static synthetic void access$13(int)
-    521:521:static synthetic android.os.Handler access$14(com.dayu.autosms.AutoSMSActivity)
-    343:343:static synthetic void access$17(com.dayu.autosms.AutoSMSActivity)
+    510:510:static synthetic android.os.Handler access$14(com.dayu.autosms.AutoSMSActivity)
+    332:332:static synthetic void access$15(com.dayu.autosms.AutoSMSActivity)
+com.dayu.autosms.AutoSMSActivity$2
 com.dayu.autosms.AutoSMSActivity$3
 com.dayu.autosms.AutoSMSActivity$4
-com.dayu.autosms.AutoSMSActivity$5
 com.dayu.autosms.AutoSMSActivity$Downloadapk
 com.dayu.autosms.AutoSMSActivity$checkupdate
 com.dayu.autosms.BuildConfig
@@ -1211,6 +1212,11 @@ com.dayu.autosms.StartSMStaskActivity:
     957:968:public static java.lang.String getFromBase64(java.lang.String)
 com.dayu.autosms.WebActivity:
     static final java.lang.String TAG
+com.dayu.autosms.c.ContactPicker:
+    static final java.lang.String TAG
+    android.widget.SimpleAdapter simpleAdapter
+com.dayu.autosms.c.ContactPicker$ContactLvAdapter:
+    293:293:public int getSelectedIndex()
 com.dayu.autosms.c.DBHelper:
     private static final java.lang.String DB_NAME
     private static final int DB_VERSION
@@ -1218,8 +1224,8 @@ com.dayu.autosms.c.DBHelper:
     private static final java.lang.String CREATE_contentplate
     private static final java.lang.String CREATE_config
     private static final java.lang.String insert_config
-    134:137:public android.database.Cursor query_count()
-    255:286:public static void copyDataBaseToSD(java.lang.String)
+    140:143:public android.database.Cursor query_count()
+    269:300:public static void copyDataBaseToSD(java.lang.String)
 com.dayu.autosms.c.FolderFilePicker:
     static final java.lang.String TAG
     android.widget.SimpleAdapter simpleAdapter

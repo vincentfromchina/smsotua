@@ -393,14 +393,6 @@ public class ManagercontentplateActivity extends Activity
      } 
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.managercontentplate, menu);
-		return true;
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		if (AutoSMSActivity.isdebug) Log.e(TAG, "requestCode"+requestCode+"resultCode"+resultCode);

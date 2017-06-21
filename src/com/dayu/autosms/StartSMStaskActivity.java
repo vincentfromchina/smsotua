@@ -59,6 +59,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -110,6 +111,7 @@ public class StartSMStaskActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_smstask);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		Bundle bundle = this.getIntent().getExtras();
 		taskid = bundle.getInt("taskid");
@@ -746,7 +748,7 @@ public class StartSMStaskActivity extends Activity
 					   PendingIntents.add(i, PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, 0));
 				    }
 				   
-				//   smsManager.sendMultipartTextMessage(t_SmsBase.getSms_sendphone(), null,divideContents , PendingIntents, null); 
+				   smsManager.sendMultipartTextMessage(t_SmsBase.getSms_sendphone(), null,divideContents , PendingIntents, null); 
 				
                   //  smsManager.sendTextMessage(t_SmsBase.getSms_sendphone(), null, t_SmsBase.getSms_sendtext(), paIntent, null);
 				   send_totalnum += divideContentssize ;

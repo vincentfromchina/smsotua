@@ -4276,9 +4276,9 @@ cn.jpush.android.ui.a: void <clinit>()
 com.dayu.autosms.AddsmstaskActivity
 com.dayu.autosms.AddsmstaskActivity: AddsmstaskActivity()
 com.dayu.autosms.AddsmstaskActivity: void pickFile(android.view.View)
+com.dayu.autosms.AddsmstaskActivity: void pickContact(android.view.View)
 com.dayu.autosms.AutoSMSActivity
 com.dayu.autosms.AutoSMSActivity: AutoSMSActivity()
-com.dayu.autosms.AutoSMSActivity: void pickFile(android.view.View)
 com.dayu.autosms.AutoSMSActivity: void onClick(android.view.View)
 com.dayu.autosms.ContentSetActivity
 com.dayu.autosms.ContentSetActivity: ContentSetActivity()
@@ -4292,6 +4292,7 @@ com.dayu.autosms.R$anim: int abc_slide_in_bottom
 com.dayu.autosms.R$anim: int abc_slide_in_top
 com.dayu.autosms.R$anim: int abc_slide_out_bottom
 com.dayu.autosms.R$anim: int abc_slide_out_top
+com.dayu.autosms.R$anim: int ani_loading
 com.dayu.autosms.R$attr: int actionBarDivider
 com.dayu.autosms.R$attr: int actionBarItemBackground
 com.dayu.autosms.R$attr: int actionBarSize
@@ -4529,6 +4530,14 @@ com.dayu.autosms.R$drawable: int ic_launcher
 com.dayu.autosms.R$drawable: int jpush_ic_richpush_actionbar_back
 com.dayu.autosms.R$drawable: int jpush_ic_richpush_actionbar_divider
 com.dayu.autosms.R$drawable: int jpush_notification_icon
+com.dayu.autosms.R$drawable: int load_1
+com.dayu.autosms.R$drawable: int load_2
+com.dayu.autosms.R$drawable: int load_3
+com.dayu.autosms.R$drawable: int load_4
+com.dayu.autosms.R$drawable: int load_5
+com.dayu.autosms.R$drawable: int load_6
+com.dayu.autosms.R$drawable: int load_7
+com.dayu.autosms.R$drawable: int load_8
 com.dayu.autosms.R$drawable: int person
 com.dayu.autosms.R$drawable: int pic_12
 com.dayu.autosms.R$drawable: int pic_14
@@ -4563,6 +4572,7 @@ com.dayu.autosms.R$id: int action_settings
 com.dayu.autosms.R$id: int actionbarLayoutId
 com.dayu.autosms.R$id: int activity_chooser_view_content
 com.dayu.autosms.R$id: int always
+com.dayu.autosms.R$id: int ani
 com.dayu.autosms.R$id: int beginning
 com.dayu.autosms.R$id: int bt_alias
 com.dayu.autosms.R$id: int bt_tag
@@ -4597,6 +4607,7 @@ com.dayu.autosms.R$id: int btn_start
 com.dayu.autosms.R$id: int btn_starttask
 com.dayu.autosms.R$id: int btn_unlock
 com.dayu.autosms.R$id: int bu_setTime
+com.dayu.autosms.R$id: int button1
 com.dayu.autosms.R$id: int button2
 com.dayu.autosms.R$id: int button3
 com.dayu.autosms.R$id: int cancel_btn
@@ -4607,8 +4618,10 @@ com.dayu.autosms.R$id: int cb_sunday
 com.dayu.autosms.R$id: int cb_thursday
 com.dayu.autosms.R$id: int cb_tuesday
 com.dayu.autosms.R$id: int cb_wednesday
+com.dayu.autosms.R$id: int chb_selcontact
 com.dayu.autosms.R$id: int checkbox
 com.dayu.autosms.R$id: int collapseActionView
+com.dayu.autosms.R$id: int contact_lv
 com.dayu.autosms.R$id: int default_activity_button
 com.dayu.autosms.R$id: int dialog
 com.dayu.autosms.R$id: int disableHome
@@ -4693,6 +4706,7 @@ com.dayu.autosms.R$id: int shortcut
 com.dayu.autosms.R$id: int showCustom
 com.dayu.autosms.R$id: int showHome
 com.dayu.autosms.R$id: int showTitle
+com.dayu.autosms.R$id: int showinfo
 com.dayu.autosms.R$id: int split_action_bar
 com.dayu.autosms.R$id: int start_time
 com.dayu.autosms.R$id: int stopPush
@@ -4711,7 +4725,9 @@ com.dayu.autosms.R$id: int tv_contentname
 com.dayu.autosms.R$id: int tv_device_id
 com.dayu.autosms.R$id: int tv_imei
 com.dayu.autosms.R$id: int tv_jiange
+com.dayu.autosms.R$id: int tv_listcontact
 com.dayu.autosms.R$id: int tv_listcontentplate
+com.dayu.autosms.R$id: int tv_listphone
 com.dayu.autosms.R$id: int tv_listsmstask
 com.dayu.autosms.R$id: int tv_package
 com.dayu.autosms.R$id: int tv_regId
@@ -4759,15 +4775,18 @@ com.dayu.autosms.R$layout: int activity_content_set
 com.dayu.autosms.R$layout: int activity_main
 com.dayu.autosms.R$layout: int activity_managercontentplate
 com.dayu.autosms.R$layout: int activity_managersmstask
+com.dayu.autosms.R$layout: int activity_select_contact
 com.dayu.autosms.R$layout: int activity_select_folder
 com.dayu.autosms.R$layout: int activity_set
 com.dayu.autosms.R$layout: int activity_start_smstask
 com.dayu.autosms.R$layout: int activity_web
 com.dayu.autosms.R$layout: int customer_notitfication_layout
 com.dayu.autosms.R$layout: int customer_notitfication_layout_one
+com.dayu.autosms.R$layout: int dialog_ani
 com.dayu.autosms.R$layout: int folder_list_item
 com.dayu.autosms.R$layout: int jpush_popwin_layout
 com.dayu.autosms.R$layout: int jpush_webview_layout
+com.dayu.autosms.R$layout: int listview_showcontact
 com.dayu.autosms.R$layout: int listviewonetextview
 com.dayu.autosms.R$layout: int main
 com.dayu.autosms.R$layout: int modcontentplatenamedialog
