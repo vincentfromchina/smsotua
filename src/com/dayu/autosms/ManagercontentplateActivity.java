@@ -216,8 +216,8 @@ public class ManagercontentplateActivity extends Activity
 				            // 设置对话框消息  
 				            isExit.setMessage("是否将已关联此短信模板的发送任务一起删除？");  
 				            // 添加选择按钮并注册监听  
-				            isExit.setButton("朕确定", listener);  
-				            isExit.setButton2("取消了", listener);  
+				            isExit.setButton("确定", listener);  
+				            isExit.setButton2("取消", listener);  
 				            // 显示对话框  
 				            isExit.show();
 						}else

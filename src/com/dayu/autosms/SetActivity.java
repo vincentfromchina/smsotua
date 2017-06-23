@@ -67,7 +67,7 @@ public class SetActivity extends Activity
 			{
 				Intent excel = new Intent();		
 				excel.setClass(SetActivity.this, WebActivity.class);
-			    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/active.jsp");
+			    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/jiaocheng/autosms/active.jsp");
 				startActivity(excel);
 			}
 		});

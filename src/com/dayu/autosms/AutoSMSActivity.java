@@ -212,7 +212,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	    {
 	    	Intent excel = new Intent();		
 			excel.setClass(AutoSMSActivity.this, WebActivity.class);
-		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/autosms/jiaocheng.jsp");
+		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/jiaocheng/autosms/autosms_haotwouse.jsp");
 			startActivity(excel);
 	    }
 	    

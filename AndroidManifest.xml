@@ -34,6 +34,20 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
+        
+    <!-- ↓↓↓ BD SDK ↓↓↓ -->
+     
+        <meta-data
+            android:name="BDAPPID"
+            android:value="9790224" />
+        <meta-data
+            android:name="BDAPPKEY"
+            android:value="mh1Vv2vbCqR8ho5oAQkreLQB217iCcwW" />
+       
+        <meta-data
+            android:name="IS_DEBUG"
+            android:value="false" />
+     
         <activity
             android:name=".AutoSMSActivity"
             android:label="@string/app_name"
