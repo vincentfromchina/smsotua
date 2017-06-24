@@ -97,7 +97,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
     static private String owner="";
 	static long filesize = 0;
 	
-    static public Boolean isdebug = true;
+    static public Boolean isdebug = false;
     static public ProgressBar mProgressBar;
 	HttpURLConnection urlConn = null;  
 	static boolean cancelupdate = false;
@@ -153,8 +153,8 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	      findViewById(R.id.btn_othersoft).setOnClickListener(this);
 	     
 	//检查软件版本
-	//	checkupdate ck = new checkupdate();
-	//	ck.start();
+		checkupdate ck = new checkupdate();
+		ck.start();
 			
 	}
 	
@@ -305,7 +305,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	 private void shownoticedialog()
 	 {
 		 final Builder adAlertDialog = new Builder(AutoSMSActivity.this);
-		 adAlertDialog.setMessage("当前软件版本太旧，需要更新");
+		 adAlertDialog.setMessage("当前有新版本，需要更新");
 		 adAlertDialog.setTitle("软件更新");
 		 adAlertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener()
 		{

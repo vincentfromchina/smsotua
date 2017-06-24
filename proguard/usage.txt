@@ -1154,28 +1154,7 @@ com.dayu.autosms.AutoSMSActivity:
     static final java.lang.String TAG
     private static final int DOWNLOAD_ING
     private static final int DOWNLOAD_FINISH
-    307:330:private void shownoticedialog()
-    334:358:private void showdownloaddialog()
     445:466:public boolean bijiaotime(java.lang.String,java.lang.String)
-    471:507:private int HttpURLConnection_update()
-    469:469:static synthetic int access$3(com.dayu.autosms.AutoSMSActivity)
-    106:106:static synthetic void access$4(java.lang.String)
-    106:106:static synthetic void access$5(java.lang.String)
-    106:106:static synthetic void access$6(java.lang.String)
-    106:106:static synthetic java.lang.String access$7()
-    305:305:static synthetic void access$8(com.dayu.autosms.AutoSMSActivity)
-    106:106:static synthetic void access$9(java.lang.String)
-    106:106:static synthetic java.lang.String access$10()
-    106:106:static synthetic java.lang.String access$11()
-    106:106:static synthetic java.lang.String access$12()
-    104:104:static synthetic void access$13(int)
-    510:510:static synthetic android.os.Handler access$14(com.dayu.autosms.AutoSMSActivity)
-    332:332:static synthetic void access$15(com.dayu.autosms.AutoSMSActivity)
-com.dayu.autosms.AutoSMSActivity$2
-com.dayu.autosms.AutoSMSActivity$3
-com.dayu.autosms.AutoSMSActivity$4
-com.dayu.autosms.AutoSMSActivity$Downloadapk
-com.dayu.autosms.AutoSMSActivity$checkupdate
 com.dayu.autosms.BuildConfig
 com.dayu.autosms.ContentSetActivity:
     static final java.lang.String TAG
@@ -1209,7 +1188,7 @@ com.dayu.autosms.SetActivity:
 com.dayu.autosms.StartSMStaskActivity:
     static final java.lang.String TAG
     android.app.PendingIntent deliverPI
-    957:968:public static java.lang.String getFromBase64(java.lang.String)
+    959:970:public static java.lang.String getFromBase64(java.lang.String)
 com.dayu.autosms.WebActivity:
     static final java.lang.String TAG
 com.dayu.autosms.c.ContactPicker:

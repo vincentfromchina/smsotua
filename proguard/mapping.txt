@@ -5045,7 +5045,6 @@ com.dayu.autosms.AddsmstaskActivity -> com.dayu.autosms.AddsmstaskActivity:
     void pickContact(android.view.View) -> pickContact
     void showfiledialog(java.lang.String) -> c
     void createdir(java.lang.String) -> a
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     android.view.LayoutInflater access$0(com.dayu.autosms.AddsmstaskActivity) -> a
     java.util.List access$1(com.dayu.autosms.AddsmstaskActivity) -> b
     java.util.List access$2(com.dayu.autosms.AddsmstaskActivity) -> c
@@ -5105,15 +5104,48 @@ com.dayu.autosms.AutoSMSActivity -> com.dayu.autosms.AutoSMSActivity:
     void jiaocheng() -> a
     void othersoft() -> b
     void open_activity(java.lang.Class) -> a
-    void updateprogessbar(int) -> a
-    void installapk() -> d
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void shownoticedialog() -> h
+    void showdownloaddialog() -> i
+    void updateprogessbar(int) -> b
+    int HttpURLConnection_update() -> j
+    void installapk() -> k
     int access$0() -> c
     void access$1(com.dayu.autosms.AutoSMSActivity,int) -> a
     void access$2(com.dayu.autosms.AutoSMSActivity) -> a
+    int access$3(com.dayu.autosms.AutoSMSActivity) -> b
+    void access$4(java.lang.String) -> a
+    void access$5(java.lang.String) -> b
+    void access$6(java.lang.String) -> c
+    java.lang.String access$7() -> d
+    void access$8(com.dayu.autosms.AutoSMSActivity) -> c
+    void access$9(java.lang.String) -> d
+    java.lang.String access$10() -> e
+    java.lang.String access$11() -> f
+    java.lang.String access$12() -> g
+    void access$13(int) -> a
+    android.os.Handler access$14(com.dayu.autosms.AutoSMSActivity) -> d
+    void access$15(com.dayu.autosms.AutoSMSActivity) -> e
 com.dayu.autosms.AutoSMSActivity$1 -> com.dayu.autosms.h:
     com.dayu.autosms.AutoSMSActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
+com.dayu.autosms.AutoSMSActivity$2 -> com.dayu.autosms.i:
+    com.dayu.autosms.AutoSMSActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.dayu.autosms.AutoSMSActivity$3 -> com.dayu.autosms.j:
+    com.dayu.autosms.AutoSMSActivity this$0 -> a
+    android.app.AlertDialog$Builder val$adAlertDialog -> b
+    void run() -> run
+com.dayu.autosms.AutoSMSActivity$4 -> com.dayu.autosms.k:
+    com.dayu.autosms.AutoSMSActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.dayu.autosms.AutoSMSActivity$Downloadapk -> com.dayu.autosms.l:
+    android.app.Dialog dialog -> a
+    com.dayu.autosms.AutoSMSActivity this$0 -> b
+    void setcontext(android.app.Dialog) -> a
+    void run() -> run
+com.dayu.autosms.AutoSMSActivity$checkupdate -> com.dayu.autosms.m:
+    com.dayu.autosms.AutoSMSActivity this$0 -> a
+    void run() -> run
 com.dayu.autosms.ContentSetActivity -> com.dayu.autosms.ContentSetActivity:
     java.lang.String Imei -> a
     java.lang.String serverip -> b
@@ -5124,19 +5156,18 @@ com.dayu.autosms.ContentSetActivity -> com.dayu.autosms.ContentSetActivity:
     android.os.Handler mHandler -> g
     void onCreate(android.os.Bundle) -> onCreate
     void Register() -> b
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     java.lang.String getcontent() -> a
     void access$0(com.dayu.autosms.ContentSetActivity) -> a
-com.dayu.autosms.ContentSetActivity$1 -> com.dayu.autosms.i:
+com.dayu.autosms.ContentSetActivity$1 -> com.dayu.autosms.n:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.dayu.autosms.ContentSetActivity$10 -> com.dayu.autosms.j:
+com.dayu.autosms.ContentSetActivity$10 -> com.dayu.autosms.o:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$11 -> com.dayu.autosms.k:
+com.dayu.autosms.ContentSetActivity$11 -> com.dayu.autosms.p:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$2 -> com.dayu.autosms.l:
+com.dayu.autosms.ContentSetActivity$2 -> com.dayu.autosms.q:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     android.widget.TextView val$txv_totalcount -> c
@@ -5145,35 +5176,35 @@ com.dayu.autosms.ContentSetActivity$2 -> com.dayu.autosms.l:
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void afterTextChanged(android.text.Editable) -> afterTextChanged
-com.dayu.autosms.ContentSetActivity$3 -> com.dayu.autosms.m:
+com.dayu.autosms.ContentSetActivity$3 -> com.dayu.autosms.r:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$4 -> com.dayu.autosms.n:
+com.dayu.autosms.ContentSetActivity$4 -> com.dayu.autosms.s:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$5 -> com.dayu.autosms.o:
+com.dayu.autosms.ContentSetActivity$5 -> com.dayu.autosms.t:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$6 -> com.dayu.autosms.p:
+com.dayu.autosms.ContentSetActivity$6 -> com.dayu.autosms.u:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$7 -> com.dayu.autosms.q:
+com.dayu.autosms.ContentSetActivity$7 -> com.dayu.autosms.v:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$8 -> com.dayu.autosms.r:
+com.dayu.autosms.ContentSetActivity$8 -> com.dayu.autosms.w:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$9 -> com.dayu.autosms.s:
+com.dayu.autosms.ContentSetActivity$9 -> com.dayu.autosms.x:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     android.widget.EditText val$edt_content -> b
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ContentSetActivity$doreg -> com.dayu.autosms.t:
+com.dayu.autosms.ContentSetActivity$doreg -> com.dayu.autosms.y:
     com.dayu.autosms.ContentSetActivity this$0 -> a
     void run() -> run
 com.dayu.autosms.ManagercontentplateActivity -> com.dayu.autosms.ManagercontentplateActivity:
@@ -5199,7 +5230,6 @@ com.dayu.autosms.ManagercontentplateActivity -> com.dayu.autosms.Managercontentp
     void update_dataset() -> a
     void show_newcontentplateDialog() -> b
     void show_modplatenameDialog(java.lang.String) -> a
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     com.dayu.autosms.ManagercontentplateActivity$platelistadapter access$0(com.dayu.autosms.ManagercontentplateActivity) -> a
     android.view.LayoutInflater access$1(com.dayu.autosms.ManagercontentplateActivity) -> b
@@ -5208,32 +5238,32 @@ com.dayu.autosms.ManagercontentplateActivity -> com.dayu.autosms.Managercontentp
     java.util.List access$4(com.dayu.autosms.ManagercontentplateActivity) -> e
     android.widget.EditText access$5() -> c
     java.lang.String access$6(com.dayu.autosms.ManagercontentplateActivity) -> f
-com.dayu.autosms.ManagercontentplateActivity$1 -> com.dayu.autosms.u:
+com.dayu.autosms.ManagercontentplateActivity$1 -> com.dayu.autosms.z:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$2 -> com.dayu.autosms.v:
+com.dayu.autosms.ManagercontentplateActivity$2 -> com.dayu.autosms.aa:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.dayu.autosms.ManagercontentplateActivity$3 -> com.dayu.autosms.w:
+com.dayu.autosms.ManagercontentplateActivity$3 -> com.dayu.autosms.ab:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
-com.dayu.autosms.ManagercontentplateActivity$4 -> com.dayu.autosms.x:
+com.dayu.autosms.ManagercontentplateActivity$4 -> com.dayu.autosms.ac:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$5 -> com.dayu.autosms.y:
+com.dayu.autosms.ManagercontentplateActivity$5 -> com.dayu.autosms.ad:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$6 -> com.dayu.autosms.z:
+com.dayu.autosms.ManagercontentplateActivity$6 -> com.dayu.autosms.ae:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$7 -> com.dayu.autosms.aa:
+com.dayu.autosms.ManagercontentplateActivity$7 -> com.dayu.autosms.af:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     android.widget.EditText val$edt_modplatename -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$8 -> com.dayu.autosms.ab:
+com.dayu.autosms.ManagercontentplateActivity$8 -> com.dayu.autosms.ag:
     com.dayu.autosms.ManagercontentplateActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$platelistadapter -> com.dayu.autosms.ac:
+com.dayu.autosms.ManagercontentplateActivity$platelistadapter -> com.dayu.autosms.ah:
     int nowclickid -> a
     android.content.DialogInterface$OnClickListener listener -> b
     com.dayu.autosms.ManagercontentplateActivity this$0 -> c
@@ -5242,16 +5272,16 @@ com.dayu.autosms.ManagercontentplateActivity$platelistadapter -> com.dayu.autosm
     java.lang.Object getItem(int) -> getItem
     int getCount() -> getCount
     com.dayu.autosms.ManagercontentplateActivity access$0(com.dayu.autosms.ManagercontentplateActivity$platelistadapter) -> a
-com.dayu.autosms.ManagercontentplateActivity$platelistadapter$1 -> com.dayu.autosms.ad:
+com.dayu.autosms.ManagercontentplateActivity$platelistadapter$1 -> com.dayu.autosms.ai:
     com.dayu.autosms.ManagercontentplateActivity$platelistadapter this$1 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$platelistadapter$2 -> com.dayu.autosms.ae:
+com.dayu.autosms.ManagercontentplateActivity$platelistadapter$2 -> com.dayu.autosms.aj:
     com.dayu.autosms.ManagercontentplateActivity$platelistadapter this$1 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$platelistadapter$3 -> com.dayu.autosms.af:
+com.dayu.autosms.ManagercontentplateActivity$platelistadapter$3 -> com.dayu.autosms.ak:
     com.dayu.autosms.ManagercontentplateActivity$platelistadapter this$1 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagercontentplateActivity$platelistadapter$ViewHolder -> com.dayu.autosms.ag:
+com.dayu.autosms.ManagercontentplateActivity$platelistadapter$ViewHolder -> com.dayu.autosms.al:
     android.widget.TextView contenplatename -> a
     android.widget.Button delete_plate -> b
     android.widget.Button mod_plate -> c
@@ -5271,40 +5301,39 @@ com.dayu.autosms.ManagertaskActivity -> com.dayu.autosms.ManagertaskActivity:
     void onCreate(android.os.Bundle) -> onCreate
     void update_dataset() -> a
     void show_modtasknameDialog(java.lang.String) -> a
-    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     android.view.LayoutInflater access$0(com.dayu.autosms.ManagertaskActivity) -> a
     java.util.List access$1(com.dayu.autosms.ManagertaskActivity) -> b
     com.dayu.autosms.ManagertaskActivity$platelistadapter access$2(com.dayu.autosms.ManagertaskActivity) -> c
     java.util.List access$3(com.dayu.autosms.ManagertaskActivity) -> d
     android.widget.TextView access$4() -> b
     java.util.List access$5(com.dayu.autosms.ManagertaskActivity) -> e
-com.dayu.autosms.ManagertaskActivity$1 -> com.dayu.autosms.ah:
+com.dayu.autosms.ManagertaskActivity$1 -> com.dayu.autosms.am:
     com.dayu.autosms.ManagertaskActivity this$0 -> a
     void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-com.dayu.autosms.ManagertaskActivity$2 -> com.dayu.autosms.ai:
+com.dayu.autosms.ManagertaskActivity$2 -> com.dayu.autosms.an:
     com.dayu.autosms.ManagertaskActivity this$0 -> a
     boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
-com.dayu.autosms.ManagertaskActivity$3 -> com.dayu.autosms.aj:
+com.dayu.autosms.ManagertaskActivity$3 -> com.dayu.autosms.ao:
     com.dayu.autosms.ManagertaskActivity this$0 -> a
     android.widget.EditText val$edt_modtaskname -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagertaskActivity$4 -> com.dayu.autosms.ak:
+com.dayu.autosms.ManagertaskActivity$4 -> com.dayu.autosms.ap:
     com.dayu.autosms.ManagertaskActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.ManagertaskActivity$platelistadapter -> com.dayu.autosms.al:
+com.dayu.autosms.ManagertaskActivity$platelistadapter -> com.dayu.autosms.aq:
     com.dayu.autosms.ManagertaskActivity this$0 -> a
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
     long getItemId(int) -> getItemId
     java.lang.Object getItem(int) -> getItem
     int getCount() -> getCount
     com.dayu.autosms.ManagertaskActivity access$0(com.dayu.autosms.ManagertaskActivity$platelistadapter) -> a
-com.dayu.autosms.ManagertaskActivity$platelistadapter$1 -> com.dayu.autosms.am:
+com.dayu.autosms.ManagertaskActivity$platelistadapter$1 -> com.dayu.autosms.ar:
     com.dayu.autosms.ManagertaskActivity$platelistadapter this$1 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagertaskActivity$platelistadapter$2 -> com.dayu.autosms.an:
+com.dayu.autosms.ManagertaskActivity$platelistadapter$2 -> com.dayu.autosms.as:
     com.dayu.autosms.ManagertaskActivity$platelistadapter this$1 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.ManagertaskActivity$platelistadapter$ViewHolder -> com.dayu.autosms.ao:
+com.dayu.autosms.ManagertaskActivity$platelistadapter$ViewHolder -> com.dayu.autosms.at:
     android.widget.TextView taskname -> a
     android.widget.Button delete_task -> b
     android.widget.Button start_task -> c
@@ -5317,39 +5346,39 @@ com.dayu.autosms.SetActivity -> com.dayu.autosms.SetActivity:
     void ShowOnUI(java.lang.String) -> a
     void access$0(com.dayu.autosms.SetActivity) -> a
     java.lang.String access$1() -> a
-com.dayu.autosms.SetActivity$1 -> com.dayu.autosms.ap:
+com.dayu.autosms.SetActivity$1 -> com.dayu.autosms.au:
     com.dayu.autosms.SetActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.SetActivity$2 -> com.dayu.autosms.aq:
+com.dayu.autosms.SetActivity$2 -> com.dayu.autosms.av:
     com.dayu.autosms.SetActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.SetActivity$3 -> com.dayu.autosms.ar:
+com.dayu.autosms.SetActivity$3 -> com.dayu.autosms.aw:
     com.dayu.autosms.SetActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.SetActivity$4 -> com.dayu.autosms.as:
+com.dayu.autosms.SetActivity$4 -> com.dayu.autosms.ax:
     com.dayu.autosms.SetActivity this$0 -> a
     void run() -> run
-com.dayu.autosms.SetActivity$5 -> com.dayu.autosms.at:
-    com.dayu.autosms.SetActivity this$0 -> a
-    android.widget.TextView val$tv1 -> b
-    void run() -> run
-com.dayu.autosms.SetActivity$6 -> com.dayu.autosms.au:
+com.dayu.autosms.SetActivity$5 -> com.dayu.autosms.ay:
     com.dayu.autosms.SetActivity this$0 -> a
     android.widget.TextView val$tv1 -> b
     void run() -> run
-com.dayu.autosms.SetActivity$7 -> com.dayu.autosms.av:
+com.dayu.autosms.SetActivity$6 -> com.dayu.autosms.az:
     com.dayu.autosms.SetActivity this$0 -> a
     android.widget.TextView val$tv1 -> b
     void run() -> run
-com.dayu.autosms.SetActivity$8 -> com.dayu.autosms.aw:
+com.dayu.autosms.SetActivity$7 -> com.dayu.autosms.ba:
     com.dayu.autosms.SetActivity this$0 -> a
     android.widget.TextView val$tv1 -> b
     void run() -> run
-com.dayu.autosms.SetActivity$9 -> com.dayu.autosms.ax:
+com.dayu.autosms.SetActivity$8 -> com.dayu.autosms.bb:
+    com.dayu.autosms.SetActivity this$0 -> a
+    android.widget.TextView val$tv1 -> b
+    void run() -> run
+com.dayu.autosms.SetActivity$9 -> com.dayu.autosms.bc:
     com.dayu.autosms.SetActivity this$0 -> a
     java.lang.String val$s -> b
     void run() -> run
-com.dayu.autosms.SetActivity$doreg -> com.dayu.autosms.ay:
+com.dayu.autosms.SetActivity$doreg -> com.dayu.autosms.bd:
     com.dayu.autosms.SetActivity this$0 -> a
     void run() -> run
 com.dayu.autosms.StartSMStaskActivity -> com.dayu.autosms.StartSMStaskActivity:
@@ -5404,48 +5433,48 @@ com.dayu.autosms.StartSMStaskActivity -> com.dayu.autosms.StartSMStaskActivity:
     int access$3() -> c
     com.dayu.autosms.c.DBHelper access$4(com.dayu.autosms.StartSMStaskActivity) -> b
     void access$5(com.dayu.autosms.StartSMStaskActivity) -> c
-com.dayu.autosms.StartSMStaskActivity$1 -> com.dayu.autosms.az:
+com.dayu.autosms.StartSMStaskActivity$1 -> com.dayu.autosms.be:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void run() -> run
-com.dayu.autosms.StartSMStaskActivity$2 -> com.dayu.autosms.ba:
+com.dayu.autosms.StartSMStaskActivity$2 -> com.dayu.autosms.bf:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.dayu.autosms.StartSMStaskActivity$3 -> com.dayu.autosms.bb:
+com.dayu.autosms.StartSMStaskActivity$3 -> com.dayu.autosms.bg:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void afterTextChanged(android.text.Editable) -> afterTextChanged
     void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
     void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
-com.dayu.autosms.StartSMStaskActivity$4 -> com.dayu.autosms.bc:
+com.dayu.autosms.StartSMStaskActivity$4 -> com.dayu.autosms.bh:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.StartSMStaskActivity$5 -> com.dayu.autosms.bd:
+com.dayu.autosms.StartSMStaskActivity$5 -> com.dayu.autosms.bi:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.StartSMStaskActivity$6 -> com.dayu.autosms.be:
+com.dayu.autosms.StartSMStaskActivity$6 -> com.dayu.autosms.bj:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.dayu.autosms.StartSMStaskActivity$7 -> com.dayu.autosms.bf:
+com.dayu.autosms.StartSMStaskActivity$7 -> com.dayu.autosms.bk:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.dayu.autosms.StartSMStaskActivity$load_smstask -> com.dayu.autosms.bg:
+com.dayu.autosms.StartSMStaskActivity$load_smstask -> com.dayu.autosms.bl:
     boolean mylife -> a
     com.dayu.autosms.StartSMStaskActivity this$0 -> b
     void interrupt() -> interrupt
     void run() -> run
     com.dayu.autosms.StartSMStaskActivity access$0(com.dayu.autosms.StartSMStaskActivity$load_smstask) -> a
-com.dayu.autosms.StartSMStaskActivity$load_smstask$1 -> com.dayu.autosms.bh:
+com.dayu.autosms.StartSMStaskActivity$load_smstask$1 -> com.dayu.autosms.bm:
     com.dayu.autosms.StartSMStaskActivity$load_smstask this$1 -> a
     void run() -> run
-com.dayu.autosms.StartSMStaskActivity$load_smstask$2 -> com.dayu.autosms.bi:
+com.dayu.autosms.StartSMStaskActivity$load_smstask$2 -> com.dayu.autosms.bn:
     com.dayu.autosms.StartSMStaskActivity$load_smstask this$1 -> a
     void run() -> run
-com.dayu.autosms.StartSMStaskActivity$send_sms -> com.dayu.autosms.bj:
+com.dayu.autosms.StartSMStaskActivity$send_sms -> com.dayu.autosms.bo:
     com.dayu.autosms.StartSMStaskActivity this$0 -> a
     void run() -> run
-com.dayu.autosms.StartSMStaskActivity$send_sms$1 -> com.dayu.autosms.bk:
+com.dayu.autosms.StartSMStaskActivity$send_sms$1 -> com.dayu.autosms.bp:
     com.dayu.autosms.StartSMStaskActivity$send_sms this$1 -> a
     void run() -> run
-com.dayu.autosms.StartSMStaskActivity$send_sms$2 -> com.dayu.autosms.bl:
+com.dayu.autosms.StartSMStaskActivity$send_sms$2 -> com.dayu.autosms.bq:
     com.dayu.autosms.StartSMStaskActivity$send_sms this$1 -> a
     void run() -> run
 com.dayu.autosms.WebActivity -> com.dayu.autosms.WebActivity:
@@ -5454,13 +5483,13 @@ com.dayu.autosms.WebActivity -> com.dayu.autosms.WebActivity:
     void onCreate(android.os.Bundle) -> onCreate
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
     android.widget.ProgressBar access$0(com.dayu.autosms.WebActivity) -> a
-com.dayu.autosms.WebActivity$1 -> com.dayu.autosms.bm:
+com.dayu.autosms.WebActivity$1 -> com.dayu.autosms.br:
     com.dayu.autosms.WebActivity this$0 -> a
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
-com.dayu.autosms.WebActivity$2 -> com.dayu.autosms.bn:
+com.dayu.autosms.WebActivity$2 -> com.dayu.autosms.bs:
     com.dayu.autosms.WebActivity this$0 -> a
     void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
-com.dayu.autosms.WebActivity$3 -> com.dayu.autosms.bo:
+com.dayu.autosms.WebActivity$3 -> com.dayu.autosms.bt:
     com.dayu.autosms.WebActivity this$0 -> a
     void onClick(android.view.View) -> onClick
 com.dayu.autosms.c.ContactPicker -> com.dayu.autosms.a.a:
