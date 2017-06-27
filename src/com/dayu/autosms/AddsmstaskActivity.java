@@ -360,7 +360,10 @@ public class AddsmstaskActivity extends Activity
 								if (onecontact[2].equals("1") && (onecontact[1] != null))
 								{
 									if (AutoSMSActivity.isdebug) Log.e(TAG, onecontact[0] + onecontact[1]);
-									bufwrd.write(onecontact[1]);
+									String replacestr = onecontact[1].replace(" ", "");
+									replacestr = replacestr.replace("-", "");
+									replacestr = replacestr.replace("+", "");
+									bufwrd.write(replacestr);
 									bufwrd.newLine();
 								}
 							}

@@ -1149,7 +1149,7 @@ android.support.v7.widget.SuggestionsAdapter:
 com.dayu.autosms.AddsmstaskActivity:
     static final java.lang.String TAG
     208:210:void copydbfile()
-    441:482:public void readAllContacts()
+    444:485:public void readAllContacts()
 com.dayu.autosms.AutoSMSActivity:
     static final java.lang.String TAG
     private static final int DOWNLOAD_ING
