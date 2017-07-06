@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -57,8 +58,13 @@ public class WebActivity extends Activity
 			{
 				// TODO Auto-generated method stub
 				// 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-				view.loadUrl(url);
-				return true;
+				//view.loadUrl(url);
+				Intent intent = new Intent();       
+		        intent.setAction("android.intent.action.VIEW");
+				 Uri content_url = Uri.parse(url);  
+				        intent.setData(content_url); 
+				        startActivity(intent);
+				return false;
 			}
 		});
 		
