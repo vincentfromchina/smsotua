@@ -4,6 +4,8 @@ public class SmsBase
 {
 	String sms_sendphone;
 	String sms_sendtext;
+	String[] sms_extendinfo;
+	
 	public SmsBase(String sms_sendphone, String sms_sendtext)
 	{
 		super();
@@ -27,6 +29,16 @@ public class SmsBase
 		this.sms_sendtext = sms_sendtext;
 	}
 
+	public void setSms_extendinfo(String[] ext)
+	{
+		this.sms_extendinfo = ext;
+	}
 	
 
+	public String[] getSms_extendinfo()
+	{
+		return this.sms_extendinfo;
+	}
+	
+	
 }

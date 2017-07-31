@@ -65,7 +65,7 @@
         </activity>
         <activity
             android:name=".WebActivity"
-            android:label="好用软件"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait" >
         </activity>
 

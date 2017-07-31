@@ -191,8 +191,8 @@ public class ContentSetActivity extends Activity {
         
     //    Button btn_insertnum = (Button)findViewById(R.id.btn_insertnum);
         
-        Button btn_insertblank = (Button)findViewById(R.id.btn_insertblank);
-        btn_insertblank.setOnClickListener(new OnClickListener()
+        Button btn_insertext1 = (Button)findViewById(R.id.btn_insertext1);
+        btn_insertext1.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
@@ -200,8 +200,34 @@ public class ContentSetActivity extends Activity {
 			{
 				int index = edt_content.getSelectionStart();  
 			    Editable editable = edt_content.getText();  
-			    editable.insert(index, "{| |}"); 
+			    editable.insert(index, "{|e1|}"); 
 				
+			}
+		});
+        
+        Button btn_insertext2 = (Button)findViewById(R.id.btn_insertext2);
+        btn_insertext2.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				int index = edt_content.getSelectionStart();  
+			    Editable editable = edt_content.getText();  
+			    editable.insert(index, "{|e2|}"); 
+			}
+		});
+        
+        Button btn_insertext3 = (Button)findViewById(R.id.btn_insertext3);
+        btn_insertext3.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				int index = edt_content.getSelectionStart();  
+			    Editable editable = edt_content.getText();  
+			    editable.insert(index, "{|e3|}"); 
 			}
 		});
         
@@ -247,19 +273,6 @@ public class ContentSetActivity extends Activity {
 			}
 		});
         
-        Button btn_unlock = (Button)findViewById(R.id.btn_unlock);
-        btn_unlock.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				 
-					   doreg mdoreg = new doreg();
-				       mdoreg.start();
-			
-			}
-		});
         
         Button btn_ok = (Button)findViewById(R.id.btn_ok);
         btn_ok.setOnClickListener(new OnClickListener()

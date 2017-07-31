@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -72,7 +73,8 @@ public class StartSMStaskActivity extends Activity
 	PendingIntent paIntent;
 	PendingIntent deliverPI;
     SmsManager smsManager;
-    String send_target[];
+  //  String send_target[];
+    HashMap<Integer, String[]> send_target;
     int    send_num = 0;
     static int    send_totalnum = 0;
     static int    send_success = 0;
@@ -105,6 +107,8 @@ public class StartSMStaskActivity extends Activity
     Intent sentIntent = new Intent(SENT_SMS_ACTION); 
 	static boolean teac = false;
 	static byte[] signfromdb ;
+	static EditText  edt_showresult;
+	static String[] extend_info;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -179,7 +183,8 @@ public class StartSMStaskActivity extends Activity
 				send_isstart = true;
 				load_finish = false;
 				SmsTaskQuery.init_sendlist();
-			     send_target = new String[10];
+			//     send_target = new String[10];
+				send_target = new HashMap<>();
 			     send_num = 0;
 			     send_success = 0;
 			     send_fail = 0;
@@ -458,7 +463,7 @@ public class StartSMStaskActivity extends Activity
 	    TextView  tv_sendinfo = (TextView)findViewById(R.id.tv_sendinfo);
 	    tv_sendinfo.setText(tv_sendinfo.getText().toString()+"\t\t"+ m_SmsTask.getTaskname()+"\r\n文件路径："+mfilePath);
 		
-	    EditText  edt_showresult = (EditText)findViewById(R.id.edt_showresult);
+	    edt_showresult = (EditText)findViewById(R.id.edt_showresult);
 	    edt_showresult.setText(GernatorSMSText.getSMSresult(m_SmsTask.getPlatecontent()));
 	    
 		m_Cursor =  sqldb.get_config();
@@ -525,9 +530,16 @@ public class StartSMStaskActivity extends Activity
 						if (AutoSMSActivity.isdebug) Log.e(TAG,"load_file 线程号："+Thread.currentThread().getId());
 						readbytes += tmp_str.getBytes().length+2;
 						tmp_str = tmp_str.trim();
-						if((tmp_str.length()>0)&&(tmp_str.length()==11)&&tmp_str.startsWith("1"))
+						if((tmp_str.length()>0)&&tmp_str.startsWith("1"))
 						 {	
-							send_target[send_num] = tmp_str;
+							int sp_len = tmp_str.split(",").length;
+							
+							extend_info = new String[sp_len];
+							extend_info = tmp_str.split(",");
+							
+							send_target.put((Integer)send_num, extend_info);
+							
+							//send_target[send_num] = tmp_str;
 							send_num++;
 						 }
 						
@@ -552,8 +564,33 @@ public class StartSMStaskActivity extends Activity
 							for (int i = 0; i < send_num; i++)
 							{
 								String sms_sendtext = m_SmsTask.getPlatecontent();
-								SmsBase t_smsbase = new SmsBase(send_target[i],GernatorSMSText.getSMSresult(sms_sendtext));
-								SmsTaskQuery.insert_sendlist(t_smsbase);
+								
+								String[] tmp_sendinfo = send_target.get(i);
+								
+								switch (tmp_sendinfo.length)
+								{
+								case 1:
+									SmsBase t_smsbase = new SmsBase(tmp_sendinfo[0],GernatorSMSText.getSMSresult(sms_sendtext));
+									SmsTaskQuery.insert_sendlist(t_smsbase);
+									break;
+								case 2:
+									 t_smsbase = new SmsBase(tmp_sendinfo[0],GernatorSMSText.getSMSresult(sms_sendtext,tmp_sendinfo[1],"",""));
+									SmsTaskQuery.insert_sendlist(t_smsbase);
+									break;
+								case 3:
+									 t_smsbase = new SmsBase(tmp_sendinfo[0],GernatorSMSText.getSMSresult(sms_sendtext,tmp_sendinfo[1],tmp_sendinfo[2],""));
+									SmsTaskQuery.insert_sendlist(t_smsbase);
+									break;
+								case 4:
+									 t_smsbase = new SmsBase(tmp_sendinfo[0],GernatorSMSText.getSMSresult(sms_sendtext,tmp_sendinfo[1],tmp_sendinfo[2],tmp_sendinfo[3]));
+									SmsTaskQuery.insert_sendlist(t_smsbase);
+									break;
+								default:
+								    t_smsbase = new SmsBase(tmp_sendinfo[0],GernatorSMSText.getSMSresult(sms_sendtext));
+									SmsTaskQuery.insert_sendlist(t_smsbase);
+									break;
+								}
+								
 							}
 							
 							synchronized (sendsmstask_lock)
@@ -661,6 +698,14 @@ public class StartSMStaskActivity extends Activity
 			}else
 			{
 				if (AutoSMSActivity.isdebug) Log.e(TAG, "读取文件出错");
+				
+				runOnUiThread(new Runnable()
+				{
+					public void run()
+					{
+						Toast.makeText(StartSMStaskActivity.this, "读取文件异常，请删除任务后重新添加", Toast.LENGTH_LONG).show();
+					}
+				});
 			}
 		}
 		
@@ -733,11 +778,20 @@ public class StartSMStaskActivity extends Activity
 				
 				t_SmsBase = SmsTaskQuery.poll_sendlist();
 				
-				
 			   if(t_SmsBase!=null)	
 				{
+				   final String send_text = t_SmsBase.getSms_sendtext();
 				   
-				   ArrayList<String> divideContents = smsManager.divideMessage(t_SmsBase.getSms_sendtext()); 
+					  runOnUiThread(new Runnable()
+					 {
+						public void run()
+						{
+							edt_showresult.setText(send_text);
+						}
+					});
+				   
+				   
+				   ArrayList<String> divideContents = smsManager.divideMessage(send_text); 
 				
 				   ArrayList<PendingIntent> PendingIntents = new ArrayList<PendingIntent>(divideContents.size());
 				
@@ -754,7 +808,7 @@ public class StartSMStaskActivity extends Activity
 				   send_totalnum += divideContentssize ;
 				   m_SmsTask.setTasktotal(send_totalnum);
 				   
-				   if (AutoSMSActivity.isdebug) Log.e(TAG, t_SmsBase.getSms_sendphone()+","+t_SmsBase.getSms_sendtext());
+				   if (AutoSMSActivity.isdebug) Log.e(TAG, t_SmsBase.getSms_sendphone()+","+send_text);
 				   if (AutoSMSActivity.isdebug) Log.e(TAG,"发送 线程号："+Thread.currentThread().getId());
 				  
 				   runOnUiThread(new Runnable()

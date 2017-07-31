@@ -33,8 +33,8 @@ public class GernatorSMSText
 		        keyWord = keyWord.replace("(", "/(");  
 		        keyWord = keyWord.replace(")", "/)");  
 		        return keyWord;  
-		    }  
-		 
+		    } 
+	
 	static public String getSMSresult(String orgStr)
     {
     	int t = -1;
@@ -80,6 +80,74 @@ public class GernatorSMSText
 			//Log.e(TAG, String.valueOf(t));
 			orgStr = replacestr(orgStr,"{|t|}",t);
 		}
+		return orgStr;
+    }
+		 
+	static public String getSMSresult(String orgStr,String ext1,String ext2,String ext3)
+    {
+    	int t = -1;
+		
+		while ((t=orgStr.indexOf("{|@|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|@|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|A|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|A|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|a|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|a|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{| |}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{| |}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|n|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|n|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|d|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|d|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|t|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replacestr(orgStr,"{|t|}",t);
+		}
+		
+		while ((t=orgStr.indexOf("{|e1|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replaceext(orgStr,t,ext1);
+		}
+		
+		while ((t=orgStr.indexOf("{|e2|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replaceext(orgStr,t,ext2);
+		}
+		
+		while ((t=orgStr.indexOf("{|e3|}"))>=0)
+		{
+			//Log.e(TAG, String.valueOf(t));
+			orgStr = replaceext(orgStr,t,ext3);
+		}
+		
+		
 		return orgStr;
     }
     
@@ -132,6 +200,16 @@ public class GernatorSMSText
 		return p;
 		
 		
+    }
+    
+    static String replaceext(String s,int pos,String ext)
+    {
+    	String s_1 = s.substring(0, pos);
+        
+        String s_2 = s.substring(pos+6, s.length());
+        
+        s = s_1 + ext + s_2;
+    	return s;
     }
 	
     static String replacestr(String s,String rep,int pos)
