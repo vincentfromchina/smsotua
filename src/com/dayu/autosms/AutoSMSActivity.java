@@ -97,7 +97,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
     static private String owner="";
 	static long filesize = 0;
 	
-    static public Boolean isdebug = true;
+    static public Boolean isdebug = false;
     static public ProgressBar mProgressBar;
 	HttpURLConnection urlConn = null;  
 	static boolean cancelupdate = false;

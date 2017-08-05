@@ -331,7 +331,7 @@ public class AddsmstaskActivity extends Activity
 	
 	public void pickContact(View v)
 	{
-		Toast.makeText(getApplicationContext(), "正在导入联系人，请稍等", Toast.LENGTH_LONG).show();
+		Toast.makeText(AddsmstaskActivity.this, "正在导入联系人，请稍等", Toast.LENGTH_LONG).show();
 		
 		ContactPicker picker = new ContactPicker(this,
 				new PickContactEvent() {
@@ -363,7 +363,8 @@ public class AddsmstaskActivity extends Activity
 									String replacestr = onecontact[1].replace(" ", "");
 									replacestr = replacestr.replace("-", "");
 									replacestr = replacestr.replace("+", "");
-									bufwrd.write(replacestr);
+									//bufwrd.write(replacestr);
+									bufwrd.write(replacestr+","+onecontact[0]);
 									bufwrd.newLine();
 								}
 							}
