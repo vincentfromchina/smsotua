@@ -41,10 +41,10 @@ public class DBHelper extends SQLiteOpenHelper
     
     private static final String CREATE_config = "CREATE TABLE if not exists config ("
     		+"sign BLOB(200)," 
-    		+"sendinteval INT DEFAULT 1)";
+    		+"sendinteval INT DEFAULT 3)";
     
     private static final String insert_config = "insert into config(sendinteval)"
-    		+"values(1)";
+    		+"values(3)";
    
 
 	public DBHelper(Context context, String dbname, CursorFactory factory)

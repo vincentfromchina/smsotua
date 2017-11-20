@@ -45,7 +45,7 @@
         android:layout_alignBaseline="@+id/tv_jiange"
         android:background="@drawable/edit_bg"
         android:ems="2"
-        android:text="1"
+        android:text="2"
         android:maxLength="3"
         android:gravity="center"
         android:inputType="number" >
@@ -57,7 +57,7 @@
         android:textSize="18sp"       
         android:layout_toRightOf="@+id/edt_sendinteval"
         android:layout_alignBaseline="@+id/tv_jiange"
-        android:text="秒 (1-120)" />
+        android:text="秒 (1-35)" />
 
     <Button
         android:id="@+id/btn_start"
@@ -131,6 +131,16 @@
            android:gravity="start"
            android:inputType="textMultiLine"
            android:textSize="20sp" />
+     
+     <TextView
+        android:id="@+id/tv_showactive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:textColor="#ffff0000"
+        android:textSize="16sp"
+        android:text="未激活" />
    
 	</RelativeLayout>
 	

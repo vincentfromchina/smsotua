@@ -4,9 +4,7 @@ import android.os.Bundle;
 
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.SmsMessage;
 import android.text.Editable;
-import android.text.StaticLayout;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
@@ -40,12 +38,10 @@ import org.json.JSONObject;
 import com.dayu.autosms.c.DBHelper;
 import com.dayu.autosms.c.GernatorSMSText;
 import com.dayu.autosms.c.Getnowtime;
-import com.dayu.autosms.dummy.ThreeDES;
 import com.dayu.autosms.m.SmsBase;
 import com.dayu.autosms.m.SmsTask;
 import com.dayu.autosms.m.SmsTaskQuery;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -55,11 +51,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,7 +74,7 @@ public class StartSMStaskActivity extends Activity
     static int    send_totalnum = 0;
     static int    send_success = 0;
     static int    send_fail = 0;
-    static int    send_interval = 1;
+    static int    send_interval = 3;
     private static int progessperct = 0;
 	private DBHelper sqldb;
 	static private String mfilePath="";
@@ -102,6 +97,7 @@ public class StartSMStaskActivity extends Activity
 	final static Object sendsmstask_lock = "发送进程共享锁";
     static TextView tv_sendstatus;
     static TextView tv_successorfail;
+    static TextView tv_showactive;
     BroadcastReceiver brc_smssendstatus;
     String SENT_SMS_ACTION = "SENT_SMS_ACTION";  
     Intent sentIntent = new Intent(SENT_SMS_ACTION); 
@@ -122,7 +118,7 @@ public class StartSMStaskActivity extends Activity
 		
 		new Thread(r_sign).start();
 		
-		
+		tv_showactive = (TextView)findViewById(R.id.tv_showactive);
 		mProgressBar = (ProgressBar)findViewById(R.id.pbr);
 		tv_sendstatus = (TextView)findViewById(R.id.tv_sendstatus);
 		edt_sendinteval = (EditText)findViewById(R.id.edt_sendinteval);
@@ -530,6 +526,10 @@ public class StartSMStaskActivity extends Activity
 						if (AutoSMSActivity.isdebug) Log.e(TAG,"load_file 线程号："+Thread.currentThread().getId());
 						readbytes += tmp_str.getBytes().length+2;
 						tmp_str = tmp_str.trim();
+						
+					if	(tmp_str.codePointAt(0)==65279)  //utf8格式
+					{
+						tmp_str = tmp_str.substring(1, tmp_str.length());
 						if((tmp_str.length()>0)&&tmp_str.startsWith("1"))
 						 {	
 							int sp_len = tmp_str.split(",").length;
@@ -542,6 +542,21 @@ public class StartSMStaskActivity extends Activity
 							//send_target[send_num] = tmp_str;
 							send_num++;
 						 }
+					}else {
+						if((tmp_str.length()>0)&&tmp_str.startsWith("1"))
+						 {	
+							int sp_len = tmp_str.split(",").length;
+							
+							extend_info = new String[sp_len];
+							extend_info = tmp_str.split(",");
+							
+							send_target.put((Integer)send_num, extend_info);
+							
+							//send_target[send_num] = tmp_str;
+							send_num++;
+						 }
+					}
+						
 						
 						if (AutoSMSActivity.isdebug) Log.e(TAG,"readbytes is"+ String.valueOf(readbytes));
 						
@@ -902,7 +917,7 @@ public class StartSMStaskActivity extends Activity
     {
 		  if (edt_sendinteval.getText().toString().equals(""))
 			{
-				edt_sendinteval.setText("1");
+				edt_sendinteval.setText("2");
 			}
 			
 			send_interval = Integer.valueOf(edt_sendinteval.getText().toString());
@@ -1078,6 +1093,16 @@ public class StartSMStaskActivity extends Activity
 									if (baseencode_serialid.equals(tp))
 									{
 										if (AutoSMSActivity.isdebug) Log.e(TAG,"认证成功");
+										
+										runOnUiThread(new Runnable()
+										{
+											public void run()
+											{
+												tv_showactive.setTextColor(Color.GREEN);
+												tv_showactive.setText("已激活");
+											}
+										});
+										
 										teac = true;
 										sqldb.update_serial(baseencode_serialid.getBytes());
 									}

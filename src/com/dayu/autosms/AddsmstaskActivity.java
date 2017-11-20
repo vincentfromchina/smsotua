@@ -5,17 +5,13 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.auth.MalformedChallengeException;
 
 import com.dayu.autosms.c.ContactPicker;
 import com.dayu.autosms.c.ContactPicker.PickContactEvent;
@@ -27,17 +23,12 @@ import com.dayu.autosms.c.Getnowtime;
 import com.dayu.autosms.m.SmsTask;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.AnimationDrawable;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -47,9 +38,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +62,7 @@ public class AddsmstaskActivity extends Activity
 	private LayoutInflater mInflater;//得到一个LayoutInfalter对象用来导入布局
 	DBHelper sqldb ;
 	static SmsTask m_SmsTask = null;
+	ContactPicker picker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -156,7 +146,7 @@ public class AddsmstaskActivity extends Activity
                 	
 					break;
                 case R.id.btn_fromfile:
-                	pickFile(v);
+                	pickFile();
                 	File feFile = new File(mfilePath);
                 	m_SmsTask.setTaskfilename(feFile.getParent());
                 	m_SmsTask.setTaskfilepath(feFile.getName());
@@ -164,7 +154,26 @@ public class AddsmstaskActivity extends Activity
 					break;
                 case R.id.btn_fromcontart:
                 	//readAllContacts();
-                	pickContact(v);
+                	
+                	 Builder adAlertDialog = new Builder(AddsmstaskActivity.this);
+                	
+                	 adAlertDialog.setTitle("温馨提示");
+                	 
+                	 adAlertDialog.setMessage("如通讯较多联系人（上千条），加载时会卡顿，请耐心等候。");
+                	 adAlertDialog.setPositiveButton("好的", new DialogInterface.OnClickListener()
+					{
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							
+							pickContact();
+							dialog.dismiss();
+						}
+					});
+                	 
+                	 adAlertDialog.show();
+                	
 					break;
 
 				default:
@@ -292,7 +301,7 @@ public class AddsmstaskActivity extends Activity
 		}
 	}
 	
-	public void pickFile(View v) {
+	public void pickFile() {
 		FolderFilePicker picker = new FolderFilePicker(this,
 				new PickPathEvent() {
 
@@ -329,12 +338,10 @@ public class AddsmstaskActivity extends Activity
 		picker.show();
 	}
 	
-	public void pickContact(View v)
+	public void pickContact()
 	{
-		Toast.makeText(AddsmstaskActivity.this, "正在导入联系人，请稍等", Toast.LENGTH_LONG).show();
-		
-		ContactPicker picker = new ContactPicker(this,
-				new PickContactEvent() {
+
+		picker =  new ContactPicker(AddsmstaskActivity.this,new PickContactEvent() {
 
 					@Override
 					public void onPickEvent(List<String[]> contact) {
@@ -389,7 +396,8 @@ public class AddsmstaskActivity extends Activity
 						}
 						
 					}
-				});  
+			   });
+	  
 		picker.show();
 	}
 	
@@ -441,7 +449,7 @@ public class AddsmstaskActivity extends Activity
 	/*
      * 读取联系人的信息
      */
-    public void readAllContacts() {
+    public void readAllContacts_test() {
         Cursor contacts = this.getBaseContext().getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, 
                  null, null, null, null);
         int contactIdIndex = 0;
@@ -457,9 +465,9 @@ public class AddsmstaskActivity extends Activity
             if (AutoSMSActivity.isdebug) Log.e(TAG, contactId);
             if (AutoSMSActivity.isdebug) Log.e(TAG, name);
             
-            /*
-             * 查找该联系人的phone信息
-             */
+            
+            // * 查找该联系人的phone信息
+             
             Cursor phones = this.getBaseContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, 
                     null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId, null, null);
             int phoneIndex = 0;

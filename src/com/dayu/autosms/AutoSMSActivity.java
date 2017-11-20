@@ -3,87 +3,57 @@ package com.dayu.autosms;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.provider.CallLog;
-import android.provider.MediaStore.Images.Thumbnails;
-import android.telephony.PhoneStateListener;
-import android.telephony.SmsManager;
 
-import android.telephony.TelephonyManager;
-import android.telephony.gsm.SmsMessage;
-import android.text.style.ReplacementSpan;
-import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.FileOutputStream;
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
+
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
+
 import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.SocketAddress;
+
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.dayu.autosms.R;
-import com.dayu.autosms.c.FolderFilePicker;
-import com.dayu.autosms.c.FolderFilePicker.PickPathEvent;
-import com.dayu.autosms.m.SmsBase;
-import com.dayu.autosms.m.SmsTask;
-import com.dayu.autosms.m.SmsTaskQuery;
-import com.dayu.autosms.c.GernatorSMSText;
-import com.dayu.autosms.c.Getnowtime;
-import com.dayu.autosms.dummy.ThreeDES;
-import com.dayu.autosms.c.DBHelper;
 
-import android.R.integer;
-import android.R.mipmap;
-import android.R.string;
+
+
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.PendingIntent;
+
 import android.app.AlertDialog.Builder;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.Cursor;
-import android.media.Image;
+
 import android.net.Uri;
-import android.view.KeyEvent;
+
 import android.view.LayoutInflater;
-import android.view.Menu;
+
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,12 +69,19 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	
     static public Boolean isdebug = false;
     static public ProgressBar mProgressBar;
+    static public TextView tv_updatepro;
 	HttpURLConnection urlConn = null;  
 	static boolean cancelupdate = false;
 	private static int progessperct = 0;
 	private static final int DOWNLOAD_ING = 37, DOWNLOAD_FINISH = 39;
 	private static String mSavepath = "", apkurl = "", apkname = "", apkversion = "";
     
+	/*
+	  代理商版本有三个地方要修改：
+	  1、取消 AutoSMSActivity 的软件update
+	  2、jiaocheng() 里面的 url路径
+	  3、btn_active 里面的 url路劲
+	 */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -151,12 +128,35 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	      findViewById(R.id.btn_managerplate).setOnClickListener(this);
 	      findViewById(R.id.btn_jiaocheng).setOnClickListener(this);
 	      findViewById(R.id.btn_othersoft).setOnClickListener(this);
+	      TextView tv_version =(TextView) findViewById(R.id.tv_version);
+	      tv_version.setText("软件版本号："+getVersionCode(getApplicationContext())+".171025");
+	      
 	     
 	//检查软件版本
 		checkupdate ck = new checkupdate();
 		ck.start();
 			
 	}
+	
+	public static int getVersionCode(Context context) {  
+	    return getPackageInfo(context).versionCode;  
+	}
+	
+	private static PackageInfo getPackageInfo(Context context) {  
+	    PackageInfo pi = null;  
+	  
+	    try {  
+	        PackageManager pm = context.getPackageManager();  
+	        pi = pm.getPackageInfo(context.getPackageName(),  
+	                PackageManager.GET_CONFIGURATIONS);  
+	  
+	        return pi;  
+	    } catch (Exception e) {  
+	        e.printStackTrace();  
+	    }  
+	  
+	    return pi;  
+	}  
 	
 
 	@Override
@@ -212,7 +212,9 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	    {
 	    	Intent excel = new Intent();		
 			excel.setClass(AutoSMSActivity.this, WebActivity.class);
-		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/jiaocheng/autosms/autosms_haotwouse.jsp");
+		    excel.putExtra("urls", 
+"http://jsonok.jsp.fjjsp.net/jiaocheng/autosms/autosms_haotwouse.jsp");
+		    //"http://jsonok.jsp.fjjsp.net/jiaocheng/autosms/daili/autosms_haotwouse_xxxxxxx.jsp
 			startActivity(excel);
 	    }
 	    
@@ -220,7 +222,8 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	    {
 	    	Intent excel = new Intent();		
 			excel.setClass(AutoSMSActivity.this, WebActivity.class);
-		    excel.putExtra("urls", "http://jsonok.jsp.fjjsp.net/othersoft/index.jsp");
+		    excel.putExtra("urls",
+		    		"http://jsonok.jsp.fjjsp.net/othersoft/index.jsp");
 			startActivity(excel);
 	    }
 	
@@ -335,6 +338,8 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 		 final LayoutInflater mInflater  = LayoutInflater.from(getApplicationContext());
 		View v = mInflater.inflate(R.layout.updatedialog, null);
 		mProgressBar = (ProgressBar) v.findViewById(R.id.update_progressBar);
+		tv_updatepro = (TextView) v.findViewById(R.id.tv_updatepro);
+		
 		
 		 adAlertDialog.setView(v);
 		 adAlertDialog.setTitle("下载进度");
@@ -415,13 +420,26 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 						
 					} catch (MalformedURLException e)
 					{
-						Toast.makeText(AutoSMSActivity.this, "下载失败", Toast.LENGTH_LONG).show();
-						dialog.dismiss();
+						runOnUiThread(new  Runnable()
+						{
+							public void run()
+							{
+								Toast.makeText(AutoSMSActivity.this, "下载失败", Toast.LENGTH_LONG).show();
+								dialog.dismiss();
+							}
+						});
+						
 						e.printStackTrace();
 					} catch (IOException e)
 					{
-						Toast.makeText(AutoSMSActivity.this, "下载失败", Toast.LENGTH_LONG).show();
-						dialog.dismiss();
+						runOnUiThread(new  Runnable()
+						{
+							public void run()
+							{
+								Toast.makeText(AutoSMSActivity.this, "下载失败", Toast.LENGTH_LONG).show();
+								dialog.dismiss();
+							}
+						});
 						e.printStackTrace();
 					}
 				}
@@ -433,6 +451,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	private void updateprogessbar(int process)
 		{
 			mProgressBar.setProgress(process);
+			tv_updatepro.setText("下载进度："+String.valueOf(process)+"%");
 		}
 		/**
 			 * 比较传进来的时间与实际时间的大小，如果当前时间比参数大，返回true，小则返回false
@@ -471,7 +490,14 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 				 int recode = 0;
 			        try{  
 			            //通过openConnection 连接  
+			        	
 			            URL url = new java.net.URL(getResources().getString(R.string.url)+"/autosms/updateversion.html");  
+			            
+			            if (isdebug)
+						{
+							url = new java.net.URL("http://192.168.1.98:8080/updateinfo/updateversion.html");
+						}
+			            
 			            urlConn=(HttpURLConnection)url.openConnection();  
 			            //设置输入和输出流   
 			            urlConn.setDoOutput(true);  

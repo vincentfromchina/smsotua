@@ -1148,13 +1148,13 @@ android.support.v7.widget.SuggestionsAdapter:
     172:174:public void close()
 com.dayu.autosms.AddsmstaskActivity:
     static final java.lang.String TAG
-    208:210:void copydbfile()
-    444:485:public void readAllContacts()
+    217:219:void copydbfile()
+    453:494:public void readAllContacts_test()
 com.dayu.autosms.AutoSMSActivity:
     static final java.lang.String TAG
     private static final int DOWNLOAD_ING
     private static final int DOWNLOAD_FINISH
-    445:466:public boolean bijiaotime(java.lang.String,java.lang.String)
+    464:485:public boolean bijiaotime(java.lang.String,java.lang.String)
 com.dayu.autosms.BuildConfig
 com.dayu.autosms.ContentSetActivity:
     static final java.lang.String TAG
@@ -1162,6 +1162,10 @@ com.dayu.autosms.ContentSetActivity:
     private static final int REG_EXITS
     private static final int REG_FAIL
     private static final int REG_BACKLIST
+    java.lang.String serialid
+    311:397:private void Register()
+    309:309:static synthetic void access$0(com.dayu.autosms.ContentSetActivity)
+com.dayu.autosms.ContentSetActivity$doreg
 com.dayu.autosms.ManagercontentplateActivity:
     static final java.lang.String TAG
     static java.text.SimpleDateFormat nowtime
@@ -1188,7 +1192,7 @@ com.dayu.autosms.SetActivity:
 com.dayu.autosms.StartSMStaskActivity:
     static final java.lang.String TAG
     android.app.PendingIntent deliverPI
-    959:970:public static java.lang.String getFromBase64(java.lang.String)
+    1028:1039:public static java.lang.String getFromBase64(java.lang.String)
 com.dayu.autosms.WebActivity:
     static final java.lang.String TAG
 com.dayu.autosms.c.ContactPicker:
@@ -1220,8 +1224,11 @@ com.dayu.autosms.dummy.DummyContent
 com.dayu.autosms.dummy.DummyContent$DummyItem
 com.dayu.autosms.dummy.ThreeDES
 com.dayu.autosms.m.SmsBase:
-    19:20:public void setSms_sendphone(java.lang.String)
-    27:28:public void setSms_sendtext(java.lang.String)
+    java.lang.String[] sms_extendinfo
+    21:22:public void setSms_sendphone(java.lang.String)
+    29:30:public void setSms_sendtext(java.lang.String)
+    34:35:public void setSms_extendinfo(java.lang.String[])
+    40:40:public java.lang.String[] getSms_extendinfo()
 com.dayu.autosms.m.SmsTask:
     java.lang.String TaskEndtime
     93:93:public java.lang.String getPlatename()

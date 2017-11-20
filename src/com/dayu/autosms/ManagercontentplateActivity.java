@@ -331,15 +331,22 @@ public class ManagercontentplateActivity extends Activity
             public void onClick(DialogInterface arg0, int arg1) {  
                 if (rec_contentplate)
 				{
-                	nowdate = new SimpleDateFormat("yyyy-M-d HH:mm");
-       			    long UTCtime = System.currentTimeMillis();
-       				date = new Date(UTCtime);
-       				String tmp_time = nowdate.format(date);
-       				
-					sqldb.insert_smscontentplate(edt_contentplate.getText().toString(), contentplate,tmp_time);
-					
-					update_dataset();
-			        m_datasetadpter.notifyDataSetChanged();
+                	if (edt_contentplate.getText().toString().equals(""))
+					{
+                		Toast.makeText(getApplicationContext(), "ÇëÌîÐ´Ä£°åÃû³Æ", Toast.LENGTH_LONG).show();
+    					
+					}else {
+						nowdate = new SimpleDateFormat("yyyy-M-d HH:mm");
+           			    long UTCtime = System.currentTimeMillis();
+           				date = new Date(UTCtime);
+           				String tmp_time = nowdate.format(date);
+           				
+    					sqldb.insert_smscontentplate(edt_contentplate.getText().toString(), contentplate,tmp_time);
+    					
+    					update_dataset();
+    			        m_datasetadpter.notifyDataSetChanged();
+					}
+                	
 				} 
             }  
         });  

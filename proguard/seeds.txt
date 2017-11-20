@@ -4275,8 +4275,6 @@ cn.jpush.android.ui.a: void onLoadResource(android.webkit.WebView,java.lang.Stri
 cn.jpush.android.ui.a: void <clinit>()
 com.dayu.autosms.AddsmstaskActivity
 com.dayu.autosms.AddsmstaskActivity: AddsmstaskActivity()
-com.dayu.autosms.AddsmstaskActivity: void pickFile(android.view.View)
-com.dayu.autosms.AddsmstaskActivity: void pickContact(android.view.View)
 com.dayu.autosms.AutoSMSActivity
 com.dayu.autosms.AutoSMSActivity: AutoSMSActivity()
 com.dayu.autosms.AutoSMSActivity: void onClick(android.view.View)
@@ -4588,8 +4586,10 @@ com.dayu.autosms.R$id: int btn_fanhuishouye
 com.dayu.autosms.R$id: int btn_fromcontart
 com.dayu.autosms.R$id: int btn_fromfile
 com.dayu.autosms.R$id: int btn_insertbig_a
-com.dayu.autosms.R$id: int btn_insertblank
 com.dayu.autosms.R$id: int btn_insertdate
+com.dayu.autosms.R$id: int btn_insertext1
+com.dayu.autosms.R$id: int btn_insertext2
+com.dayu.autosms.R$id: int btn_insertext3
 com.dayu.autosms.R$id: int btn_insertlitter_a
 com.dayu.autosms.R$id: int btn_insertnum
 com.dayu.autosms.R$id: int btn_insertspc
@@ -4605,7 +4605,6 @@ com.dayu.autosms.R$id: int btn_sendpause
 com.dayu.autosms.R$id: int btn_sendstop
 com.dayu.autosms.R$id: int btn_start
 com.dayu.autosms.R$id: int btn_starttask
-com.dayu.autosms.R$id: int btn_unlock
 com.dayu.autosms.R$id: int bu_setTime
 com.dayu.autosms.R$id: int button1
 com.dayu.autosms.R$id: int button2
@@ -4733,9 +4732,11 @@ com.dayu.autosms.R$id: int tv_package
 com.dayu.autosms.R$id: int tv_regId
 com.dayu.autosms.R$id: int tv_sendinfo
 com.dayu.autosms.R$id: int tv_sendstatus
+com.dayu.autosms.R$id: int tv_showactive
 com.dayu.autosms.R$id: int tv_showtaskinfo
 com.dayu.autosms.R$id: int tv_successorfail
 com.dayu.autosms.R$id: int tv_taskinfo
+com.dayu.autosms.R$id: int tv_updatepro
 com.dayu.autosms.R$id: int tv_version
 com.dayu.autosms.R$id: int txv_calculate
 com.dayu.autosms.R$id: int txv_totalcount

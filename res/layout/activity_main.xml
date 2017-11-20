@@ -282,4 +282,11 @@
                     android:textSize="16sp"
                     android:text="快速使用：\n1、编辑短信模板\n2、添加任务\n3、发送短信\n\n注意事项：\n建议使用android4.x系统，兼容性稳定性高，android5.x/6.x系统偶尔会出现不稳定和闪退情况" />
 
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="版本号：" />
+
 </LinearLayout>
