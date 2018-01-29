@@ -58,6 +58,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -305,6 +307,26 @@ public class StartSMStaskActivity extends Activity
 				   { 
 					   btn_sendpause.setText("继续");
 				   }	
+				
+			}
+		});
+		
+		ImageView imgbtn_what_jiange = (ImageView)findViewById(R.id.imgbtn_what_jiange);
+		
+		imgbtn_what_jiange.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				AlertDialog msg = new AlertDialog.Builder(StartSMStaskActivity.this).create();
+				
+				msg.setTitle("关于发送间隔");  
+				msg.setMessage("每条短信之间暂停的时间，如果您经常被移动运营商封号，请尝试增大发送间隔。"
+						+ "如何确定被封号\n 1、失败数量越来越多；2、使用系统自带短信发送给被人不成功，多数"
+						+ "是被封号了，解封时间不定，短的几小时，长的几天。");  
+ 
+				msg.show();
 				
 			}
 		});

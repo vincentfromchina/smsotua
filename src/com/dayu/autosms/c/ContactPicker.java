@@ -10,6 +10,7 @@ import com.dayu.autosms.R;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -116,6 +118,38 @@ public class ContactPicker extends Dialog {
 			}
 		});
 		
+		final Button btn_selall = (Button)findViewById(R.id.btn_selall);
+		btn_selall.setOnClickListener(new View.OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				for (String[] record : contact)
+				{
+					record[2] = "1";
+				}
+				
+				mContactLvAdapter.notifyDataSetChanged();
+			}
+		});
+		
+		
+		final Button btn_resel = (Button)findViewById(R.id.btn_resel);
+		btn_resel.setOnClickListener(new View.OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				for (String[] record : contact)
+				{
+					record[2] = record[2].equals("1") ?  "0" : "1";
+				}
+				
+				mContactLvAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	private void setResult() {
@@ -316,6 +350,6 @@ public class ContactPicker extends Dialog {
      */
     public Cursor readAllContacts(Context mContext) {
         return mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, 
-                 null, null, null, null);
+                 null, null, null, "DISPLAY_NAME COLLATE LOCALIZED asc");
     }
 }

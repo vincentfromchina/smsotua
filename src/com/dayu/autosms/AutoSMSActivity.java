@@ -129,7 +129,7 @@ public class AutoSMSActivity extends Activity implements OnClickListener
 	      findViewById(R.id.btn_jiaocheng).setOnClickListener(this);
 	      findViewById(R.id.btn_othersoft).setOnClickListener(this);
 	      TextView tv_version =(TextView) findViewById(R.id.tv_version);
-	      tv_version.setText("软件版本号："+getVersionCode(getApplicationContext())+".171025");
+	      tv_version.setText("软件版本号："+getVersionCode(getApplicationContext())+".171220");
 	      
 	     
 	//检查软件版本

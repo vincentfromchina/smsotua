@@ -19,13 +19,36 @@
         android:gravity="left"
         android:singleLine="true"
         android:textColor="#FFA500"
+        android:text="标题"
         android:textSize="18sp" />
+    
+    <Button
+        android:id="@+id/btn_selall"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/title_tv"
+        android:layout_alignRight="@+id/line"
+        android:background="@drawable/bg_button"
+        android:text="全选" />
+
+    <Button
+        android:id="@+id/btn_resel"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_selall"
+        android:layout_alignBottom="@+id/btn_selall"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/btn_selall"
+        android:background="@drawable/bg_button"
+        android:text="反选" />
 
     <ImageView
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="2dip"
-        android:layout_below="@id/title_tv"
+        android:layout_below="@id/btn_resel"
         android:layout_marginTop="5dip"
         android:background="#00b366"
         android:contentDescription="@null" />
@@ -73,5 +96,7 @@
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />
+
+    
 
 </RelativeLayout>

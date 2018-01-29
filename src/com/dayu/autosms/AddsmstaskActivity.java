@@ -160,7 +160,7 @@ public class AddsmstaskActivity extends Activity
                 	 adAlertDialog.setTitle("温馨提示");
                 	 
                 	 adAlertDialog.setMessage("如通讯较多联系人（上千条），加载时会卡顿，请耐心等候。");
-                	 adAlertDialog.setPositiveButton("好的", new DialogInterface.OnClickListener()
+                	 adAlertDialog.setPositiveButton("点击开始加载", new DialogInterface.OnClickListener()
 					{
 						
 						@Override
@@ -407,6 +407,8 @@ public class AddsmstaskActivity extends Activity
 		 final Builder adAlertDialog = new Builder(AddsmstaskActivity.this);
 		 adAlertDialog.setMessage("文件已生成，保存路径：\r\n"+filepath);
 	//	 adAlertDialog.setTitle("软件更新");
+		 mfilePath = filepath;
+		 
 		 adAlertDialog.setPositiveButton("好的，知道了", new DialogInterface.OnClickListener()
 		{
 			
@@ -418,6 +420,26 @@ public class AddsmstaskActivity extends Activity
 		});
 		 
 		 adAlertDialog.show();
+		 
+		 File feFile = new File(mfilePath);
+			if(feFile.canRead())
+			{
+				long filesize = feFile.length();
+				TextView tv_taskinfo = (TextView)findViewById(R.id.tv_taskinfo);
+				
+				m_SmsTask.setTaskfilepath(feFile.getParent());
+				m_SmsTask.setTaskfilename(feFile.getName());
+				
+				if (filesize>1024)
+				{
+					tv_taskinfo.setText("文件："+mfilePath);
+					
+				}else
+				{
+					tv_taskinfo.setText("文件："+mfilePath);
+				}
+			}
+			
 	 }
 	
 	public void createdir(String path)

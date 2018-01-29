@@ -76,6 +76,13 @@
         android:layout_alignRight="@+id/edt_content"
         android:textSize="18sp"
         android:text="/140" />
+    
+    <ImageView
+         android:id="@+id/imgbtn_what_zishu"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@+id/txv_calculate"
+         android:src="@drawable/atantion" />
 
     <TextView
         android:id="@+id/txv_yulan"
@@ -212,6 +219,8 @@
          android:layout_marginTop="5dp"
          android:background="@drawable/bg_button"
          android:text="扩展字段3" />
+
+     
 
   </RelativeLayout>
   

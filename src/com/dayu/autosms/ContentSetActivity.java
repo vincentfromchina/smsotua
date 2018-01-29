@@ -34,6 +34,7 @@ import com.dayu.autosms.c.GernatorSMSText;
 
 import android.R.color;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.Menu;
@@ -41,6 +42,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
@@ -296,6 +299,26 @@ public class ContentSetActivity extends Activity {
 					setResult(RESULT_CODE, data);
 					finish();
 			    }
+			}
+		});
+        
+        ImageView imgbtn_what_zishu = (ImageView)findViewById(R.id.imgbtn_what_zishu);
+		
+        imgbtn_what_zishu.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				AlertDialog msg = new AlertDialog.Builder(ContentSetActivity.this).create();
+				
+				msg.setTitle("关于短信字数");  
+				msg.setMessage("每条标准短信字数为140个英文字符，中文按3个计算，如果您的短信长度大于140"
+						+ "系统将使用长短信方式发送，意思是将短信拆分成每条140字来发送，运营商按条数来收费，"
+						+ "但接收者看到是“一条”短信，有关长短信更详细内容请自行百度了解。");  
+ 
+				msg.show();
+				
 			}
 		});
  

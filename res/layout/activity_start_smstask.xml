@@ -7,86 +7,95 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".StartSMStaskActivity" >
 
-<RelativeLayout 
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >    
-    
+    android:layout_height="wrap_content" >
+
     <TextView
         android:id="@+id/tv_sendinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="3"
-        android:textSize="18sp"
+        android:text="任务信息"
         android:textColor="#ff0000ff"
-        android:text="任务信息" />
-    
+        android:textSize="18sp" />
+
     <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/tv_sendinfo"
-                android:layout_marginBottom="10dp"
-                android:background="#7d000000" />
-    
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_sendinfo"
+        android:layout_marginBottom="10dp"
+        android:background="#7d000000" />
+
     <TextView
         android:id="@+id/tv_jiange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"       
         android:layout_below="@+id/tv_sendinfo"
         android:layout_marginTop="5dp"
-        android:text="每条短信发送间隔" />
-    
+        android:text="每条短信发送间隔"
+        android:textSize="18sp" />
+
     <EditText
         android:id="@+id/edt_sendinteval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/tv_jiange"
         android:layout_alignBaseline="@+id/tv_jiange"
+        android:layout_toRightOf="@+id/tv_jiange"
         android:background="@drawable/edit_bg"
         android:ems="2"
-        android:text="2"
-        android:maxLength="3"
         android:gravity="center"
-        android:inputType="number" >
+        android:inputType="number"
+        android:maxLength="3"
+        android:text="2" >
     </EditText>
-    
+
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"       
-        android:layout_toRightOf="@+id/edt_sendinteval"
         android:layout_alignBaseline="@+id/tv_jiange"
-        android:text="秒 (1-35)" />
+        android:layout_toRightOf="@+id/edt_sendinteval"
+        android:text="秒 (1-120)"
+        android:textSize="18sp" />
+    
+    <ImageView
+         android:id="@+id/imgbtn_what_jiange"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/tv_jiange"
+         android:layout_toRightOf="@+id/textView1"
+         android:src="@drawable/atantion" />
 
     <Button
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_jiange"     
-        android:layout_marginTop="5dp" 
+        android:layout_below="@+id/tv_jiange"
         android:layout_margin="2dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/bg_button"
         android:text="开始" />
-    
+
     <Button
         android:id="@+id/btn_sendpause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/btn_start"
         android:layout_alignBaseline="@+id/btn_start"
-        android:visibility="invisible"
         android:layout_margin="2dp"
+        android:layout_toRightOf="@+id/btn_start"
         android:background="@drawable/bg_button"
-        android:text="暂停" />
-    
-     <Button
+        android:text="暂停"
+        android:visibility="invisible" />
+
+    <Button
         android:id="@+id/btn_sendstop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btn_start"
-        android:layout_toRightOf="@+id/btn_sendpause"
         android:layout_margin="2dp"
+        android:layout_toRightOf="@+id/btn_sendpause"
         android:background="@drawable/bg_button"
         android:text="结束" />
 
@@ -96,17 +105,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_start"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
-        android:text="任务状态:" />
-    
+        android:text="任务状态:"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/tv_successorfail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_sendstatus"
         android:layout_marginTop="3dp"
-        android:textSize="16sp"
-        android:text="发送成功:   发送失败:" />
+        android:text="发送成功:   发送失败:"
+        android:textSize="16sp" />
 
     <ProgressBar
         android:id="@+id/pbr"
@@ -114,34 +123,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_successorfail"
-        android:minHeight="20dp"
-        android:progressDrawable="@drawable/progressbar"
         android:layout_below="@+id/tv_successorfail"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:minHeight="20dp"
+        android:progressDrawable="@drawable/progressbar" />
 
-     <EditText
-           android:id="@+id/edt_showresult"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_below="@+id/pbr"
-           android:background="@drawable/weixin_kuang"
-           android:focusable="false"
-           android:longClickable="false"
-           android:ems="10"
-           android:gravity="start"
-           android:inputType="textMultiLine"
-           android:textSize="20sp" />
-     
-     <TextView
+    <EditText
+        android:id="@+id/edt_showresult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pbr"
+        android:background="@drawable/weixin_kuang"
+        android:ems="10"
+        android:focusable="false"
+        android:gravity="start"
+        android:inputType="textMultiLine"
+        android:longClickable="false"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/tv_showactive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:text="未激活"
         android:textColor="#ffff0000"
-        android:textSize="16sp"
-        android:text="未激活" />
-   
-	</RelativeLayout>
+        android:textSize="16sp" />
+
+    
+    
+</RelativeLayout>
 	
 </ScrollView>

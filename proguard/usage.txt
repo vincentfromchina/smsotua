@@ -1149,7 +1149,7 @@ android.support.v7.widget.SuggestionsAdapter:
 com.dayu.autosms.AddsmstaskActivity:
     static final java.lang.String TAG
     217:219:void copydbfile()
-    453:494:public void readAllContacts_test()
+    475:516:public void readAllContacts_test()
 com.dayu.autosms.AutoSMSActivity:
     static final java.lang.String TAG
     private static final int DOWNLOAD_ING
@@ -1163,8 +1163,8 @@ com.dayu.autosms.ContentSetActivity:
     private static final int REG_FAIL
     private static final int REG_BACKLIST
     java.lang.String serialid
-    311:397:private void Register()
-    309:309:static synthetic void access$0(com.dayu.autosms.ContentSetActivity)
+    334:420:private void Register()
+    332:332:static synthetic void access$0(com.dayu.autosms.ContentSetActivity)
 com.dayu.autosms.ContentSetActivity$doreg
 com.dayu.autosms.ManagercontentplateActivity:
     static final java.lang.String TAG
@@ -1192,14 +1192,14 @@ com.dayu.autosms.SetActivity:
 com.dayu.autosms.StartSMStaskActivity:
     static final java.lang.String TAG
     android.app.PendingIntent deliverPI
-    1028:1039:public static java.lang.String getFromBase64(java.lang.String)
+    1050:1061:public static java.lang.String getFromBase64(java.lang.String)
 com.dayu.autosms.WebActivity:
     static final java.lang.String TAG
 com.dayu.autosms.c.ContactPicker:
     static final java.lang.String TAG
     android.widget.SimpleAdapter simpleAdapter
 com.dayu.autosms.c.ContactPicker$ContactLvAdapter:
-    293:293:public int getSelectedIndex()
+    327:327:public int getSelectedIndex()
 com.dayu.autosms.c.DBHelper:
     private static final java.lang.String DB_NAME
     private static final int DB_VERSION

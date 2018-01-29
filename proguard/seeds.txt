@@ -4513,6 +4513,7 @@ com.dayu.autosms.R$drawable: int abc_textfield_searchview_holo_dark
 com.dayu.autosms.R$drawable: int abc_textfield_searchview_holo_light
 com.dayu.autosms.R$drawable: int abc_textfield_searchview_right_holo_dark
 com.dayu.autosms.R$drawable: int abc_textfield_searchview_right_holo_light
+com.dayu.autosms.R$drawable: int atantion
 com.dayu.autosms.R$drawable: int bak_jpush_notification_icon
 com.dayu.autosms.R$drawable: int bg_button
 com.dayu.autosms.R$drawable: int border_bg
@@ -4600,6 +4601,8 @@ com.dayu.autosms.R$id: int btn_managertask
 com.dayu.autosms.R$id: int btn_modplate
 com.dayu.autosms.R$id: int btn_ok
 com.dayu.autosms.R$id: int btn_othersoft
+com.dayu.autosms.R$id: int btn_resel
+com.dayu.autosms.R$id: int btn_selall
 com.dayu.autosms.R$id: int btn_selectsmsplate
 com.dayu.autosms.R$id: int btn_sendpause
 com.dayu.autosms.R$id: int btn_sendstop
@@ -4650,6 +4653,8 @@ com.dayu.autosms.R$id: int image
 com.dayu.autosms.R$id: int image2
 com.dayu.autosms.R$id: int imgRichpushBtnBack
 com.dayu.autosms.R$id: int imgView
+com.dayu.autosms.R$id: int imgbtn_what_jiange
+com.dayu.autosms.R$id: int imgbtn_what_zishu
 com.dayu.autosms.R$id: int init
 com.dayu.autosms.R$id: int layout_root
 com.dayu.autosms.R$id: int line
@@ -4744,6 +4749,7 @@ com.dayu.autosms.R$id: int txv_yulan
 com.dayu.autosms.R$id: int up
 com.dayu.autosms.R$id: int update_progressBar
 com.dayu.autosms.R$id: int useLogo
+com.dayu.autosms.R$id: int view1
 com.dayu.autosms.R$id: int webhelp
 com.dayu.autosms.R$id: int withText
 com.dayu.autosms.R$id: int wvPopwin
